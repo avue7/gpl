@@ -1,0 +1,49 @@
+//Declaration of window setup
+int window_width = 500;
+int window_height = 500;
+int window_x = 500;
+int window_y = 10;
+string window_title = "Catch: Basket Edition";
+int animation_speed = 88;
+
+//Declaration of global variables
+int move_x = 40;
+int move_y = 40;
+int spider_move_x = 5;
+int spider_move_y = 5;
+int i;
+
+//Declaration of animation block forward
+forward animation spider_animation(circle spider1);
+
+triangle human(x = 10, y = 10, size = 20);
+circle spider(x = window_width/2, y = window/2, radius = 10, animation_block = spider_animation);
+
+
+    
+//Event Handler
+on leftarrow
+{
+  if (human.x > 10)
+    human.x -= move_x;
+    print (human.x);
+}
+on rightarrow
+{
+  if (human.x < window_width - 10)
+    human.x += move_x;
+    print (human.x);
+}
+on uparrow
+{
+  if (human.y > 10)
+    human.y -= move_y;;
+    print (human.y);
+}
+on downarrow
+{
+  if (human.y < window_height - 10)
+    human.y += move_y;
+    print (human.y);
+}
+
