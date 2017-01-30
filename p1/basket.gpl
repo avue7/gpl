@@ -6,8 +6,8 @@ int window_height = 600;
 string window_title = "Breakout";
 
 //.........Declarations of variables......//
-rectangle bounce_paddle(x = 20, y = 10, h = 10, w = 10);
-circle ball(x = 40, y = 20, radius = 10);
+pixmap basket(x = 20, y = 10, filename="basket.bmp");
+
 
 
 //.........Initialization Block...............//
