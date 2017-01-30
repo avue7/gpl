@@ -3,57 +3,114 @@ int window_width = 500;
 int window_height = 500;
 int window_x = 500;
 int window_y = 300;
-string window_title = "Catch: Basket Edition";
+string window_title = "SURVIVE OR DIE";
 int animation_speed = 88;
 
 //Declaration of global variables
 int move_x = 40;
 int move_y = 40;
+//Spiders 1-4
 int spider_move_x = 5;
 int spider_move_y = 5;
-int i;
-int numb_spiders = 6;
 
+int spider1_move_x = 5;
+int spider1_move_y = 5;
+
+int spider2_move_x = 5;
+int spider2_move_y = 5;
+
+int spider3_move_x = 5;
+int spider3_move_y = 5;
+
+int spider4_move_x = 5;
+int spider4_move_y = 5;
 
 //Declaration of animation block forward
-forward animation spider_animation(circle spider);
+forward animation spider_animation(circle spider);    //parameters are like reference
+forward animation spider1_animation(circle spider1);
+forward animation spider2_animation(circle spider2);
+forward animation spider3_animation(circle spider3);
+forward animation spider4_animation(circle spider4);
 
-circle spiders[numb_spiders];
+//Create a triangle to represent a human
 triangle human(x = 10, y = 10, size = 20);
-//circle spider(x = window_width/2, y = window_height/2, radius = 10);// animation_block = spider_animation);
 
+//Create circles for spiders
+circle cir_spider(x = random(window_width), y = random(window_height), radius = 10, animation_block = spider_animation);
 
-initialization
-{
-  for (i = 0; i < numb_spiders; i++)
-  {
-    spiders[i].x = random(window_width - 10);
-    spiders[i].y = random(window_height - 10);
-    spiders[i].radius = 10;
-    spiders[i].animation_block = spider_animation;
-    spiders[i].user_int = random(numb_spiders);
-  }
-}
+circle cir_spider1(x = random(window_width), y = random(window_height), radius = 10, animation_block = spider1_animation);
+
+circle cir_spider2(x = random(window_width), y = random(window_height), radius = 10, animation_block = spider2_animation);
+
+circle cir_spider3(x = random(window_width), y = random(window_height), radius = 10, animation_block = spider3_animation);
+
+circle cir_spider4(x = random(window_width), y = random(window_height), radius = 10, animation_block = spider4_animation);
 
 animation spider_animation(circle spider)
-{
+{    
   if (spider touches human)
-    print (spider.user_int);   
-  for(i = 0; i < numb_spiders; i++)
-  {
-    spider[i].x -= spider_move_x;
-    spider[i].y += spider_move_y;
-    if (spider[i].x < 0 || spider[i].x > window_width)
-       spider_move_x = -spider_move_x;
-       spider[i].x += random(10);
-    if (spider[i].y < 0 || spider[i].y > window_height)
-       spider_move_y = -spider_move_y;
-  } 
+    print("THAT HURTS");
+  if (spider.x < 0 || spider.x > window_width - 10)
+    spider_move_x = -spider_move_x;
+  if (spider.y < 0 || spider.y > window_height - 10)
+    spider_move_y = -spider_move_y;
+
+  spider.x += spider_move_x;
+  spider.y += spider_move_y;  
 }
 
+animation spider1_animation(circle spider1)
+{    
+  if (spider1.x < 0 || spider1.x > window_width - 10)
+    spider1_move_x = -spider1_move_x;
+  if (spider1.y < 0 || spider1.y > window_height - 10)
+    spider1_move_y = -spider1_move_y;
+  if (spider1 touches human)
+    print("THAT HURTS");
 
+  spider1.x += spider1_move_x;
+  spider1.y += spider1_move_y;  
+}
 
+animation spider2_animation(circle spider2)
+{    
+  if (spider2.x < 0 || spider2.x > window_width - 10)
+    spider2_move_x = -spider2_move_x;
+  if (spider2.y < 0 || spider2.y > window_height - 10)
+    spider2_move_y = -spider2_move_y;
+  if (spider2 touches human)
+    print("THAT HURTS");
+
+  spider2.x += spider2_move_x;
+  spider2.y += spider2_move_y;  
+}
     
+animation spider3_animation(circle spider3)
+{    
+  if (spider3.x < 0 || spider3.x > window_width - 10)
+    spider3_move_x = -spider3_move_x;
+  if (spider3.y < 0 || spider3.y > window_height - 10)
+    spider3_move_y = -spider3_move_y;
+  if (spider3 touches human)
+    print("THAT HURTS");
+
+  spider3.x += spider3_move_x;
+  spider3.y += spider3_move_y;  
+}
+
+animation spider4_animation(circle spider4)
+{    
+  if (spider4.x < 0 || spider4.x > window_width - 10)
+    spider4_move_x = -spider4_move_x;
+  if (spider4.y < 0 || spider4.y > window_height - 10)
+    spider4_move_y = -spider4_move_y;
+  if (spider4 touches human)
+    print("THAT HURTS");
+
+  spider4.x += spider4_move_x;
+  spider4.y += spider4_move_y;  
+}
+
 //Event Handler
 on leftarrow
 {
