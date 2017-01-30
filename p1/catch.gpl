@@ -1,0 +1,28 @@
+//Declaration of window setup
+int window_x = 500;
+int window_y = 10;
+int window_width = 900;
+int window_height = 600;
+string window_title = "Catch: Basket Edition";
+
+//Declaration of global variables
+int move_x = 35;
+
+pixmap basket(x = window_width/2, y = 10, filename = "basket_35x40.bmp");
+
+
+
+//Event Handler
+on leftarrow
+{
+  if (basket.x > 10)
+    basket.x -= move_x;
+    print (basket.x);
+}
+on rightarrow
+{
+  if (basket.x < window_width - 10)
+    basket.x += move_x;
+    print (basket.x);
+}
+
