@@ -1,18 +1,38 @@
 //Setting up system window (remember these are reserved variables)
-int window_x = 500; // x and y are the placement of the window in the desktop
-int window_y;
-int window_width = 1000;
+int window_x = 600; // x and y are the placement of the window in the desktop
+int window_y = 200;
+int window_width = 800;
 int window_height = 600;
+
 string window_title = "Catch: Basket Edition";
 
 //.........Declarations of variables......//
 int score = 0;
+int basket_decrement = 10;
+int basket_x_min = 10;
+int basket_x_max = (window_width - 10);
 
 textbox score_box( x = 5, y = window_height - 20, text = "Score: " + score);
-pixmap basket(x = window_width/2, y = 20, filename="basket.bmp");
+pixmap basket(x = window_width / 2, y = 20, filename="basket.bmp");
 
 //.........Initialization Block...............//
 initialization
 {
-  print("hello there!");
+
+}
+
+//.........Animation Block..................//
+
+//.........Event Handler Block.............//
+on leftarrow
+{
+  if (basket.x > basket_x_min)
+    basket.x -= basket_decrement;
+    print (basket.x);
+}
+on rightarrow
+{
+  if (basket.x < basket_x_max)
+    basket.x += basket_decrement;
+    print (basket.x);
 }
