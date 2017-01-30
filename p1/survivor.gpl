@@ -16,7 +16,7 @@ int numb_spiders = 6;
 
 
 //Declaration of animation block forward
-forward animation spider_animation(circle spider1);
+forward animation spider_animation(circle spider);
 
 circle spiders[numb_spiders];
 triangle human(x = 10, y = 10, size = 20);
@@ -31,12 +31,24 @@ initialization
     spiders[i].y = random(window_height - 10);
     spiders[i].radius = 10;
     spiders[i].animation_block = spider_animation;
+    spiders[i].user_int = random(numb_spiders);
   }
 }
 
-animation spider_animation(circle spider1)
+animation spider_animation(circle spider)
 {
-  
+  if (spider touches human)
+    print (spider.user_int);   
+  for(i = 0; i < numb_spiders; i++)
+  {
+    spider[i].x -= spider_move_x;
+    spider[i].y += spider_move_y;
+    if (spider[i].x < 0 || spider[i].x > window_width)
+       spider_move_x = -spider_move_x;
+       spider[i].x += random(10);
+    if (spider[i].y < 0 || spider[i].y > window_height)
+       spider_move_y = -spider_move_y;
+  } 
 }
 
 
