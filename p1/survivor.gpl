@@ -1,9 +1,12 @@
+//Athit Vue
+//CSCI 515
+//1/29/2017
 //Declaration of window setup
 int window_width = 500;
 int window_height = 500;
 int window_x = 500;
 int window_y = 300;
-string window_title = "SURVIVE OR DIE";
+string window_title = "SHOOT'em SPIDERS";
 int animation_speed = 88;
 
 //Declaration of global variables
@@ -14,6 +17,7 @@ int lives = 5;
 int max_bullets = 5;
 int bullet_move_y = 5;
 int i;
+
 
 circle bullets[max_bullets];
 
@@ -41,6 +45,8 @@ forward animation spider2_animation(circle spider2);
 forward animation spider3_animation(circle spider3);
 forward animation spider4_animation(circle spider4);
 
+textbox instruction(x = 5, y = 5, text = "Instruction: Hit F1 when you die to respawn. Spacebar to shoot.");
+
 //Declare a textbox for keeping scores
 textbox score_board(x = 5, y = window_height - 15, text = "SCORE: " + score);
 
@@ -61,6 +67,8 @@ circle cir_spider3(x = random(window_width), y = random(window_height), radius =
 
 circle cir_spider4(x = random(window_width), y = random(window_height), radius = 10, animation_block = spider4_animation);
 
+rectangle ammo_reload(x = random(window_width), y = random(window_height), h = 10, w = 10);
+
 initialization
 {
   //Initialize bullets and make them invisible until shot
@@ -70,6 +78,7 @@ initialization
     bullets[i].visible = false;
     bullets[i].animation_block = bullet_animation;
   }
+ ammo_reload.visible = false;
 }    
 
 //ANIMATION BLOCK STARTS HERE
@@ -323,7 +332,7 @@ animation bullet_animation(circle cur_bullet)
      cur_bullet.y += bullet_move_y;  
     }
   }
-}
+}  
 
 //Event Handler
 on leftarrow
@@ -338,12 +347,12 @@ on rightarrow
 }
 on downarrow
 {
-  if (human.y > 10)
+  if (human.y > 20)
     human.y -= move_y;
 }
 on uparrow
 {
-  if (human.y < window_height - 10)
+  if (human.y < (window_height - 10) )
     human.y += move_y;
 }
 //For each bullet if it is invisible make them visible
@@ -375,3 +384,31 @@ on f1
   }
 }
 
+on akey
+{
+  if (human.visible)
+  {
+//    ammo_reload.visible = true;
+//    if (human touches ammo_reload)
+//    { 
+//      ammo_reload.visible = false;
+//      if( ammo_reload.visible == false)
+//      {
+        for (i = 0; i < max_bullets; i++)
+        {
+//          if (bullets[i].visible == false)
+//          {
+            bullets[i].visible = true;
+            bullets[i].x = human.x + human.w/2;
+            bullets[i].y = human.y + 1; 
+            i = max_bullets + 1;
+//            }
+        }
+//      }  
+//    }
+  }
+}
+termination
+{
+  print("YOU LOSE!!!!! Your score was: " + score);
+}
