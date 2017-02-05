@@ -127,12 +127,10 @@ declaration_list:
 declaration:
   T_RECORD T_ID {cout << "record " << *$2 << "\n{\n\n";} T_LBRACE field_list T_RBRACE
   {
-      cout << "\n}\n\n";
-      cout << $5 << " fields were declared\n";
+      cout << "\n} " << $5 << " fields were declared\n\n";
   }
   ;
-
-
+  
 //---------------------------------------------------------------------
 field_list:
   field_list field
