@@ -47,6 +47,11 @@ void get_int_value()
   yylval.union_int = atoi(yytext);
 }
  
+// Adding get_double_value from P2 #2 to account for doubles
+void get_double_value()
+{
+  yylval.union_double = atof(yytext);
+}
 
 void get_string_value()
 {
@@ -93,6 +98,7 @@ The right-hand-side (RHS) specifies an action (code to execute) when
 
 
 [0-9]+          get_int_value(); return T_INT_CONSTANT;
+[0-9]+         get_double_value(); return T_DOUBLE_CONSTANT;
 [A-Za-z]+       get_string_value(); return T_ID;
 
 
