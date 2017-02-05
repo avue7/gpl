@@ -96,6 +96,7 @@ using namespace std;
 // Just like tokens, grammar symbols can be associated with a type
 // This allows values to be passed up (and down) the parse tree
 %type <union_int> declaration_list
+%type <union_int> field_list
 
 %% // indicates the start of the rules
 
@@ -127,6 +128,7 @@ declaration:
   T_RECORD T_ID {cout << "record " << *$2 << "\n{\n\n";} T_LBRACE field_list T_RBRACE
   {
       cout << "\n}\n\n";
+      cout << $5 << " fields were declared\n";
   }
   ;
 
@@ -134,7 +136,13 @@ declaration:
 //---------------------------------------------------------------------
 field_list:
   field_list field
+  {
+    $$ = $1 + 1;
+  }
   | empty 
+  {
+    $$ = 0;
+  }
   ;
 
 //---------------------------------------------------------------------
@@ -148,4 +156,3 @@ field:
 //---------------------------------------------------------------------
 empty:
   ;
-
