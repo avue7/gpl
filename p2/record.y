@@ -161,7 +161,7 @@ field:
   |
   T_ID T_ASSIGN T_STRING_CONSTANT T_SEMIC
   {
-    cout << " " << *$1 << " = " << *$3 << " (string)\n";
+    cout << " " << *$1 << " = " << "'" << *$3 << "'" << " (string)\n";
   }
   ;
   
