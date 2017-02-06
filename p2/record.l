@@ -24,7 +24,7 @@
 #include "error.h"    // gpl file, using now to get use to it
 #include "parser.h"   // gpl file, using now to get use to it
 
-// #include <ctype.h>
+#include <ctype.h>
 #include <iostream>
 using namespace std;
 
@@ -61,6 +61,13 @@ void get_string_value()
   // this memory should be deleted.
   yylval.union_string = new string(yytext);
 }
+
+// Adding this from P2 #3 to account for string constants (those having a quotation mark)
+void get_string_constant_value()
+{
+  yylval.union_string_constant = new string(yytext);
+}
+
 
 void error()
 {
@@ -99,6 +106,7 @@ The right-hand-side (RHS) specifies an action (code to execute) when
 
 [0-9]+          get_int_value(); return T_INT_CONSTANT;
 [0-9.]+         get_double_value(); return T_DOUBLE_CONSTANT;
+\"[^\"\n]*\"      get_string_constant_value(); return T_STRING_CONSTANT;
 [A-Za-z]+       get_string_value(); return T_ID;
 
 

@@ -67,6 +67,7 @@ using namespace std;
 %union {
  int            union_int;
  double      union_double;
+ std::string    *union_string_constant;
  std::string    *union_string;  // MUST be a pointer to a string (this sucks!)
 }
 
@@ -90,10 +91,11 @@ using namespace std;
 // the value is put in the union by the scanner (in the .l file ) so it can be
 // used by the parser (in the .y file)
 
-%token <union_double>    T_DOUBLE_CONSTANT      "double constant"
 %token <union_int>      T_INT_CONSTANT      "int constant"
 %token <union_string> T_ID                "identifier"
 %token <union_string> T_ERROR             "error"
+%token <union_string_constant>     T_STRING_CONSTANT    "string constant"
+%token <union_double>    T_DOUBLE_CONSTANT      "double constant"
 
 // Just like tokens, grammar symbols can be associated with a type
 // This allows values to be passed up (and down) the parse tree
@@ -155,6 +157,11 @@ field:
   T_ID T_ASSIGN T_DOUBLE_CONSTANT T_SEMIC
   {
     cout << " " << *$1 << " = " << $3 << " (double)\n";
+  }
+  |
+  T_ID T_ASSIGN T_STRING_CONSTANT T_SEMIC
+  {
+    cout << " " << *$1 << " = " << *$3 << " (string)\n";
   }
   ;
   
