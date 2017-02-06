@@ -98,6 +98,22 @@ The right-hand-side (RHS) specifies an action (code to execute) when
   the regular expression is matched.
 */
 
+/* Here is what this means:
+    ^ says start of line.
+    [] means everything included; adding a + at the end means one or more, * means 0 or more.
+    \d means any digit; \D means any nondigit.
+    \w means any word character(letter, number, underscore)
+    [^] inside the brackets means "not" those included
+    ..... and so on.....
+    This one means:
+    ^ start of including [] if not digit and including []  + at least one or more....
+    ------------->>>> for below on T_ID
+*/
+
+/*
+  Add the () to mean at least one " | " or the other ---->>>>for below on T_MONTH
+*/
+
 %%
 
 [\n]            line_count++; // count the lines for error reporting
@@ -114,10 +130,7 @@ The right-hand-side (RHS) specifies an action (code to execute) when
 [0-9.]+         get_double_value(); return T_DOUBLE_CONSTANT;
 \"[^\"\n]*\"   get_string_constant_value(); return T_STRING_CONSTANT;
 (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)    get_string_value(); return T_MONTH;
-[A-Za-z]+      get_string_value(); return T_ID;
-
-
-
+[^\0-9_][A-Za-z0-9_]+      get_string_value(); return T_ID;
 
 
 
