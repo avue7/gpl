@@ -166,17 +166,17 @@ field:
   |
   T_ID T_ASSIGN T_DOUBLE_CONSTANT T_SEMIC
   {
-    cout << " " << *$1 << " = " << $3 << " (double)\n";
+    cout << "  " << *$1 << " = " << $3 << " (double)\n";
   }
   |
   T_ID T_ASSIGN T_STRING_CONSTANT T_SEMIC
   {
-    cout << " " << *$1 << " = " << "'" << *$3 << "'" << " (string)\n";
+    cout << "  " << *$1 << " = " << "'" << *$3 << "'" << " (string)\n";
   }
   |
   T_ID T_ASSIGN T_MONTH T_INT_CONSTANT T_COMMA T_INT_CONSTANT T_SEMIC
   {
-    cout << " " << *$1 << " = " << *$3 << " " << $4 << " , " << $6 << " (month)\n";
+    cout << "  " << *$1 << " = " << *$3 << " " << $4 << ", " << $6 << " (date)\n";
   }
   ;
   

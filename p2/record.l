@@ -127,10 +127,10 @@ The right-hand-side (RHS) specifies an action (code to execute) when
 ","              return T_COMMA;
 
 [0-9]+          get_int_value(); return T_INT_CONSTANT;
-[0-9.]+         get_double_value(); return T_DOUBLE_CONSTANT;
+[0-9]+[.]         get_double_value(); return T_DOUBLE_CONSTANT;
 \"[^\"\n]*\"   get_string_constant_value(); return T_STRING_CONSTANT;
 (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)    get_string_value(); return T_MONTH;
-[^\0-9_][A-Za-z0-9_]+      get_string_value(); return T_ID;
+[A-Za-z_]+[0-9]*     get_string_value(); return T_ID;
 
 
 
