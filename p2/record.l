@@ -63,9 +63,14 @@ void get_string_value()
 }
 
 // Adding this from P2 #3 to account for string constants (those having a quotation mark)
+// Need to get rid of quation marks so new string (yytext) will point to first element of array
+//  do new string (yytext + 1) to point to next element of the array.
+// Now we have to get rid of last quotation. YYTEXT is a c-style string so we have a null pointer
+//  at the end. Need to get the last quotation out of the string by doing strlen(yytext) - 1.
 void get_string_constant_value()
 {
-  yylval.union_string_constant = new string(yytext);
+  yytext[strlen(yytext) - 1]='\0';  // Moving the null terminator to the last quotation's place
+  yylval.union_string_constant = new string(yytext + 1);
 }
 
 
