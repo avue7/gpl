@@ -139,7 +139,7 @@ using namespace std;
 
 // Just like tokens, grammar symbols can be associated with a type
 // This allows values to be passed up (and down) the parse tree
-%type <union_int> declaration_list
+%type <union_int> declaration_list empty
 
 %% // indicates the start of the rules
 
@@ -422,6 +422,8 @@ math_operator:
 
 //---------------------------------------------------------------------
 empty:
+    {
+    }
     // empty goes to nothing so that you can use empty in productions
     // when you want a production to go to nothing
     ;
