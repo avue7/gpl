@@ -129,7 +129,6 @@ using namespace std;
 
 // special token that does not match any production
 // used for characters that are not part of the language
-%token T_ERROR               "error"
 
 %token <union_int>      T_INT_CONSTANT                            "int constant"
 %token <union_string> T_ID                                                "identifier"
@@ -141,7 +140,6 @@ using namespace std;
 // Just like tokens, grammar symbols can be associated with a type
 // This allows values to be passed up (and down) the parse tree
 %type <union_int> declaration_list
-%type <union_int> field_list
 
 %% // indicates the start of the rules
 
