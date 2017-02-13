@@ -17,6 +17,7 @@ using namespace std;
 %union {
  int            union_int;
  double      union_double;
+ int                union_line_number;
  std::string    *union_string;  // MUST be a pointer to a string (this sucks!)
  std::string    *union_string_constant;
 }
@@ -41,7 +42,7 @@ using namespace std;
 %token T_CIRCLE              "circle"
 %token T_RECTANGLE           "rectangle"
 %token T_TEXTBOX             "textbox"
-%token <union_int> T_FORWARD         "forward" // value is line number
+%token <union_line_number> T_FORWARD         "forward" // value is line number
 %token T_INITIALIZATION      "initialization"
 %token T_TERMINATION          "termination"
 
@@ -56,8 +57,8 @@ using namespace std;
 %token T_IF                  "if"
 %token T_FOR                 "for"
 %token T_ELSE                "else"
-%token <union_int> T_PRINT           "print" // value is line number
-%token <union_int> T_EXIT            "exit" // value is line number
+%token <union_line_number> T_PRINT           "print" // value is line number
+%token <union_line_number> T_EXIT            "exit" // value is line number
 
 %token T_LPAREN              "("
 %token T_RPAREN              ")"
@@ -127,14 +128,14 @@ using namespace std;
 %token T_LKEY                "lkey"
 %token T_WKEY                "wkey"
 
+%token <union_string> T_ID            	 "identifier"
+%token <union_int> T_INT_CONSTANT    "int constant"
+%token <uinion_double> T_DOUBLE_CONSTANT "double constant"
+%token <union_string_constant> T_STRING_CONSTANT "string constant"
+
 // special token that does not match any production
 // used for characters that are not part of the language
-
-%token <union_int>      T_INT_CONSTANT                            "int constant"
-%token <union_string> T_ID                                                "identifier"
-%token <union_string> T_ERROR                                         "error"
-%token <union_string_constant>     T_STRING_CONSTANT    "string constant"
-%token <union_double>    T_DOUBLE_CONSTANT                 "double constant"
+%token T_ERROR               "error"
 
 
 // Just like tokens, grammar symbols can be associated with a type
