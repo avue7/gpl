@@ -42,7 +42,7 @@ using namespace std;
 %token T_CIRCLE              "circle"
 %token T_RECTANGLE           "rectangle"
 %token T_TEXTBOX             "textbox"
-%token <union_line_number> T_FORWARD         "forward" // value is line number
+%token <union_int> T_FORWARD         "forward" // value is line number
 %token T_INITIALIZATION      "initialization"
 %token T_TERMINATION          "termination"
 
@@ -57,8 +57,8 @@ using namespace std;
 %token T_IF                  "if"
 %token T_FOR                 "for"
 %token T_ELSE                "else"
-%token <union_line_number> T_PRINT           "print" // value is line number
-%token <union_line_number> T_EXIT            "exit" // value is line number
+%token <union_int> T_PRINT           "print" // value is line number
+%token <union_int> T_EXIT            "exit" // value is line number
 
 %token T_LPAREN              "("
 %token T_RPAREN              ")"
