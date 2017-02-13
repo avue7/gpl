@@ -1,4 +1,4 @@
-%{  // bison syntax to indicate the start of the header
+ %{  // bison syntax to indicate the start of the header
     // the header is copied directly into y.tab.c (the generated parser)
 
 extern int yylex();               // this lexer function returns next token
@@ -128,7 +128,8 @@ using namespace std;
 %token T_LKEY                "lkey"
 %token T_WKEY                "wkey"
 
-%token <union_string> T_ID            	 "identifier"
+
+%token <union_string> T_ID             "identifier"
 %token <union_int> T_INT_CONSTANT    "int constant"
 %token <uinion_double> T_DOUBLE_CONSTANT "double constant"
 %token <union_string_constant> T_STRING_CONSTANT "string constant"
@@ -142,8 +143,16 @@ using namespace std;
 // This allows values to be passed up (and down) the parse tree
 %type <union_int> declaration_list empty
 
-%% // indicates the start of the rules
+////////////////////////// Precedence = low to high /////////////////////////////////////////////////////////////
+%left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS T_EQUAL T_NOT_EQUAL
+%left T_MOD
+%nonassoc T_NOT T_OR
+%nonassoc T_AND
+%left T_PLUS T_MINUS 
+%left T_MULTIPLY T_DIVIDE
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+%% // indicates the start of the rules
 
 //---------------------------------------------------------------------
 program:

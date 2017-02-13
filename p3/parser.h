@@ -28,10 +28,9 @@
 
 #include <string>
 #include "error.h"  // gpl's error reporting
-
 #include <iostream>
-using namespace std;
 #include <stdio.h> 
+#include <ctype.h>
 
 // put new included ABOVE this line
 #include "y.tab.h"
