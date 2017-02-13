@@ -143,14 +143,17 @@ using namespace std;
 // This allows values to be passed up (and down) the parse tree
 %type <union_int> declaration_list empty
 
-////////////////////////// Precedence = low to high /////////////////////////////////////////////////////////////
+//////////////////////////////////// Precedence = low to high ////////////////////////////////////////////////////
+%nonassoc IF_NO_ELSE
+%nonassoc T_ELSE
 %left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS T_EQUAL T_NOT_EQUAL
 %left T_MOD
 %nonassoc T_NOT T_OR
 %nonassoc T_AND
+%nonassoc UNARY_OPS
 %left T_PLUS T_MINUS 
 %left T_MULTIPLY T_DIVIDE
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 %% // indicates the start of the rules
 
@@ -341,8 +344,8 @@ statement:
 
 //---------------------------------------------------------------------
 if_statement:
-    T_IF T_LPAREN expression T_RPAREN if_block
-    | T_IF T_LPAREN expression T_RPAREN if_block T_ELSE if_block
+    T_IF T_LPAREN expression T_RPAREN if_block %prec IF_NO_ELSE
+    | T_IF T_LPAREN expression T_RPAREN if_block T_ELSE if_block 
     ;
 
 //---------------------------------------------------------------------
