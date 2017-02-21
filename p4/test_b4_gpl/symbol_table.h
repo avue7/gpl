@@ -21,7 +21,7 @@ class Symbol_table
   private:
     static Symbol_table *m_instance;
     int m_id;
-    Symbol_table() {};
+    Symbol_table();
     Symbol_table(const Symbol_table &);
     const Symbol_table &operator=(const Symbol_table &);
 

@@ -20,7 +20,7 @@ class Symbol
     string get_name(); 
     
     // Make this constructor first and test it. 
-    Symbol(string name, Gpl_type type, void* value);
+    Symbol(string name, Gpl_type type, int value);
     void print();
 };
 

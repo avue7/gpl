@@ -1,5 +1,11 @@
 #include "symbol_table.h"
 
+Symbol_table::Symbol_table()
+{
+  
+
+}
+
 /* static */ Symbol_table *Symbol_table::m_instance = NULL;
 /* static */ Symbol_table *Symbol_table::instance()
 {
@@ -17,18 +23,17 @@
 */
 Symbol *Symbol_table::lookup(string name)
 {
-  for (unordered_map<string, Symbol*>::iterator it = m_map.begin(); it != m_map.end(); it++)
+  unordered_map<string, Symbol*>::const_iterator got = m_map.find(name);
+  
+  if (got == m_map.end())
   {
-    string m_name = it->first;
-
-    if (m_map.find(name) == m_name)
-    {
-      cout << "FOUND IT IN THE MAP" << endl;
-    }
-    else
-    {
-      return NULL;
-    }
+    cout << "NAME NOT FOUND IN MAP" << endl;   
+    return NULL;
+  }
+  else
+  {
+    cout << got->first << " is located at " << got->second << endl;
+    return got->second;
   }
 }
 

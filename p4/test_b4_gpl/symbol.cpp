@@ -1,10 +1,10 @@
 #include "symbol.h"
 
-Symbol::Symbol(string name, Gpl_type type, void* value)
+Symbol::Symbol(string name, Gpl_type type, int value)
 {
   m_name = name;
   m_type = type;
-  m_value = value;
+  m_value = (void*) new int(value);
 }
 
 string Symbol::get_name()
