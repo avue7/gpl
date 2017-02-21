@@ -109,14 +109,15 @@ void get_string()
   cout << "_-----------------------------------------------" << endl;
 }
 
-/*void get_array_int()
+void get_array_int()
 {
   std::string name = "nums[0]";
   Gpl_type type = INT_ARRAY;
+  int size = 4;
   int value = 42;
 
   Symbol *test;
-  test  = new Symbol(name, type, value);
+  test  = new Symbol(name, type, value, size);
   cout << "This is the symbol #1 (INT) we are testing: " << endl;
   test->print();
   cout << "---------------------------------------------------" << endl;
@@ -134,7 +135,7 @@ void get_string()
   cout << "_-----------------------------------------------" << endl;
 
 }
-*/
+
 void get_array_double()
 {
 
@@ -153,7 +154,7 @@ int main()
   get_string();
   
   // Testing the arrays now:
- // get_array_int();
+  get_array_int();
   get_array_double();
   get_array_string();
 }

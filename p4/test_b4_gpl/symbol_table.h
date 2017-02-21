@@ -4,6 +4,7 @@
 #include "symbol.h"
 #include "gpl_type.h"
 #include <iostream>
+#include <algorithm>
 #include <sstream>
 #include <vector>
 #include <unordered_map>
@@ -17,7 +18,7 @@ class Symbol_table
     Symbol *lookup(string name);
     void add_symbol(Symbol *symbol); // Making this function to add symbols
     void print(ostream &os);
-    bool compare_symbols(Symbol *a, Symbol *b);
+    static bool compare_symbols(Symbol *a, Symbol *b);
     unordered_map<string, Symbol*> m_map;   
  
   private:
