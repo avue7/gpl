@@ -28,12 +28,22 @@ void Symbol_table::add_symbol(Symbol *symbol)
 
 void Symbol_table::print(ostream &os)
 {
+  // Use a vector to temporarily store symbols for sorting
+  vector<Symbol*>sort_vector;
+
   // Iterate thru map and print
   for (unordered_map<string, Symbol*>::iterator it = m_map.begin();
        it != m_map.end(); it++)
   {  
-    Symbol *temp = it->second;
-
+    Symbol *symbol = it->second;
+    sort_vector.push_back(symbol);
+  }
+  vector<Symbol*>::iterator it;
+  for (it=sort_vector.begin(); it < sort_vector.end(); it++)
+  {
+    os << " " << *it;
+  }
+/*
     if (temp->m_type == INT)
     {
       os << temp->get_type() << " " << 
@@ -49,7 +59,8 @@ void Symbol_table::print(ostream &os)
       os << temp->get_type() << " " <<
       temp->m_name << " = " << *(string *)(temp->m_value) << endl;
     }
-  }  
+  } 
+*/ 
 }
 
 Symbol *Symbol_table::lookup(string name)
