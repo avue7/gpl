@@ -19,12 +19,15 @@ class Symbol
     void* m_value;
     int m_size;
     string get_name(); 
-    string get_type(); 
+    string get_type();
+    bool is_array(); 
     // Make this constructor first and test it. 
     Symbol(string name, Gpl_type type, int value);
     Symbol(string name, Gpl_type type, double value);
     Symbol(string name, Gpl_type type, string value);
     Symbol(string name, Gpl_type type, int value, int size);
+    Symbol(string name, Gpl_type type, double value, int size);
+    Symbol(string name, Gpl_type type, string value, int size);
     void print();
 };
 

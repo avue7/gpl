@@ -111,14 +111,14 @@ void get_string()
 
 void get_array_int()
 {
-  std::string name = "nums[0]";
+  std::string name = "nums";
   Gpl_type type = INT_ARRAY;
   int size = 4;
   int value = 42;
 
   Symbol *test;
   test  = new Symbol(name, type, value, size);
-  cout << "This is the symbol #1 (INT) we are testing: " << endl;
+  cout << "This is the symbol #5 (INT_ARRAY) we are testing: " << endl;
   test->print();
   cout << "---------------------------------------------------" << endl;
   
@@ -138,11 +138,55 @@ void get_array_int()
 
 void get_array_double()
 {
+  std::string name = "nums_doubles";
+  Gpl_type type = DOUBLE_ARRAY;
+  int size = 4;
+  double value = 3.14159;
+
+  Symbol *test;
+  test  = new Symbol(name, type, value, size);
+  cout << "This is the symbol #6 (DOUBLE_ARRAY) we are testing: " << endl;
+  test->print();
+  cout << "---------------------------------------------------" << endl;
+  
+  cout << "TESTING OF THE SYMBOL_TABLE CLASS: " << endl;
+  // Testing the adding of this symbol to the symbol_table
+  Symbol_table *table = Symbol_table::instance();
+  table->add_symbol(test);
+  table->print(cout);
+  
+  // Testing the look_up function in symbol_table to make sure it works
+  cout << "Testing the lookup function inside of symbol_table:" << endl;
+  table->lookup(name);
+
+  cout << "_-----------------------------------------------" << endl;
 
 }
 
 void get_array_string()
 {
+  std::string name = "nums_STRING";
+  Gpl_type type = STRING_ARRAY;
+  int size = 4;
+  string value ="HELLO WORLD";
+
+  Symbol *test;
+  test  = new Symbol(name, type, value, size);
+  cout << "This is the symbol #7 (STRING_ARRAY) we are testing: " << endl;
+  test->print();
+  cout << "---------------------------------------------------" << endl;
+  
+  cout << "TESTING OF THE SYMBOL_TABLE CLASS: " << endl;
+  // Testing the adding of this symbol to the symbol_table
+  Symbol_table *table = Symbol_table::instance();
+  table->add_symbol(test);
+  table->print(cout);
+  
+  // Testing the look_up function in symbol_table to make sure it works
+  cout << "Testing the lookup function inside of symbol_table:" << endl;
+  table->lookup(name);
+
+  cout << "_-----------------------------------------------" << endl;
  
 }
 

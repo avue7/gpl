@@ -43,10 +43,49 @@ void Symbol_table::add_symbol(Symbol *symbol)
   /* Use find() to see if we can find the symbol
      name to the end of the map. If it reaches end
      then name is not yet in the map. Lets add it. */
+  void *ptr;
+  
   if (m_map.find(symbol->m_name) == m_map.end())
   {
     m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol));
   }
+  else 
+  {
+    if (symbol->is_array())
+    {
+      if (symbol->m_type == INT_ARRAY)
+      {
+        ptr = new vector<int>;
+        for (int i = 0; i < symbol->m_size; i++)
+        {
+          (*(vector<int>*)ptr).push_back(42);
+        }
+        symbol->m_value = ptr;
+      }
+      else if (symbol->m_type == DOUBLE_ARRAY)
+      {
+        ptr = new vector<double>;
+        for (int i = 0; i < symbol->m_size; i++)
+        {
+          (*(vector<double>*)ptr).push_back(3.14159);
+        }
+        symbol->m_value = ptr;
+      }
+      else if (symbol->m_type == STRING_ARRAY)
+      {
+        ptr = new vector<string>;
+        for (int i = 0; i < symbol->m_size; i++)
+        {
+          (*(vector<string>*)ptr).push_back("Hello world");
+        }
+        symbol->m_value = ptr;
+      }
+      else
+      {
+        cout << "Im not sure what else to do at the moment" << endl;
+      }
+     }
+   }
 }
 
 
@@ -86,15 +125,36 @@ void Symbol_table::print(ostream &os)
     }
     else if (temp->m_type == INT_ARRAY)
     {
-      os << temp->get_type() << " " << 
-      temp->m_name << " = " << *(int *)(temp->m_value) << endl;
+      for (int i=0; i < temp->m_size; i++)
+      {
+        os << temp->get_type() << " " << 
+        temp->m_name << "[" << i << "]" << " = " <<
+         *(int *)(temp->m_value) << endl;
+      }
     }
-
+    else if (temp->m_type == DOUBLE_ARRAY)
+    {
+      for (int i=0; i < temp->m_size; i++)
+      {
+        os << temp->get_type() << " " << 
+        temp->m_name << "[" << i << "]" << " = " <<
+         *(double *)(temp->m_value) << endl;
+      }
+    }
+    else if (temp->m_type == STRING_ARRAY)
+    {
+      for (int i=0; i < temp->m_size; i++)
+      {
+        os << temp->get_type() << " " << 
+        temp->m_name << "[" << i << "]" << " = " <<
+         *(string *)(temp->m_value) << endl;
+      }
+    }
     else
     {
       os << temp->get_type() << " " <<
       temp->m_name << " = " << *(string *)(temp->m_value) << endl;
     }
-  }  
+  }
 }
 

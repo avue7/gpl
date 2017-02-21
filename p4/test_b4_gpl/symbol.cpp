@@ -32,6 +32,34 @@ Symbol::Symbol(string name, Gpl_type type, int value, int size)
   m_size = size;
 }
 
+Symbol::Symbol(string name, Gpl_type type, double value, int size)
+{
+  m_name = name;
+  m_type = type;
+  m_value = (void*) new double(value);
+  m_size = size;
+}
+
+Symbol::Symbol(string name, Gpl_type type, string value, int size)
+{
+  m_name = name;
+  m_type = type;
+  m_value = (void*) new string(value);
+  m_size = size;
+}
+
+bool Symbol::is_array()
+{
+  if (m_type == INT_ARRAY)
+    return true;
+  else if (m_type == DOUBLE_ARRAY)
+    return true;
+  else if (m_type == STRING_ARRAY)
+    return true;
+  else
+    return false;
+}
+
 string Symbol::get_type()
 {
  return  gpl_type_to_string(m_type);
