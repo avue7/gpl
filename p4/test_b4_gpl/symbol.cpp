@@ -24,6 +24,10 @@ Symbol::Symbol(string name, Gpl_type type, string value)
   m_value = (void*) new string(value);
 }
 
+string Symbol::get_type()
+{
+ return  gpl_type_to_string(m_type);
+}
 
 string Symbol::get_name()
 {
@@ -34,7 +38,7 @@ void Symbol::print()
 {
   if (m_type == 1)
   {
-    cout << "Name: " << m_name << ", Type: " << m_type << ", Value: " << *((int*)m_value) << endl;
+    cout << "Name: " << m_name << ", Type: " << gpl_type_to_string(m_type) << ", Value: " << *((int*)m_value) << endl;
   }
   else if (m_type == 2)
   {

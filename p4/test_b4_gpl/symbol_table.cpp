@@ -36,8 +36,18 @@ void Symbol_table::print(ostream &os)
 
     if (temp->m_type == INT)
     {
-      os << temp->m_type << " " << temp->m_name << " = " << 
-           *(int *)(temp->m_value) << endl;
+      os << temp->get_type() << " " << 
+      temp->m_name << " = " << *(int *)(temp->m_value) << endl;
+    }
+    else if (temp->m_type == DOUBLE)
+    {
+      os << temp->get_type() << " " << 
+      temp->m_name << " = " << *(double *)(temp->m_value) << endl;
+    }
+    else
+    {
+      os << temp->get_type() << " " <<
+      temp->m_name << " = " << *(string *)(temp->m_value) << endl;
     }
   }  
 }

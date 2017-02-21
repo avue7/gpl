@@ -18,7 +18,7 @@ class Symbol
     Gpl_type m_type;
     void* m_value;
     string get_name(); 
-    
+    string get_type(); 
     // Make this constructor first and test it. 
     Symbol(string name, Gpl_type type, int value);
     Symbol(string name, Gpl_type type, double value);
