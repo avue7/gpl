@@ -21,6 +21,8 @@ class Symbol
     
     // Make this constructor first and test it. 
     Symbol(string name, Gpl_type type, int value);
+    Symbol(string name, Gpl_type type, double value);
+    Symbol(string name, Gpl_type type, string value);
     void print();
 };
 
