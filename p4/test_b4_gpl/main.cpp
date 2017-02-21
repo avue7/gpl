@@ -11,9 +11,21 @@ void get_int()
 
   Symbol *test;
   test  = new Symbol(name, type, value);
-  cout << "This is the symbol we are testing: " << endl;
+  cout << "This is the symbol #1 (INT) we are testing: " << endl;
   test->print();
   cout << "---------------------------------------------------" << endl;
+  
+  cout << "TESTING OF THE SYMBOL_TABLE CLASS: " << endl;
+  // Testing the adding of this symbol to the symbol_table
+  Symbol_table *table = Symbol_table::instance();
+  table->add_symbol(test);
+  table->print(cout);
+  
+  // Testing the look_up function in symbol_table to make sure it works
+  cout << "Testing the lookup function inside of symbol_table:" << endl;
+  table->lookup(name);
+
+  cout << "_-----------------------------------------------" << endl;
 }
 
 //  Symbol_table *test_table = Symbol_table::instance();
@@ -25,7 +37,7 @@ void get_double()
 
   Symbol *test2;
   test2  = new Symbol(name, type, value);
-  cout << "This is the symbol we are testing: " << endl;
+  cout << "This is the symbol #2 (DOUBLE) we are testing: " << endl;
   test2->print();
   cout << "---------------------------------------------------" << endl;
 }
@@ -38,7 +50,7 @@ void get_string()
 
   Symbol *test3;
   test3  = new Symbol(name, type, value);
-  cout << "This is the symbol we are testing: " << endl;
+  cout << "This is the symbol #3 (string) we are testing: " << endl;
   test3->print();
   cout << "---------------------------------------------------" << endl;
 }
@@ -48,5 +60,7 @@ int main()
   get_int();
   get_double();
   get_string();
+
+
 }
 

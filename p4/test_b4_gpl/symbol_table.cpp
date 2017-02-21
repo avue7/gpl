@@ -1,11 +1,5 @@
 #include "symbol_table.h"
 
-Symbol_table::Symbol_table()
-{
-  
-
-}
-
 /* static */ Symbol_table *Symbol_table::m_instance = NULL;
 /* static */ Symbol_table *Symbol_table::instance()
 {
@@ -16,11 +10,38 @@ Symbol_table::Symbol_table()
   return m_instance;
 }
 
-/*void Symbol_table::print(ostream &os)
-{
-
-}
+/* Reference to unordered_map (might need it later):
+http://www.cplusplus.com/reference/unordered_map/unordered_map/insert/
 */
+
+void Symbol_table::add_symbol(Symbol *symbol)
+{
+  /* Use find() to see if we can find the symbol
+     name to the end of the map. If it reaches end
+     then name is not yet in the map. Lets add it. */
+  if (m_map.find(symbol->m_name) == m_map.end())
+  {
+    m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol));
+  }
+}
+
+
+void Symbol_table::print(ostream &os)
+{
+  // Iterate thru map and print
+  for (unordered_map<string, Symbol*>::iterator it = m_map.begin();
+       it != m_map.end(); it++)
+  {  
+    Symbol *temp = it->second;
+
+    if (temp->m_type == INT)
+    {
+      os << temp->m_type << " " << temp->m_name << " = " << 
+           *(int *)(temp->m_value) << endl;
+    }
+  }  
+}
+
 Symbol *Symbol_table::lookup(string name)
 {
   unordered_map<string, Symbol*>::const_iterator got = m_map.find(name);
