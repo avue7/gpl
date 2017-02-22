@@ -43,26 +43,26 @@ void Symbol_table::add_symbol(Symbol *symbol)
   /* Use find() to see if we can find the symbol
      name to the end of the map. If it reaches end
      then name is not yet in the map. Lets add it. */
-  void *ptr;
   
   if (m_map.find(symbol->m_name) == m_map.end())
-  {
-    m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol));
-  }
-  else 
-  {
+  { 
     if (symbol->is_array())
     {
       if (symbol->m_type == INT_ARRAY)
       {
-        ptr = new vector<int>;
+        int *temp_array = new int[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
-          (*(vector<int>*)ptr).push_back(42);
+          temp_array[i] = 42;
         }
-        symbol->m_value = ptr;
+        symbol->m_value = temp_array;
       }
-      else if (symbol->m_type == DOUBLE_ARRAY)
+    }
+    m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol));
+  } 
+     
+}
+/*      else if (symbol->m_type == DOUBLE_ARRAY)
       {
         ptr = new vector<double>;
         for (int i = 0; i < symbol->m_size; i++)
@@ -79,14 +79,7 @@ void Symbol_table::add_symbol(Symbol *symbol)
           (*(vector<string>*)ptr).push_back("Hello world");
         }
         symbol->m_value = ptr;
-      }
-      else
-      {
-        cout << "Im not sure what else to do at the moment" << endl;
-      }
-     }
-   }
-}
+      }*/
 
 
 /****************************
@@ -103,6 +96,7 @@ void Symbol_table::print(ostream &os)
        it != m_map.end(); it++)
   {  
     Symbol *symbol = it->second;
+    
     sort_vector.push_back(symbol);
   }
   // Sort the vector aphabetically with -> name.
@@ -112,31 +106,32 @@ void Symbol_table::print(ostream &os)
     it < sort_vector.end(); it++) {
 
     Symbol *temp = *it; // Need to set new temp object to work
-
     if (temp->m_type == INT)
     {
       os << temp->get_type() << " " << 
       temp->m_name << " = " << *(int *)(temp->m_value) << endl;
-    }
+    }/*
     else if (temp->m_type == DOUBLE)
     {
       os << temp->get_type() << " " << 
       temp->m_name << " = " << *(double *)(temp->m_value) << endl;
-    }
+    }*/
+    /* ARRAYS PRINTOUT BEGINS HERE */
+   /* else*/
     else if (temp->m_type == INT_ARRAY)
     {
       for (int i=0; i < temp->m_size; i++)
       {
-        os << temp->get_type() << " " << 
+        os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << " = " <<
          *(int *)(temp->m_value) << endl;
       }
     }
-    else if (temp->m_type == DOUBLE_ARRAY)
+/*    else if (temp->m_type == DOUBLE_ARRAY)
     {
       for (int i=0; i < temp->m_size; i++)
       {
-        os << temp->get_type() << " " << 
+        os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << " = " <<
          *(double *)(temp->m_value) << endl;
       }
@@ -145,11 +140,11 @@ void Symbol_table::print(ostream &os)
     {
       for (int i=0; i < temp->m_size; i++)
       {
-        os << temp->get_type() << " " << 
+        os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << " = " <<
          *(string *)(temp->m_value) << endl;
       }
-    }
+    }*/
     else
     {
       os << temp->get_type() << " " <<

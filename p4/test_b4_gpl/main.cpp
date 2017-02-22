@@ -27,7 +27,7 @@ void get_int()
 
   cout << "_-----------------------------------------------" << endl;
 }
-
+/*
 void get_int2()
 {
   std::string name = "c";
@@ -107,17 +107,16 @@ void get_string()
   table->lookup(name);
 
   cout << "_-----------------------------------------------" << endl;
-}
+}*/
 
 void get_array_int()
 {
   std::string name = "nums";
   Gpl_type type = INT_ARRAY;
-  int size = 4;
-  int value = 42;
+  int value = 4;
 
   Symbol *test;
-  test  = new Symbol(name, type, value, size);
+  test  = new Symbol(name, type, value);
   cout << "This is the symbol #5 (INT_ARRAY) we are testing: " << endl;
   test->print();
   cout << "---------------------------------------------------" << endl;
@@ -135,7 +134,7 @@ void get_array_int()
   cout << "_-----------------------------------------------" << endl;
 
 }
-
+/*
 void get_array_double()
 {
   std::string name = "nums_doubles";
@@ -165,9 +164,9 @@ void get_array_double()
 
 void get_array_string()
 {
-  std::string name = "nums_STRING";
+  std::string name = "nums_strings";
   Gpl_type type = STRING_ARRAY;
-  int size = 4;
+  int size = 1;
   string value ="HELLO WORLD";
 
   Symbol *test;
@@ -189,17 +188,17 @@ void get_array_string()
   cout << "_-----------------------------------------------" << endl;
  
 }
-
+*/
 int main()
 {
   get_int();
-  get_double();
-  get_int2();
-  get_string();
+//  get_double();
+//  get_int2();
+//  get_string();
   
   // Testing the arrays now:
   get_array_int();
-  get_array_double();
-  get_array_string();
+//  get_array_double();
+//  get_array_string();
 }
 
