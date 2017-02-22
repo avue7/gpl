@@ -7,7 +7,7 @@ void get_int()
 {
   std::string name = "a";
   Gpl_type type = INT;
-  int value = 42;
+  void* value = (void*) new int(42);
 
   Symbol *test;
   test  = new Symbol(name, type, value);
@@ -27,12 +27,12 @@ void get_int()
 
   cout << "_-----------------------------------------------" << endl;
 }
-/*
+
 void get_int2()
 {
   std::string name = "c";
   Gpl_type type = INT;
-  int value = 42;
+  void *value = (void*) new int(42);
 
   Symbol *test;
   test  = new Symbol(name, type, value);
@@ -58,7 +58,7 @@ void get_double()
 {
   std::string name = "b";
   Gpl_type type = DOUBLE;
-  double value = 3.14159;
+  void* value = (void*) new double(3.14159);
 
   Symbol *test2;
   test2  = new Symbol(name, type, value);
@@ -88,7 +88,7 @@ void get_string()
 {
   std::string name = "d";
   Gpl_type type = STRING;
-  string value = "HELLO WORLD";
+  void *value = (void*) new string("HELLO WORLD");
 
   Symbol *test3;
   test3  = new Symbol(name, type, value);
@@ -107,13 +107,13 @@ void get_string()
   table->lookup(name);
 
   cout << "_-----------------------------------------------" << endl;
-}*/
+}
 
 void get_array_int()
 {
   std::string name = "nums";
   Gpl_type type = INT_ARRAY;
-  int value = 4;
+  void* value = (void*) new int(4);
 
   Symbol *test;
   test  = new Symbol(name, type, value);
@@ -134,16 +134,15 @@ void get_array_int()
   cout << "_-----------------------------------------------" << endl;
 
 }
-/*
+
 void get_array_double()
 {
   std::string name = "nums_doubles";
   Gpl_type type = DOUBLE_ARRAY;
-  int size = 4;
-  double value = 3.14159;
+  void* value = (void*) new int(4);
 
   Symbol *test;
-  test  = new Symbol(name, type, value, size);
+  test  = new Symbol(name, type, value);
   cout << "This is the symbol #6 (DOUBLE_ARRAY) we are testing: " << endl;
   test->print();
   cout << "---------------------------------------------------" << endl;
@@ -166,11 +165,10 @@ void get_array_string()
 {
   std::string name = "nums_strings";
   Gpl_type type = STRING_ARRAY;
-  int size = 1;
-  string value ="HELLO WORLD";
+  void *value = (void*) new int(4);
 
   Symbol *test;
-  test  = new Symbol(name, type, value, size);
+  test  = new Symbol(name, type, value);
   cout << "This is the symbol #7 (STRING_ARRAY) we are testing: " << endl;
   test->print();
   cout << "---------------------------------------------------" << endl;
@@ -188,17 +186,17 @@ void get_array_string()
   cout << "_-----------------------------------------------" << endl;
  
 }
-*/
+
 int main()
 {
   get_int();
-//  get_double();
-//  get_int2();
-//  get_string();
+  get_double();
+  get_int2();
+  get_string();
   
   // Testing the arrays now:
   get_array_int();
-//  get_array_double();
-//  get_array_string();
+  get_array_double();
+  get_array_string();
 }
 

@@ -23,7 +23,7 @@ class Symbol
     string get_base_type();
     bool is_array(); 
     // Make this constructor first and test it. 
-    Symbol(string name, Gpl_type type, int value);
+    Symbol(string name, Gpl_type type, void* value);
 //    Symbol(string name, Gpl_type type, double value);
 //    Symbol(string name, Gpl_type type, string value);
 //    Symbol(string name, Gpl_type type, int value, int size);
