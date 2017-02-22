@@ -7,6 +7,8 @@ extern int line_count;            // current line in the input; from record.l
 
 #include "error.h"      // class for printing errors (used by gpl)
 #include "parser.h"
+#include "symbol_table.h"
+#include "gpl_type.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -16,10 +18,11 @@ using namespace std;
 
 %union {
  int            union_int;
- double      union_double;
- int                union_line_number;
+ double         union_double;
+ int            union_line_number;
  std::string    *union_string;  // MUST be a pointer to a string (this sucks!)
  std::string    *union_string_constant;
+ int            union_gpl_type;
 }
 
 // if a token has a type associated with it, put that type (as named in the
@@ -142,6 +145,7 @@ using namespace std;
 // Just like tokens, grammar symbols can be associated with a type
 // This allows values to be passed up (and down) the parse tree
 %type <union_int> declaration_list empty
+%type <union_gpl_type> simple_type
 
 //////////////////////////////////// Precedence = low to high ////////////////////////////////////////////////////
 %nonassoc IF_NO_ELSE
@@ -178,14 +182,52 @@ declaration:
 //---------------------------------------------------------------------
 variable_declaration:
     simple_type  T_ID  optional_initializer
-    | simple_type  T_ID  T_LBRACKET expression T_RBRACKET
+    {
+      Symbol *symbol;
+      if ($1 == INT)
+      {
+        symbol = new Symbol(*$2, INT, new int(42));
+      }
+      else if ($1 == DOUBLE)
+      { 
+        symbol = new Symbol(*$2, DOUBLE, new double(3.14159));
+      }
+      else
+      {
+        symbol = new Symbol(*$2, STRING, new string("Hello world"));
+      }
+
+      Symbol_table::instance()->add_symbol(symbol);
+    }
+    | simple_type  T_ID  T_LBRACKET T_INT_CONSTANT T_RBRACKET
+    {
+      Symbol *symbol;
+      if ($1 == INT)
+      {
+        symbol = new Symbol(*$2, INT_ARRAY, new int($4));
+      }      
+      else if ($1 == DOUBLE)
+      {       
+        symbol = new Symbol(*$2, DOUBLE_ARRAY, new int($4));
+      }
+      else
+      { 
+        symbol = new Symbol(*$2, STRING_ARRAY, new int($4));
+      }
+    
+      Symbol_table::instance()->add_symbol(symbol);
+    }
     ;
+
 
 //---------------------------------------------------------------------
 simple_type:
     T_INT
+    { $$ = INT;}
     | T_DOUBLE
+    { $$ = DOUBLE; }
     | T_STRING
+    { $$ =  STRING; }
     ;
 
 //---------------------------------------------------------------------

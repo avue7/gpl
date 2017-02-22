@@ -34,5 +34,6 @@
 
 // put new included ABOVE this line
 #include "y.tab.h"
+#include "gpl_type.h"
 #include "symbol_table.h"
 #endif // #ifndef PARSER_H
