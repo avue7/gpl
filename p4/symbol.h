@@ -22,9 +22,17 @@ class Symbol
     string get_type();
     string get_base_type();
     bool is_array(); 
-    // Make this constructor first and test it. 
-    Symbol(string name, Gpl_type type, void *value);
+
+    Symbol(string name, Gpl_type type, int value);
+    Symbol(string name, Gpl_type type, double value);
+    Symbol(string name, Gpl_type type, string value);
     void print();
+
+    /* If you want to use the below constructor instead
+       then you must make the values point to a void. 
+       From gpl.y grammer rules, you can dynamically allocate
+       memory for each value type. */
+    // Symbol(string name, Gpl_type type, void *value);
 };
 
 #endif

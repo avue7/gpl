@@ -8,7 +8,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
-
+#include "error.h"
 using namespace std;
 
 class Symbol_table

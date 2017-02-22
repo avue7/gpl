@@ -3,7 +3,7 @@ SIZE=17
 CXXFLAGS = -g -std=c++11 -Wall -W -Werror -pedantic
 LDFLAGS = 
 
-main: main.o symbol.o  symbol_table.o gpl_type.o gpl_assert.o
+main: main.o symbol.o  symbol_table.o gpl_type.o gpl_assert.o error.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
 main.o: main.cpp
@@ -20,7 +20,8 @@ gpl_type.o: gpl_type.cpp gpl_type.h
 
 gpl_assert.o: gpl_assert.cpp gpl_assert.h
 	$(CXX) $(CXXFLAGS) -c $<
-
+error.o: error.cpp error.h error.d
+	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
 	rm -f *.o

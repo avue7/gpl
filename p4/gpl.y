@@ -147,7 +147,7 @@ using namespace std;
 %type <union_int> declaration_list empty
 %type <union_gpl_type> simple_type
 
-//////////////////////////////////// Precedence = low to high ////////////////////////////////////////////////////
+///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
 %left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS T_EQUAL T_NOT_EQUAL
@@ -157,7 +157,7 @@ using namespace std;
 %nonassoc UNARY_OPS
 %left T_PLUS T_MINUS 
 %left T_MULTIPLY T_DIVIDE
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 
 %% // indicates the start of the rules
 
@@ -186,36 +186,36 @@ variable_declaration:
       Symbol *symbol;
       if ($1 == INT)
       {
-        symbol = new Symbol(*$2, INT, new int(42));
+        symbol = new Symbol(*$2, INT, 42);
       }
       else if ($1 == DOUBLE)
       { 
-        symbol = new Symbol(*$2, DOUBLE, new double(3.14159));
+        symbol = new Symbol(*$2, DOUBLE, 3.14159);
       }
       else
       {
-        symbol = new Symbol(*$2, STRING, new string("Hello world"));
+        symbol = new Symbol(*$2, STRING, "Hello world");
       }
 
-      Symbol_table::instance()->add_symbol(symbol);
+      Symbol_table::instance()->insert_symbol(symbol);
     }
     | simple_type  T_ID  T_LBRACKET T_INT_CONSTANT T_RBRACKET
     {
       Symbol *symbol;
       if ($1 == INT)
       {
-        symbol = new Symbol(*$2, INT_ARRAY, new int($4));
+        symbol = new Symbol(*$2, INT_ARRAY, $4);
       }      
       else if ($1 == DOUBLE)
       {       
-        symbol = new Symbol(*$2, DOUBLE_ARRAY, new int($4));
+        symbol = new Symbol(*$2, DOUBLE_ARRAY, $4);
       }
       else
       { 
-        symbol = new Symbol(*$2, STRING_ARRAY, new int($4));
+        symbol = new Symbol(*$2, STRING_ARRAY, $4);
       }
     
-      Symbol_table::instance()->add_symbol(symbol);
+      Symbol_table::instance()->insert_symbol(symbol);
     }
     ;
 

@@ -17,7 +17,7 @@ class Symbol
     string m_name;
     Gpl_type m_type;
     void* m_value;
-    int m_size;
+    string m_size;
     string get_name(); 
     string get_type();
     string get_base_type();

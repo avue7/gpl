@@ -49,7 +49,12 @@ void Symbol_table::add_symbol(Symbol *symbol)
     if (symbol->is_array())
     {
       if (symbol->m_type == INT_ARRAY)
-      {;
+      {
+        if (symbol->m_size == 0)
+        {
+          symbol->m_size == 0;
+          Error::error(Error::INVALID_ARRAY_SIZE, symbol->m_name);
+        }
         int *temp_array = new int[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
@@ -78,6 +83,10 @@ void Symbol_table::add_symbol(Symbol *symbol)
     }
     m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol));
   } 
+  else
+  {
+    Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, symbol->m_name);
+  }
      
 }
 

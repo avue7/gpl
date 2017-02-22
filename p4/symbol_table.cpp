@@ -35,10 +35,10 @@ bool Symbol_table::compare_symbols (Symbol *a, Symbol *b)
 
 
 /********************************************************
- * NEED THE ADD FUNCTION TO ADD SYMBOLS TO SYMBOL TABLE *
+ * NEED THE INSERT FUNCTION TO ADD SYMBOLS TO SYMBOL TABLE *
 ********************************************************/
 
-void Symbol_table::add_symbol(Symbol *symbol)
+void Symbol_table::insert_symbol(Symbol *symbol)
 {
   /* Use find() to see if we can find the symbol
      name to the end of the map. If it reaches end
@@ -47,8 +47,13 @@ void Symbol_table::add_symbol(Symbol *symbol)
   {
     if (symbol->is_array())
     {
-      if (symbol->m_type == INT_ARRAY)
+      if (symbol->m_size == 0)
       {
+        string str = "0"; 
+        Error::error(Error::INVALID_ARRAY_SIZE, symbol->m_name, str); 
+      }
+      if (symbol->m_type == INT_ARRAY)
+      { 
         int *temp_array = new int[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
@@ -95,18 +100,19 @@ void Symbol_table::print(ostream &os)
 
   // Iterate thru map and add to sort_vector
   for (unordered_map<string, Symbol*>::iterator it = m_map.begin();
-       it != m_map.end(); it++)
+                                          it != m_map.end(); it++)
   {  
     Symbol *symbol = it->second;
     
     sort_vector.push_back(symbol);
   }
+
   // Sort the vector aphabetically with -> name.
   sort(sort_vector.begin(), sort_vector.end(), compare_symbols);
   
   for (vector<Symbol*>::iterator it=sort_vector.begin();
-    it < sort_vector.end(); it++) {
-
+                           it < sort_vector.end(); it++) 
+  {
     Symbol *temp = *it; // Need to set new temp object to work
     if (temp->m_type == INT)
     {
@@ -146,7 +152,7 @@ void Symbol_table::print(ostream &os)
         << *(string *)(temp->m_value) << "\"" << endl;
       }
     }
-    else
+    else  // Print non-array strings here
     {
       os << temp->get_type() << " " <<
       temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
