@@ -77,6 +77,10 @@ void Symbol_table::add_symbol(Symbol *symbol)
     }
     m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol)); 
   }
+  else
+  {
+    Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, symbol->m_name);
+  }
 }
 
 
