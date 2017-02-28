@@ -198,11 +198,11 @@ variable_declaration:
       }
       else if ($1 == DOUBLE)
       { 
-        symbol = new Symbol(*$2, DOUBLE, 3.14159);
+        symbol = new Symbol(*$2, DOUBLE, 0.0);
       }
       else
       {
-        symbol = new Symbol(*$2, STRING, "Hello world");
+        symbol = new Symbol(*$2, STRING, "");
       }
 
       Symbol_table::instance()->insert_symbol(symbol);
@@ -210,6 +210,7 @@ variable_declaration:
     | simple_type  T_ID  T_LBRACKET expression T_RBRACKET
     {
       Symbol *symbol;
+      int array_size = $4->eval_int();
       if ($1 == INT)
       {
         symbol = new Symbol(*$2, INT_ARRAY, $4);
@@ -445,9 +446,45 @@ expression:
     | expression T_EQUAL expression
     | expression T_NOT_EQUAL expression
     | expression T_PLUS expression 
+    {
+      $$ = new Expression($1, PLUS, $3);
+    }
     | expression T_MINUS expression
+    {
+      if ($1->get_type() == STRING && $3->get_type() == STRING)
+      {
+        print("ERROR");
+        $$ = new Expression(0);
+      }
+      else
+      {
+        $$ = new Expression($1, T_MINUS, $3);
+      }
+    }
     | expression T_MULTIPLY expression
+    {
+      if ($1->get_type() == STRING && $3->get_type() == STRING)
+      {
+        print("ERROR");
+        $$ = new Expression(0);
+      }
+      else 
+      {
+        $$ = new Expression($1, T_MULTIPLY, $3);
+      }
+    }
     | expression T_DIVIDE expression
+    {
+      if ($1->get_type() == STRING && $3->get_type() == STRING)
+      {
+        print("ERROR");
+        $$ = new Expression(0);
+      }
+      else
+      {
+        $$ = new Expression($1, T_DIVIDE, $3);
+      }
+    }
     | expression T_MOD expression
     | T_MINUS  expression
     | T_NOT  expression
