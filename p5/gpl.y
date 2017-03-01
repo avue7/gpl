@@ -10,6 +10,7 @@ extern int line_count;            // current line in the input; from record.l
 #include "symbol_table.h"
 #include "gpl_type.h"
 #include "expression.h"
+#include "variable.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -25,7 +26,7 @@ using namespace std;
  std::string    *union_string_constant;
  Gpl_type       union_gpl_type;
  Expression     *union_expression;
- 
+ Variable 	*union_variable; 
 }
 
 // if a token has a type associated with it, put that type (as named in the
@@ -149,7 +150,7 @@ using namespace std;
 // This allows values to be passed up (and down) the parse tree
 %type <union_gpl_type> simple_type
 %type <union_expression> expression
-%type <union_expression> variable
+%type <union_variable> variable
 %type <union_expression> primary_expression
 %type <union_expression> optional_initializer
 
@@ -191,8 +192,15 @@ variable_declaration:
     {
       Symbol *symbol;
       if ($1 == INT)
-      {
-        symbol = new Symbol(*$2, INT, $3->eval_int());
+      { 
+        if ($3->m_var)
+        {
+          symbol = new Symbol(*$2, INT, $3->m_var->get_int_value());
+        }
+        else
+        {
+          symbol = new Symbol(*$2, INT, $3->eval_int());
+        }
       }
       else if ($1 == DOUBLE)
       { 
@@ -426,7 +434,34 @@ assign_statement:
 //---------------------------------------------------------------------
 variable:
     T_ID
+    {
+      if (Symbol_table::instance()->lookup(*$1))
+      {
+        $$ = new Variable(*$1);
+      }
+      else
+      {
+        Error::error(Error::UNDECLARED_VARIABLE, *$1);
+        $$ = new Variable(0);
+      }
+    }
     | T_ID T_LBRACKET expression T_RBRACKET
+    {
+      Expression *expr = $3;
+      if (expr->m_type == DOUBLE)
+      {
+        Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
+        $$ = new Variable(0);
+      }
+      else if (expr->m_type == STRING)
+      {
+        Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
+      }
+      else
+      {
+        cout << "I AM NOT HANDLING (A+B) as EXP YET!!" << endl;
+      }  
+    }
     | T_ID T_PERIOD T_ID
     | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
     ;

@@ -35,6 +35,7 @@
 #include "symbol.h"
 #include "symbol_table.h"
 #include "error.h"
+#include "variable.h"
 #include "gpl_type.h"
 // put new included ABOVE this line
 #include "y.tab.h"

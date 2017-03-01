@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "gpl_type.h"
+using namespace std;
 
 class Symbol; // Class forwarding
 class Expression; // Class forwarding
@@ -15,8 +16,10 @@ class Variable
     Gpl_type m_type;
     Expression *m_expr; // Pointer to class
     Symbol *m_symbol;   // Pointer to class
-    
+    string m_var_type;    
+
     // Member functions
+    string get_type();
     int get_int_value();
     double get_double_value();
     string get_string_value();

@@ -23,7 +23,6 @@ Symbol *Symbol_table::lookup(string name)
   }
   else
   {
-    cout << got->first << " is located at " << got->second << endl;
     return got->second;
   }
 }
