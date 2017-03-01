@@ -31,9 +31,11 @@
 #include <iostream>
 #include <stdio.h> 
 #include <ctype.h>
-
+#include "expression.h"
+#include "symbol.h"
+#include "symbol_table.h"
+#include "error.h"
+#include "gpl_type.h"
 // put new included ABOVE this line
 #include "y.tab.h"
-#include "gpl_type.h"
-#include "symbol_table.h"
 #endif // #ifndef PARSER_H

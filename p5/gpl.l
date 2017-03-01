@@ -2,7 +2,9 @@
 
 #include "error.h"    // gpl file, using now to get use to it
 #include "parser.h"   // gpl file, using now to get use to it
-
+#include "expression.h"
+#include "gpl_type.h"
+#include "symbol_table.h"
 #include <string>
 #include <ctype.h>
 #include <iostream>
