@@ -97,12 +97,26 @@ int Expression::eval_int()
 {
 
   // Make sure type is INT or DOUBLE
-  assert(m_type == INT || m_type == DOUBLE);
+//  assert(m_type == INT || m_type == DOUBLE);
   if (m_node == CONSTANT)
   {
     return *(int*) m_value;
-  } 
-
+  }
+  if (m_node == VARIABLE)
+  {
+    return m_var->get_int_value();
+  }
+  if (m_node == BINARY_OPERATOR)
+  {   
+      if (m_oper == MULTIPLY)
+      {
+        return m_lhs->eval_int() * m_rhs->eval_int();
+      }
+  }
+ // if (m_node == VARIABLE)
+ // {
+ //   cout << "Printing from var" << endl;
+ // }
   /* BINARY_LOGICAL_OPERATORS EVALUATION */  
 /*  if (m_oper == LESS_THAN)
   {
@@ -266,6 +280,17 @@ double Expression::eval_double()
   {
     return *(double*) m_value;
   }
+  if (m_node == VARIABLE)
+  {
+    return m_var->get_double_value();
+  }
+  if (m_node == BINARY_OPERATOR)
+  {   
+      if (m_oper == MULTIPLY)
+      {
+        return m_lhs->eval_int();
+      }
+  }
 /*  if (m_type == INT)
   {
     int r = eval_int();
@@ -280,6 +305,10 @@ string Expression::eval_string()
   if (m_node == CONSTANT)
   {
     return *(string*) m_value;
+  }
+  if (m_node == VARIABLE)
+  {
+    return m_var->get_string_value();
   }
 /*  if (m_type == INT)
   {

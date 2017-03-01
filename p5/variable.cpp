@@ -9,7 +9,7 @@ Variable::Variable(string symbol_name)
   // store it in m_symbol
   m_symbol = Symbol_table::instance()->lookup(symbol_name);
   m_type = m_symbol->m_type;
-  m_expr = new Expression(0, INT, NULL, NULL);
+  m_expr = NULL;
   m_var_type = "CONSTANT";
 }
 
@@ -23,15 +23,28 @@ Variable::Variable(string symbol_name, Expression *expression)
 
 int Variable::get_int_value()
 {
-  return *(int*)m_symbol->m_value;
+  void *temp;
+  int value;
+  temp = m_symbol->m_value;
+  value = *(int*)temp;
+  return value;
+
 }
 
 double Variable::get_double_value()
 {
-  return *(double*)m_symbol->m_value;
+  void *temp;
+  double value;
+  temp = m_symbol->m_value;
+  value = *(double*)temp;
+  return value;
 }
 
 string Variable::get_string_value()
 {
-  return *(string*)m_symbol->m_value;
+  void *temp;
+  string value;
+  temp = m_symbol->m_value;
+  value = *(string*)temp;
+  return value;
 }

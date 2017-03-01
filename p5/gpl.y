@@ -191,16 +191,10 @@ variable_declaration:
     simple_type  T_ID  optional_initializer
     {
       Symbol *symbol;
+         
       if ($1 == INT)
       { 
-        if ($3->m_var)
-        {
-          symbol = new Symbol(*$2, INT, $3->m_var->get_int_value());
-        }
-        else
-        {
-          symbol = new Symbol(*$2, INT, $3->eval_int());
-        }
+        symbol = new Symbol(*$2, INT, $3->eval_int());
       }
       else if ($1 == DOUBLE)
       { 
@@ -512,7 +506,21 @@ expression:
     }
     | expression T_MULTIPLY expression
     {
-
+      if ($1->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
+        $1 = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($3->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
+        $3 = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($1->m_type == DOUBLE || $1->m_type == DOUBLE)
+      {
+        $$ = new Expression(MULTIPLY, DOUBLE, $1, $3);
+      }
+      $$ = new Expression(MULTIPLY, INT, $1, $3);
     }
     | expression T_DIVIDE expression
     {
@@ -536,6 +544,7 @@ primary_expression:
     T_LPAREN  expression T_RPAREN
     { $$ = $2; }
     | variable
+    { $$ = new Expression($1); }
     | T_INT_CONSTANT
     { $$ = new Expression($1, INT, NULL, NULL); }
     | T_TRUE
