@@ -108,10 +108,20 @@ int Expression::eval_int()
   }
   if (m_node == BINARY_OPERATOR)
   {   
-      if (m_oper == MULTIPLY)
-      {
+    switch(m_oper)
+    {
+      case MULTIPLY: 
         return m_lhs->eval_int() * m_rhs->eval_int();
-      }
+      case PLUS:
+        return m_lhs->eval_int() + m_rhs->eval_int();
+      case MINUS:
+        return m_lhs->eval_int() - m_rhs->eval_int();
+      case DIVIDE:
+        return m_lhs->eval_int() / m_rhs->eval_int();
+      case MOD:
+        return m_lhs->eval_int() % m_rhs->eval_int();
+      default: cerr << "Error: eval_int() failed!" << endl;
+    }
   }
  // if (m_node == VARIABLE)
  // {
@@ -285,11 +295,20 @@ double Expression::eval_double()
     return m_var->get_double_value();
   }
   if (m_node == BINARY_OPERATOR)
-  {   
-      if (m_oper == MULTIPLY)
-      {
-        return m_lhs->eval_int();
-      }
+  {  
+    switch(m_oper)
+    {
+      case MULTIPLY: 
+        return m_lhs->eval_double() * m_rhs->eval_double();
+      case PLUS:
+        return m_lhs->eval_double() + m_rhs->eval_double();
+      case MINUS:
+        return m_lhs->eval_double() - m_rhs->eval_double();
+      case DIVIDE:
+        return m_lhs->eval_double() / m_rhs->eval_double();
+      default:
+        cerr << "Error: eval_double in m_oper failed!" << endl;
+    }
   }
 /*  if (m_type == INT)
   {
@@ -310,20 +329,30 @@ string Expression::eval_string()
   {
     return m_var->get_string_value();
   }
-/*  if (m_type == INT)
+  if (m_node == BINARY_OPERATOR)
   {
-    int r = eval_int();
-    stringstream ss; 
-    ss << r;
-    return r;
+    if (m_oper == PLUS)
+    {  
+      string value;
+      if (m_rhs->m_type == INT)
+      {
+        stringstream ss;
+        ss << m_rhs->eval_int(); 
+//        ss >> value;
+        m_rhs->m_type = STRING;
+        if (m_rhs->m_type == STRING)
+        {
+          value = "YOU HAVE CHANGED THE TYPE TO STRING";
+        }
+        else
+        {
+          value = "NO, the type is still in int";
+        }
+          
+      }
+      return m_lhs->eval_string() + value;
+          
+    }
   }
-  else if (m_type == DOUBLE)
-  {
-    double s = eval_double();
-    stringstream ss;
-    ss << s;
-    return s;
-  }
-*/
 }
 
