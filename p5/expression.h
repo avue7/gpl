@@ -11,6 +11,7 @@
 using namespace std;
 
 class Variable; // Forwarding class to avoid inf. loop
+class Constant;
 
 class Expression
 {
@@ -20,8 +21,8 @@ class Expression
     Expression *m_rhs;
     Operator_type m_oper;
     Gpl_type m_type;
-    void *m_value;
     Variable *m_var;
+    Constant *m_constant;
 
     // Member functions: 
     int eval_int();         // To return evaluated ints
@@ -33,7 +34,7 @@ class Expression
     // Constructor for constant
     Expression (int value, Gpl_type gpl_type, Expression *lhs, Expression *rhs);
     Expression (double value, Gpl_type gpl_type, Expression *lhs, Expression *rhs);
-    Expression (string value, Gpl_type gpl_type, Expression *lhs, Expression *rhs);
+    Expression (string *value, Gpl_type gpl_type, Expression *lhs, Expression *rhs);
     // Constructor for variable
     Expression (Variable *variable); 
    

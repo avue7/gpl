@@ -1,6 +1,6 @@
 #include "expression.h"
 #include "variable.h"
-
+#include "constant.h"
 // unary and binary operator
 Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
@@ -49,29 +49,29 @@ Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expressio
 // Constructor for constants
 Expression::Expression(int value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_value = (void*) new int(value);
   m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
+  m_constant = new Constant(value);
 }
 
 Expression::Expression(double value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_value = (void*) new double(value);
   m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
+  m_constant = new Constant(value);
 }
 
-Expression::Expression(string value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
+Expression::Expression(string *value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_value = (void*) new string(value);
   m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
+  m_constant = new Constant(value);
 }
 
 // Constructor for variable
@@ -100,7 +100,7 @@ int Expression::eval_int()
 //  assert(m_type == INT || m_type == DOUBLE);
   if (m_node == CONSTANT)
   {
-    return *(int*) m_value;
+    return m_constant->get_int_value();
   }
   if (m_node == VARIABLE)
   {
@@ -286,12 +286,30 @@ int Expression::eval_int()
 
 double Expression::eval_double()
 {  
+  stringstream ss;
+  double value;
   if (m_node == CONSTANT)
   {
-    return *(double*) m_value;
+    if (m_constant->get_type() == INT)
+    {
+      int value;
+      double new_value;
+      value = m_constant->get_int_value();
+      new_value = (double) value;
+      return new_value;
+    }
+    return m_constant->get_double_value();
   }
   if (m_node == VARIABLE)
   {
+    if (m_var->m_type == INT)
+    {
+      int value;
+      double new_value;
+      value = m_var->get_int_value();
+      new_value = (double) value;
+      return new_value;
+    }
     return m_var->get_double_value();
   }
   if (m_node == BINARY_OPERATOR)
@@ -310,22 +328,20 @@ double Expression::eval_double()
         cerr << "Error: eval_double in m_oper failed!" << endl;
     }
   }
-/*  if (m_type == INT)
-  {
-    int r = eval_int();
-    double s = (double) r;
-    return s;}
-*/
 }
 
+// Recursion function for transversing the tree and finding its string value
 string Expression::eval_string()
 {
   stringstream ss;
   string value;
+  // This is one of our base case for recursion to stop.
   if (m_node == CONSTANT)
-  {
-    return *(string*) m_value;
+  {       
+    return m_constant->get_string_value();
   }
+  // The other base case for recursion to stop.
+  /* NOTE: CASTING HAPPENS HERE */ 
   if (m_node == VARIABLE)
   {
     if (m_var->m_type == INT)
@@ -334,18 +350,56 @@ string Expression::eval_string()
       ss >> value;
       return value;      
     }
-    if (m_var->m_type == DOUBLE)
+    else if (m_var->m_type == DOUBLE)
     { 
       ss << m_var->get_double_value();
       ss >> value;
       return value;
     }
-    return m_var->get_string_value();
+    else
+    {
+      return m_var->get_string_value();
+    }
   }
   if (m_node == BINARY_OPERATOR)
   {
     if (m_oper == PLUS)
-    {  
+    { 
+      // If either side is a double FOR BOTH VARIABLE AND CONSTANT LEAF
+      // with a simple type (RETURN TYPE) of string.
+      if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
+      {
+         double left;
+         double right;
+         double result;
+         string to_string;
+         
+         left = m_lhs->eval_double();
+         right = m_rhs->eval_double();
+         result = left + right;
+         ss << result;
+         ss >> to_string;     
+         return to_string;
+      }
+      // If leaves of both types are an int on either side, just use 
+      // eval_double for simplicity.
+      if (m_lhs->m_type == INT || m_rhs->m_type == INT)
+      {
+         double left;
+         double right;
+         double result;
+         string to_string;
+         
+         left = m_lhs->eval_double();
+         right = m_rhs->eval_double();
+         result = left + right;
+         ss << result;
+         ss >> to_string;     
+         return to_string;
+      }
+      // Recursively call the left side of the tree
+      // then recursively call the right side and add the 
+      // two values together
       return m_lhs->eval_string() + m_rhs->eval_string();   
     }
   }

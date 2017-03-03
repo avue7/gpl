@@ -157,13 +157,13 @@ using namespace std;
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
-%left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS T_EQUAL T_NOT_EQUAL
-%left T_MOD
 %nonassoc T_NOT T_OR
 %nonassoc T_AND
+%left T_EQUAL T_NOT_EQUAL
+%left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS
+%left T_PLUS T_MINUS
+%left T_MULTIPLY T_DIVIDE T_MOD
 %nonassoc UNARY_OPS
-%left T_PLUS T_MINUS 
-%left T_MULTIPLY T_DIVIDE
 ///////////////////////////////////////////////////////////////////////
 
 %% // indicates the start of the rules
@@ -554,7 +554,7 @@ primary_expression:
     | T_DOUBLE_CONSTANT
     { $$ = new Expression($1, DOUBLE, NULL, NULL); }
     | T_STRING_CONSTANT
-    { $$ = new Expression(*$1, STRING, NULL, NULL); }
+    { $$ = new Expression($1, STRING, NULL, NULL); }
     ;
 
 //---------------------------------------------------------------------
