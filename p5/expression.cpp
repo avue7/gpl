@@ -4,7 +4,7 @@
 // unary and binary operator
 Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_type = gpl_type;
+  m_return_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_oper = operator_type;
@@ -49,7 +49,7 @@ Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expressio
 // Constructor for constants
 Expression::Expression(int value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_type = gpl_type;
+  m_return_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
@@ -58,7 +58,7 @@ Expression::Expression(int value, Gpl_type gpl_type, Expression *lhs, Expression
 
 Expression::Expression(double value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_type = gpl_type;
+  m_return_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
@@ -67,7 +67,7 @@ Expression::Expression(double value, Gpl_type gpl_type, Expression *lhs, Express
 
 Expression::Expression(string *value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_type = gpl_type;
+  m_return_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
@@ -77,8 +77,8 @@ Expression::Expression(string *value, Gpl_type gpl_type, Expression *lhs, Expres
 // Constructor for variable
 Expression::Expression(Variable *variable)
 {
-  m_type = variable->m_type;
-  m_var = variable;
+  m_var = variable;;
+  m_return_type = variable->m_type;
   m_node = VARIABLE;
 }
 /***************************************
@@ -293,10 +293,8 @@ double Expression::eval_double()
     if (m_constant->get_type() == INT)
     {
       int value;
-      double new_value;
       value = m_constant->get_int_value();
-      new_value = (double) value;
-      return new_value;
+      return (double)value;
     }
     return m_constant->get_double_value();
   }
@@ -305,12 +303,13 @@ double Expression::eval_double()
     if (m_var->m_type == INT)
     {
       int value;
-      double new_value;
       value = m_var->get_int_value();
-      new_value = (double) value;
-      return new_value;
+      return (double)value;
     }
-    return m_var->get_double_value();
+    else
+    {
+      return m_var->get_double_value();
+    }
   }
   if (m_node == BINARY_OPERATOR)
   {  
@@ -338,7 +337,22 @@ string Expression::eval_string()
   // This is one of our base case for recursion to stop.
   if (m_node == CONSTANT)
   {       
+    if (m_constant->get_type() == INT)
+    {
+      ss << m_constant->get_int_value();
+      ss >> value;
+      return value;      
+    }
+    else if (m_constant->get_type() == DOUBLE)
+    { 
+      ss << m_constant->get_double_value();
+      ss >> value;
+      return value;
+    }
+    else
+    {
     return m_constant->get_string_value();
+    }
   }
   // The other base case for recursion to stop.
   /* NOTE: CASTING HAPPENS HERE */ 
@@ -365,9 +379,26 @@ string Expression::eval_string()
   {
     if (m_oper == PLUS)
     { 
+      if (m_return_type == DOUBLE)
+      {
+        double value;
+        string s_value;
+        value = eval_double();
+        ss << value;
+        ss >> s_value;
+        return s_value;
+      }
+      else
+     {      
+        return m_lhs->eval_string() + m_rhs->eval_string();  
+      } 
+    }
+  }
+}
+/*
       // If either side is a double FOR BOTH VARIABLE AND CONSTANT LEAF
       // with a simple type (RETURN TYPE) of string.
-      if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
+      if (m_lhs->m_var->m_type == DOUBLE || m_rhs->m_var->m_type == DOUBLE)
       {
          double left;
          double right;
@@ -383,7 +414,7 @@ string Expression::eval_string()
       }
       // If leaves of both types are an int on either side, just use 
       // eval_double for simplicity.
-      if (m_lhs->m_type == INT || m_rhs->m_type == INT)
+      if (m_lhs->m_var->m_type == INT || m_rhs->m_var->m_type == INT)
       {
          double left;
          double right;
@@ -399,9 +430,4 @@ string Expression::eval_string()
       }
       // Recursively call the left side of the tree
       // then recursively call the right side and add the 
-      // two values together
-      return m_lhs->eval_string() + m_rhs->eval_string();   
-    }
-  }
-}
-
+      // two values together  */
