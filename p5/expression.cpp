@@ -314,44 +314,39 @@ double Expression::eval_double()
   {
     int r = eval_int();
     double s = (double) r;
-    return s;
-  }
+    return s;}
 */
 }
 
 string Expression::eval_string()
 {
+  stringstream ss;
+  string value;
   if (m_node == CONSTANT)
   {
     return *(string*) m_value;
   }
   if (m_node == VARIABLE)
   {
+    if (m_var->m_type == INT)
+    {
+      ss << m_var->get_int_value();
+      ss >> value;
+      return value;      
+    }
+    if (m_var->m_type == DOUBLE)
+    { 
+      ss << m_var->get_double_value();
+      ss >> value;
+      return value;
+    }
     return m_var->get_string_value();
   }
   if (m_node == BINARY_OPERATOR)
   {
     if (m_oper == PLUS)
     {  
-      string value;
-      if (m_rhs->m_type == INT)
-      {
-        stringstream ss;
-        ss << m_rhs->eval_int(); 
-//        ss >> value;
-        m_rhs->m_type = STRING;
-        if (m_rhs->m_type == STRING)
-        {
-          value = "YOU HAVE CHANGED THE TYPE TO STRING";
-        }
-        else
-        {
-          value = "NO, the type is still in int";
-        }
-          
-      }
-      return m_lhs->eval_string() + value;
-          
+      return m_lhs->eval_string() + m_rhs->eval_string();   
     }
   }
 }
