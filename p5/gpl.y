@@ -191,20 +191,37 @@ variable_declaration:
     simple_type  T_ID  optional_initializer
     {
       Symbol *symbol;
-         
-      if ($1 == INT)
-      { 
-        symbol = new Symbol(*$2, INT, $3->eval_int());
-      }
-      else if ($1 == DOUBLE)
-      { 
-        symbol = new Symbol(*$2, DOUBLE, $3->eval_double());
+      Expression *expr = $3;
+      if ($3)
+      {
+        if ($1 == INT)
+        { 
+          symbol = new Symbol(*$2, INT, $3->eval_int());
+        }
+        else if ($1 == DOUBLE)
+        { 
+          symbol = new Symbol(*$2, DOUBLE, $3->eval_double());
+        }
+        else if ($1 == STRING)
+        {
+          symbol = new Symbol(*$2, STRING, $3->eval_string());
+        }
       }
       else
       {
-        symbol = new Symbol(*$2, STRING, $3->eval_string());
+        switch($1)
+        {
+          case INT:
+            symbol = new Symbol(*$2, $1, 0);
+            break;
+          case DOUBLE:
+            symbol = new Symbol(*$2, $1, 0.0);
+            break;
+          case STRING:
+            symbol = new Symbol(*$2, $1, "");
+            break;
+        }
       }
-
       Symbol_table::instance()->insert_symbol(symbol);
     }
     | simple_type  T_ID  T_LBRACKET expression T_RBRACKET
@@ -442,12 +459,12 @@ variable:
     | T_ID T_LBRACKET expression T_RBRACKET
     {
       Expression *expr = $3;
-      if (expr->m_return_type == DOUBLE)
+      if (expr->m_type == DOUBLE)
       {
         Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
         $$ = new Variable(0);
       }
-      else if (expr->m_return_type == STRING)
+      else if (expr->m_type == STRING)
       {
         Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
       }
@@ -497,15 +514,15 @@ expression:
     }
     | expression T_PLUS expression 
     {
-      if ($1->m_return_type == STRING || $3->m_return_type == STRING)
+      if ($1->m_type == STRING || $3->m_type == STRING)
       {
         $$= new Expression(PLUS, STRING, $1, $3);
       }
-      else if ($1->m_return_type == DOUBLE || $3->m_return_type == DOUBLE)
+      else if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
       {
         $$= new Expression(PLUS, DOUBLE, $1, $3);
       }
-      else if ($1->m_return_type == INT && $1->m_return_type == INT)
+      else if ($1->m_type == INT && $1->m_type == INT)
       {
         $$= new Expression(PLUS, INT, $1, $3);
       }
@@ -516,21 +533,25 @@ expression:
     }
     | expression T_MULTIPLY expression
     {
-      if ($1->m_return_type == STRING)
+      if ($1->m_type == STRING)
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
         $1 = new Expression(0, INT, NULL, NULL);
       }
-      else if ($3->m_return_type == STRING)
+      else if ($3->m_type == STRING)
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
         $3 = new Expression(0, INT, NULL, NULL);
       }
-      else if ($1->m_return_type == DOUBLE || $1->m_return_type == DOUBLE)
+      else if ($1->m_type == DOUBLE || $1->m_type == DOUBLE)
       {
         $$ = new Expression(MULTIPLY, DOUBLE, $1, $3);
       }
-      $$ = new Expression(MULTIPLY, INT, $1, $3);
+      else if ($1->m_type == INT && $3->m_type == INT)
+      {
+        assert($1->m_type == INT || $3->m_type == INT);
+        $$ = new Expression(MULTIPLY, INT, $1, $3);
+      }
     }
     | expression T_DIVIDE expression
     {

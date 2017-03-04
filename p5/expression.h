@@ -20,7 +20,7 @@ class Expression
     Expression *m_lhs;
     Expression *m_rhs;
     Operator_type m_oper;
-    Gpl_type m_return_type;
+    Gpl_type m_type;
     Variable *m_var;
     Constant *m_constant;
 

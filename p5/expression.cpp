@@ -4,7 +4,7 @@
 // unary and binary operator
 Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_return_type = gpl_type;
+  m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_oper = operator_type;
@@ -49,7 +49,7 @@ Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expressio
 // Constructor for constants
 Expression::Expression(int value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_return_type = gpl_type;
+  m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
@@ -58,7 +58,7 @@ Expression::Expression(int value, Gpl_type gpl_type, Expression *lhs, Expression
 
 Expression::Expression(double value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_return_type = gpl_type;
+  m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
@@ -67,7 +67,7 @@ Expression::Expression(double value, Gpl_type gpl_type, Expression *lhs, Express
 
 Expression::Expression(string *value, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
-  m_return_type = gpl_type;
+  m_type = gpl_type;
   m_lhs = lhs;
   m_rhs = rhs;
   m_node = CONSTANT; // Set this node_type to CONSTANT
@@ -78,7 +78,7 @@ Expression::Expression(string *value, Gpl_type gpl_type, Expression *lhs, Expres
 Expression::Expression(Variable *variable)
 {
   m_var = variable;;
-  m_return_type = variable->m_type;
+  m_type = variable->m_type;
   m_node = VARIABLE;
 }
 /***************************************
@@ -95,18 +95,15 @@ Expression::Expression(Variable *variable)
 */
 int Expression::eval_int()
 {
-
-  // Make sure type is INT or DOUBLE
-//  assert(m_type == INT || m_type == DOUBLE);
   if (m_node == CONSTANT)
   {
     return m_constant->get_int_value();
   }
-  if (m_node == VARIABLE)
+  else if (m_node == VARIABLE)
   {
     return m_var->get_int_value();
   }
-  if (m_node == BINARY_OPERATOR)
+  else if (m_node == BINARY_OPERATOR)
   {   
     switch(m_oper)
     {
@@ -120,174 +117,29 @@ int Expression::eval_int()
         return m_lhs->eval_int() / m_rhs->eval_int();
       case MOD:
         return m_lhs->eval_int() % m_rhs->eval_int();
-      default: cerr << "Error: eval_int() failed!" << endl;
-    }
-  }
- // if (m_node == VARIABLE)
- // {
- //   cout << "Printing from var" << endl;
- // }
-  /* BINARY_LOGICAL_OPERATORS EVALUATION */  
-/*  if (m_oper == LESS_THAN)
-  {
-    assert(m_lhs && m_rhs); // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
-    {
-      return m_lhs->eval_string() < m_rhs->eval_string();
-    }
-    else if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE) 
-    {
-      return m_lhs->eval_double() < m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() < m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == LESS_EQUAL)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() <= m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() == DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() <= m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() <= m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == GREATER_THAN)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() > m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() == DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() > m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() > m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == GREATER_EQUAL)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() >= m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() == DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() >= m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() >= m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == NOT_EQUAL)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() !=  m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() != DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() != m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() != m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == EQUAL)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() == m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() == DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() == m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() == m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == AND)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() && m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() == DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() && m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() && m_rhs->eval_int();
-    }
-  }
-  else if (m_oper == OR)
-  {
-    assert(m_lhs && m_rhs) // Make sure both lhs and rhs exists
-    // Check left and right side 
-    if (m_lhs->get_type() == STRING || m_rhs->get_type() == STRING)
-    {
-      return m_lhs->eval_string() || m_rhs->eval_string();
-    }
-    else if (m_lhs->get_type() == DOUBLE || m_rhs->get_type() == DOUBLE) 
-    {
-      return m_lhs->eval_double() || m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() || m_rhs->eval_int();
-    }
-  }*/
-  /* BINARY_OPERATORS EVALUATION */
-/*  else if (m_oper == PLUS)
-  {
-    if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
-    {
-      return m_lhs->eval_double() + m_rhs->eval_double();
-    }
-    else
-    {
-      return m_lhs->eval_int() + m_rhs->eval_int();
+      default: 
+        cerr << "Error: eval_int() failed!" << endl;
+        return 1;
     }
   }
   else
   {
-    cout << "fucking shit what da hell" << endl;
+    cerr << "ERROR: TROUBLE IN EVAL_INT()" << endl;
+    return 1;
   }
-*/
 }
-
 
 double Expression::eval_double()
 {  
-  stringstream ss;
-  double value;
+  // Check for ints. Cast to double if there are any
+  if (m_type == INT)
+  {
+    int value;
+    double d_value;
+    value = eval_int();
+    d_value = (double) value;
+    return d_value;
+  }
   if (m_node == CONSTANT)
   {
     if (m_constant->get_type() == INT)
@@ -296,12 +148,16 @@ double Expression::eval_double()
       value = m_constant->get_int_value();
       return (double)value;
     }
-    return m_constant->get_double_value();
+    else
+    {
+      return m_constant->get_double_value();
+    }
   }
-  if (m_node == VARIABLE)
+  else if (m_node == VARIABLE)
   {
     if (m_var->m_type == INT)
     {
+      assert(m_var->m_type == INT);
       int value;
       value = m_var->get_int_value();
       return (double)value;
@@ -311,7 +167,7 @@ double Expression::eval_double()
       return m_var->get_double_value();
     }
   }
-  if (m_node == BINARY_OPERATOR)
+  else if (m_node == BINARY_OPERATOR)
   {  
     switch(m_oper)
     {
@@ -325,7 +181,13 @@ double Expression::eval_double()
         return m_lhs->eval_double() / m_rhs->eval_double();
       default:
         cerr << "Error: eval_double in m_oper failed!" << endl;
+        return 1;
     }
+  }
+  else
+  {
+    cerr << "ERROR: TROUBLE IN EVAL_DOUBLE()" << endl;
+    return 1;
   }
 }
 
@@ -334,6 +196,28 @@ string Expression::eval_string()
 {
   stringstream ss;
   string value;
+  // Casting and base case for for recursion in eval_string
+  // If double call eval_double() let it handle the doubles 
+  // return then cast to string
+  if (m_type == DOUBLE)
+  {
+    double value;
+    string s_value;
+    value = eval_double();
+    ss << value;
+    ss >> s_value;
+    return s_value;
+  }
+  // Check for ints as well.
+  if (m_type == INT)
+  {
+    int value;
+    string s_value;
+    value = eval_int();
+    ss << value;
+    ss >> s_value;
+    return s_value;
+  }     
   // This is one of our base case for recursion to stop.
   if (m_node == CONSTANT)
   {       
@@ -356,7 +240,7 @@ string Expression::eval_string()
   }
   // The other base case for recursion to stop.
   /* NOTE: CASTING HAPPENS HERE */ 
-  if (m_node == VARIABLE)
+  else if (m_node == VARIABLE)
   {
     if (m_var->m_type == INT)
     {
@@ -375,59 +259,15 @@ string Expression::eval_string()
       return m_var->get_string_value();
     }
   }
-  if (m_node == BINARY_OPERATOR)
+  else if (m_node == BINARY_OPERATOR)
   {
     if (m_oper == PLUS)
     { 
-      if (m_return_type == DOUBLE)
-      {
-        double value;
-        string s_value;
-        value = eval_double();
-        ss << value;
-        ss >> s_value;
-        return s_value;
-      }
-      else
-     {      
-        return m_lhs->eval_string() + m_rhs->eval_string();  
-      } 
+      return m_lhs->eval_string() + m_rhs->eval_string();   
     }
   }
+  else
+  {
+    return "ERROR: CANT DO ANY EVAL ON STR";
+  }
 }
-/*
-      // If either side is a double FOR BOTH VARIABLE AND CONSTANT LEAF
-      // with a simple type (RETURN TYPE) of string.
-      if (m_lhs->m_var->m_type == DOUBLE || m_rhs->m_var->m_type == DOUBLE)
-      {
-         double left;
-         double right;
-         double result;
-         string to_string;
-         
-         left = m_lhs->eval_double();
-         right = m_rhs->eval_double();
-         result = left + right;
-         ss << result;
-         ss >> to_string;     
-         return to_string;
-      }
-      // If leaves of both types are an int on either side, just use 
-      // eval_double for simplicity.
-      if (m_lhs->m_var->m_type == INT || m_rhs->m_var->m_type == INT)
-      {
-         double left;
-         double right;
-         double result;
-         string to_string;
-         
-         left = m_lhs->eval_double();
-         right = m_rhs->eval_double();
-         result = left + right;
-         ss << result;
-         ss >> to_string;     
-         return to_string;
-      }
-      // Recursively call the left side of the tree
-      // then recursively call the right side and add the 
-      // two values together  */
