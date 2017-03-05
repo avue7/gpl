@@ -1,4 +1,4 @@
- %{  // bison syntax to indicate the start of the header
+%{  // bison syntax to indicate the start of the header
     // the header is copied directly into y.tab.c (the generated parser)
 
 extern int yylex();               // this lexer function returns next token
@@ -26,7 +26,8 @@ using namespace std;
  std::string    *union_string_constant;
  Gpl_type       union_gpl_type;
  Expression     *union_expression;
- Variable 	*union_variable; 
+ Variable 	*union_variable;
+ Operator_type  union_oper_type;
 }
 
 // if a token has a type associated with it, put that type (as named in the
@@ -153,7 +154,7 @@ using namespace std;
 %type <union_variable> variable
 %type <union_expression> primary_expression
 %type <union_expression> optional_initializer
-
+%type <union_oper_type> math_operator
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -474,7 +475,11 @@ variable:
       }  
     }
     | T_ID T_PERIOD T_ID
+    {
+    }
     | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
+    {
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -562,12 +567,90 @@ expression:
     }
     | T_MINUS  expression %prec UNARY_OPS
     {
+      $$ = new Expression(UNARY_MINUS, $2->m_type, $2, NULL);
     }
     | T_NOT  expression  %prec UNARY_OPS
     {
+      if ($2->m_type == STRING)
+      {
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "!");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      $$ = new Expression(NOT, INT, $2, NULL);
     }
     | math_operator T_LPAREN expression T_RPAREN
+    {
+      //Cannot be a string at all
+      // assert($3->m_type != STRING);
+      if ($3->m_type == STRING)
+      {
+        switch ($1 == STRING)
+        {
+          case COS:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "cos");
+            break;
+          case SIN:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "sin");
+            break;
+          case TAN:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "tan");
+            break;
+          case ACOS:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "acos");
+            break;
+          case ASIN:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "asin");
+            break;
+          case ATAN:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "atan");
+            break;
+          case SQRT:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "sqrt");
+            break;
+          case ABS:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "abs");
+            break;
+          case FLOOR:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "floor");
+            break;
+          case RANDOM:
+            Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "random");
+            break;
+          default:
+            break;
+        }
+      } 
+      else
+      {
+        Expression *expr = $3;
+        /***** Check with tyson on this one. In test 13, floor return type
+         is a double, however, in gpl manual only a return type int is 
+         possible. ********/
+     /*   if ($1 == FLOOR || $1 == RANDOM)
+        {  
+          $$ = new Expression($1, INT, $3, NULL); 
+        }*/
+        if ($3)
+        { 
+          if ($1 == ASIN)
+          {
+            cerr << "ASIN CAN BE FOUND IN GPL.Y" << endl;
+          }
+          if ($3->m_node == 10)
+          {
+            cerr << "This is the value of variable: " << $3->m_var->get_double_value() << endl;
+          }
+          if ($3->m_node == 8)
+          {
+            cerr << "created one with m_LHS " << $3->m_constant->get_double_value() <<  endl;
+          }
+          $$ = new Expression($1, DOUBLE, expr, NULL);
+        }
+      }
+    }
     | variable geometric_operator variable
+    {
+    } 
     ;
 
 //---------------------------------------------------------------------
@@ -597,15 +680,25 @@ geometric_operator:
 //---------------------------------------------------------------------
 math_operator:
     T_SIN
+    { $$ = SIN; }
     | T_COS
+    { $$ = COS; }
     | T_TAN
+    { $$ = TAN; }
     | T_ASIN
+    { $$ = ASIN; }
     | T_ACOS
+    { $$ = ACOS; }
     | T_ATAN
+    { $$ = ATAN; }
     | T_SQRT
+    { $$ = SQRT; }
     | T_ABS
+    { $$ = ABS; }
     | T_FLOOR
+    { $$ = FLOOR; }
     | T_RANDOM
+    { $$ = RANDOM; }
     ;
 
 //---------------------------------------------------------------------

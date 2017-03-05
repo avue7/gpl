@@ -1,6 +1,8 @@
 #include "expression.h"
 #include "variable.h"
 #include "constant.h"
+
+
 // unary and binary operator
 Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
 {
@@ -38,10 +40,13 @@ Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expressio
     case ATAN:
     case RANDOM:
     case SQRT:
+    case FLOOR:
+    case ABS:
       m_node = UNARY_OPERATOR;
       break;
     //set the default of the case incase cant get the op_type
-    default: cerr << "Error: cannot assign operator type" << endl;
+    default: cerr << "Error: cannot assign operator type in EXPR constructor"
+                  << endl;
     break;
   }
 }
@@ -118,8 +123,15 @@ int Expression::eval_int()
       case MOD:
         return m_lhs->eval_int() % m_rhs->eval_int();
       default: 
-        cerr << "Error: eval_int() failed!" << endl;
+        cerr << "Error: cannot find m_oper in eval_int()!" << endl;
         return 1;
+    }
+  }
+  else if (m_node == UNARY_OPERATOR)
+  {
+    if (m_oper == ABS)
+    {
+      return (-m_lhs->eval_int());
     }
   }
   else
@@ -180,12 +192,55 @@ double Expression::eval_double()
       case DIVIDE:
         return m_lhs->eval_double() / m_rhs->eval_double();
       default:
-        cerr << "Error: eval_double in m_oper failed!" << endl;
+        cerr << "Error: cannot find m_oper in eval_double()!" << endl;
         return 1;
     }
   }
-  else
+  else if (m_node == UNARY_OPERATOR)
   {
+    if (m_oper == SIN)
+    {
+      return sin (m_lhs->eval_double() * M_PI / 180.0);
+    }
+    else if (m_oper == COS)
+    {
+      return cos (m_lhs->eval_double() * M_PI / 180.0);
+    }
+    else if (m_oper == TAN)
+    {
+      return tan (m_lhs->eval_double() * M_PI / 180.0);
+    }
+    else if (m_oper == ASIN)
+    {
+      return asin (m_lhs->eval_double()) * 180.0 / M_PI;
+    }
+    else if (m_oper == ACOS)
+    {
+      return acos (m_lhs->eval_double()) * 180.0 / M_PI;
+    }
+    else if (m_oper == ATAN)
+    {
+      return atan (m_lhs->eval_double()) * 180.0 / M_PI;
+    }
+    else if (m_oper == SQRT)
+    {
+      return sqrt (m_lhs->eval_double());
+    }
+    else if (m_oper == ABS)
+    {
+      return abs(m_lhs->eval_double());
+    }
+    else if (m_oper == FLOOR)
+    {
+      return floor (;
+    }
+    else if (m_oper == UNARY_MINUS)
+    {
+      return (-m_lhs->eval_double());
+    }
+  }
+  else
+  { 
     cerr << "ERROR: TROUBLE IN EVAL_DOUBLE()" << endl;
     return 1;
   }
@@ -265,9 +320,13 @@ string Expression::eval_string()
     { 
       return m_lhs->eval_string() + m_rhs->eval_string();   
     }
+    else
+    {
+      cerr << "ERROR: cannot find m_oper in eval_string()!" << endl;
+    }
   }
   else
   {
-    return "ERROR: CANT DO ANY EVAL ON STR";
+    return "ERROR: TROUBLE IN EVAL_STRING()!";
   }
 }

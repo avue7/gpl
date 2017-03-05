@@ -3,10 +3,13 @@
 
 #include "gpl_type.h"
 #include "error.h" // Dont know if i need this yet but just in case for now
+#include <limits.h> // To use macros M_PI
 #include <string>
+#include <stdlib.h>
 #include <sstream>
 #include <iostream>
 #include <cmath>
+#include <math.h>
 #include <assert.h>
 using namespace std;
 
@@ -23,7 +26,7 @@ class Expression
     Gpl_type m_type;
     Variable *m_var;
     Constant *m_constant;
-
+ 
     // Member functions: 
     int eval_int();         // To return evaluated ints
     double eval_double();   // to return evaluated doubles
@@ -38,8 +41,7 @@ class Expression
     // Constructor for variable
     Expression (Variable *variable); 
    
-  private:
-    enum Node {BINARY_OPERATOR, LOGICAL_OPERATOR, UNARY_OPERATOR, CONSTANT, VARIABLE}; // since im making a node maybe i dont need this
+    enum Node {BINARY_OPERATOR = 2, LOGICAL_OPERATOR=4, UNARY_OPERATOR=6, CONSTANT=8, VARIABLE=10}; // since im making a node maybe i dont need this
     Node m_node;
 };
 #endif
