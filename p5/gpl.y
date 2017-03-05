@@ -614,7 +614,6 @@ expression:
     | math_operator T_LPAREN expression T_RPAREN
     {
       Expression *expr = $3;
-
       if ($3->m_type == STRING)
       {
         switch ($1 == STRING)
@@ -656,7 +655,41 @@ expression:
       }
       else if ($1 == RANDOM)
       {
-        $$ = new Expression($1, INT, expr, NULL);
+        /* Check the Random for any values < 1 since any value 
+           < 1 is not legal. In p6 need to change this to default to 2 */
+        if ($3->m_type == DOUBLE)
+        {
+           if ($3->eval_double() < 1)
+           {
+             stringstream ss;
+             double value;
+             value = $3->eval_double();
+             ss << value;
+             Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
+             $$ = new Expression(0, INT, NULL, NULL);
+           }
+           else
+           {
+             $$ = new Expression($1, $3->m_type, expr, NULL);
+           }  
+        }
+        else if ($3->m_type == INT)
+        {
+           if ($3->eval_int() < 1)
+           {
+             stringstream ss;
+             int value;
+             value = $3->eval_double();
+             ss << value;
+             Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
+             $$ = new Expression(0, INT, NULL, NULL);
+           }
+           else
+           {
+             $$ = new Expression($1, $3->m_type, expr, NULL);
+           }
+        }
+      /*$$ = new Expression($1, $3->m_type, expr, NULL);*/
       } 
       else
       {
@@ -665,18 +698,6 @@ expression:
        
         if ($3)
         { 
-/*          if ($1 == FLOOR)
-          {
-            cerr << "FLOOR CAN BE FOUND IN GPL.Y" << endl;
-          }
-          if ($3->m_node == 10)
-          {
-            cerr << "This is the value of variable: " << $3->m_var->get_double_value() << endl;
-          }
-          if ($3->m_node == 8)
-          {
-            cerr << "created one with m_LHS " << $3->m_constant->get_double_value() <<  endl;
-          }*/ 
           $$ = new Expression($1, DOUBLE, expr, NULL);
         }
         else

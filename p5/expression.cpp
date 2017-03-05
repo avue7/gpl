@@ -143,7 +143,15 @@ int Expression::eval_int()
     }
     else if (m_oper == RANDOM)
     {
-      return rand() % m_lhs->eval_int(); 
+      if (m_lhs->m_type == DOUBLE)
+      { 
+        // If lhs is take the floor and cast it to an int
+        return rand() % (int) floor(m_lhs->eval_double());
+      }
+      else
+      {
+        return rand() % m_lhs->eval_int();
+      } 
     }
     else
     {
@@ -258,6 +266,10 @@ double Expression::eval_double()
     else if (m_oper == UNARY_MINUS)
     {
       return (-m_lhs->eval_double());
+    }
+    else if (m_oper == RANDOM)
+    {  
+      return rand() % (int) floor(m_lhs->eval_double());
     }
   }
   else
