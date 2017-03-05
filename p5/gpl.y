@@ -534,19 +534,36 @@ expression:
     }
     | expression T_MINUS expression
     {
-
+      if ($1->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "-");
+        $$ = new Expression(0, INT, NULL, NULL); 
+      }
+      else if($3->m_type == STRING)
+      {
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "-");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
+      {
+        $$ = new Expression(MINUS, DOUBLE, $1, $3);
+      } 
+      else if ($1->m_type == INT && $3->m_type == INT)
+      {
+        $$ = new Expression(MINUS, INT, $1, $3);
+      }
     }
     | expression T_MULTIPLY expression
     {
       if ($1->m_type == STRING)
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
-        $1 = new Expression(0, INT, NULL, NULL);
+        $$ = new Expression(0, INT, NULL, NULL);
       }
-      else if ($3->m_type == STRING)
+      else if($3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
-        $3 = new Expression(0, INT, NULL, NULL);
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "*");
+        $$ = new Expression(0, INT, NULL, NULL);
       }
       else if ($1->m_type == DOUBLE || $1->m_type == DOUBLE)
       {
@@ -554,20 +571,36 @@ expression:
       }
       else if ($1->m_type == INT && $3->m_type == INT)
       {
-        assert($1->m_type == INT || $3->m_type == INT);
         $$ = new Expression(MULTIPLY, INT, $1, $3);
       }
     }
     | expression T_DIVIDE expression
     {
-
+      if ($1->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "/");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if($3->m_type == STRING)
+      {
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "/");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($1->m_type == DOUBLE || $1->m_type == DOUBLE)
+      {
+        $$ = new Expression(DIVIDE, DOUBLE, $1, $3);
+      }
+      else if ($1->m_type == INT && $3->m_type == INT)
+      {
+        $$ = new Expression(DIVIDE, INT, $1, $3);
+      }
     }
     | expression T_MOD expression
     {
     }
     | T_MINUS  expression %prec UNARY_OPS
     {
-      $$ = new Expression(UNARY_MINUS, $2->m_type, $2, NULL);
+      $$ = new Expression(UNARY_MINUS, DOUBLE, $2, NULL);
     }
     | T_NOT  expression  %prec UNARY_OPS
     {
@@ -580,8 +613,8 @@ expression:
     }
     | math_operator T_LPAREN expression T_RPAREN
     {
-      //Cannot be a string at all
-      // assert($3->m_type != STRING);
+      Expression *expr = $3;
+
       if ($3->m_type == STRING)
       {
         switch ($1 == STRING)
@@ -619,22 +652,22 @@ expression:
           default:
             break;
         }
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($1 == RANDOM)
+      {
+        $$ = new Expression($1, INT, expr, NULL);
       } 
       else
       {
-        Expression *expr = $3;
-        /***** Check with tyson on this one. In test 13, floor return type
-         is a double, however, in gpl manual only a return type int is 
-         possible. ********/
-     /*   if ($1 == FLOOR || $1 == RANDOM)
-        {  
-          $$ = new Expression($1, INT, $3, NULL); 
-        }*/
+        //Cannot be a string at all
+        assert($3->m_type != STRING);
+       
         if ($3)
         { 
-          if ($1 == ASIN)
+/*          if ($1 == FLOOR)
           {
-            cerr << "ASIN CAN BE FOUND IN GPL.Y" << endl;
+            cerr << "FLOOR CAN BE FOUND IN GPL.Y" << endl;
           }
           if ($3->m_node == 10)
           {
@@ -643,8 +676,12 @@ expression:
           if ($3->m_node == 8)
           {
             cerr << "created one with m_LHS " << $3->m_constant->get_double_value() <<  endl;
-          }
+          }*/ 
           $$ = new Expression($1, DOUBLE, expr, NULL);
+        }
+        else
+        {
+          cerr << "ERROR: NO EXPRESSION DECLARED IN MATH_OPERS" << endl;
         }
       }
     }

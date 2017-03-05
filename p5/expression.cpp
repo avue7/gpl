@@ -129,9 +129,26 @@ int Expression::eval_int()
   }
   else if (m_node == UNARY_OPERATOR)
   {
-    if (m_oper == ABS)
-    {
+    if (m_oper == UNARY_MINUS)
+    { 
       return (-m_lhs->eval_int());
+    }
+    else if (m_oper == ABS)
+    {
+      return abs(m_lhs->eval_int());
+    }
+    else if (m_oper == FLOOR)
+    {
+      return floor(m_lhs->eval_int());
+    }
+    else if (m_oper == RANDOM)
+    {
+      return rand() % m_lhs->eval_int(); 
+    }
+    else
+    {
+      cerr << "Error: Cannot find m_oper in eval_int();" << endl;
+      return 1;
     }
   }
   else
@@ -183,7 +200,7 @@ double Expression::eval_double()
   {  
     switch(m_oper)
     {
-      case MULTIPLY: 
+      case MULTIPLY:
         return m_lhs->eval_double() * m_rhs->eval_double();
       case PLUS:
         return m_lhs->eval_double() + m_rhs->eval_double();
@@ -197,7 +214,10 @@ double Expression::eval_double()
     }
   }
   else if (m_node == UNARY_OPERATOR)
-  {
+  { 
+    /* The parenthesis that encapsulates the order of ops is very
+       important. YOU MUST NOT CHANGE THE ORDER OF THE PARENS!!!
+       OR YOU WILL GET THE WRONG RETURN VALUES!!!! */
     if (m_oper == SIN)
     {
       return sin (m_lhs->eval_double() * M_PI / 180.0);
@@ -210,6 +230,7 @@ double Expression::eval_double()
     {
       return tan (m_lhs->eval_double() * M_PI / 180.0);
     }
+    // For arcsin, arccos, arctan...parens only around recursive call
     else if (m_oper == ASIN)
     {
       return asin (m_lhs->eval_double()) * 180.0 / M_PI;
@@ -232,7 +253,7 @@ double Expression::eval_double()
     }
     else if (m_oper == FLOOR)
     {
-      return floor (;
+      return floor (m_lhs->eval_double());
     }
     else if (m_oper == UNARY_MINUS)
     {
