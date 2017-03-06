@@ -123,7 +123,49 @@ int Expression::eval_int()
       case MOD:
         return m_lhs->eval_int() % m_rhs->eval_int();
       default: 
-        cerr << "Error: cannot find m_oper in eval_int()!" << endl;
+        cerr << "Error: cannot find m_oper in binary of eval_int()!" << endl;
+        return 1;
+    }
+  }
+  else if (m_node == LOGICAL_OPERATOR) 
+  {
+    switch(m_oper)
+    {
+      case OR: 
+        return m_lhs->eval_int() || m_rhs->eval_int();
+      case AND:
+        return m_lhs->eval_int() && m_rhs->eval_int();
+      case EQUAL:
+        if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          cerr << "THIS RAN INSIDE OF EVAL _INT " << endl;
+          return m_lhs->eval_string() == m_rhs->eval_string();
+        }
+        else if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
+        {
+          return m_lhs->eval_double() == m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() == m_rhs->eval_int();
+        }
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          return 1;
+        }
+      case NOT_EQUAL:
+        return m_lhs->eval_int() != m_rhs->eval_int();
+      case LESS_THAN:
+        return m_lhs->eval_int() < m_rhs->eval_int();
+      case LESS_EQUAL:
+        return m_lhs->eval_int() <= m_rhs->eval_int();
+      case GREATER_THAN:
+        return m_lhs->eval_int() > m_rhs->eval_int();
+      case GREATER_EQUAL:
+        return m_lhs->eval_int() >= m_rhs->eval_int();
+      default:
+        cerr << "Error: cannot find m_oper in logical_ops of eval_double()!" << endl;
         return 1;
     }
   }
@@ -218,6 +260,47 @@ double Expression::eval_double()
         return m_lhs->eval_double() / m_rhs->eval_double();
       default:
         cerr << "Error: cannot find m_oper in eval_double()!" << endl;
+        return 1;
+    }
+  }
+  else if (m_node == LOGICAL_OPERATOR) 
+  {
+    switch(m_oper)
+    {
+      case OR:
+        return m_lhs->eval_double() || m_rhs->eval_double();
+      case AND:
+        return m_lhs->eval_double() && m_rhs->eval_double();
+      case EQUAL:
+        if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          return m_lhs->eval_string() == m_rhs->eval_string();
+        }
+        else if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
+        {
+          return m_lhs->eval_double() == m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() == m_rhs->eval_int();
+        }
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_double()!" << endl;
+          return 1;
+        }
+      case NOT_EQUAL:
+        return m_lhs->eval_double() != m_rhs->eval_double();
+      case LESS_THAN:
+        return m_lhs->eval_double() < m_rhs->eval_double();
+      case LESS_EQUAL:
+        return m_lhs->eval_double() <= m_rhs->eval_double();
+      case GREATER_THAN:
+        return m_lhs->eval_double() > m_rhs->eval_double();
+      case GREATER_EQUAL:
+        return m_lhs->eval_double() >= m_rhs->eval_double();
+      default:
+        cerr << "Error: cannot find m_oper in logical_ops of eval_int()!" << endl;
         return 1;
     }
   }
@@ -356,6 +439,47 @@ string Expression::eval_string()
     else
     {
       cerr << "ERROR: cannot find m_oper in eval_string()!" << endl;
+    }
+  }
+  else if (m_node == LOGICAL_OPERATOR) 
+  {
+    stringstream ss;
+    string s_value;
+    int int_value;
+    double d_value;
+    if (m_oper == EQUAL)
+    {  
+      if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+      {
+        int_value = eval_int();
+        ss << int_value;
+        ss >> s_value;
+        return s_value;
+      }
+      else if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
+      { 
+        d_value = eval_double();
+        ss << d_value;
+        ss >> s_value;
+        return s_value;
+      }
+      else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+      {
+        string left = m_lhs->eval_string();
+        string right = m_rhs->eval_string();
+        if (left == right)
+        {
+          return "1";
+        }
+        else
+        {
+          return "0";
+        }
+      }
+      else
+      {
+        return  "ERROR: Trouble in equal of logical of eval_double()!";
+      }
     }
   }
   else

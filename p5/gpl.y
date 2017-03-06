@@ -488,10 +488,37 @@ expression:
     { $$ = $1; } 
     | expression T_OR expression
     {
-
+      if ($1->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "||");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($3->m_type == STRING)
+      {
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "||");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else 
+      {
+        $$ = new Expression(OR, INT, $1, $3);
+      }
     }
     | expression T_AND expression
     {
+      if ($1->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "&&");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($3->m_type == STRING)
+      {
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "&&");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else 
+      {
+        $$ = new Expression(AND, INT, $1, $3);
+      }
     }
     | expression T_LESS_EQUAL expression
     {
