@@ -197,11 +197,18 @@ variable_declaration:
       {
         if ($1 == INT)
         { 
-          symbol = new Symbol(*$2, INT, $3->eval_int());
+          if ($3->m_type == DOUBLE)
+          {
+            symbol = new Symbol(*$2, INT, $3->eval_double();
+          }
+          else if ($3->m_type == INT)
+          {
+            symbol = new Symbol(*$2, INT, $3->eval_int());
+          }
         }
         else if ($1 == DOUBLE)
         { 
-          symbol = new Symbol(*$2, DOUBLE, $3->eval_double());
+          symbol = new Symbol(*$2, DOUBLE, (double) $3->eval_int());
         }
         else if ($1 == STRING)
         {
@@ -592,7 +599,7 @@ expression:
         Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "*");
         $$ = new Expression(0, INT, NULL, NULL);
       }
-      else if ($1->m_type == DOUBLE || $1->m_type == DOUBLE)
+      else if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
       {
         $$ = new Expression(MULTIPLY, DOUBLE, $1, $3);
       }
