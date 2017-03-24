@@ -29,6 +29,7 @@ Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expressio
     case GREATER_THAN:
     case LESS_THAN:
     case LESS_EQUAL:
+    case NOT:
       m_node = LOGICAL_OPERATOR; // Logical ops are binary
       break;
     case UNARY_MINUS:
@@ -132,7 +133,22 @@ int Expression::eval_int()
     switch(m_oper)
     {
       case OR: 
-        return m_lhs->eval_int() || m_rhs->eval_int();
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return m_lhs->eval_int() || (int)  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return  (int) m_lhs->eval_double() ||  m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+          return m_lhs->eval_double() || m_rhs->eval_double();
+        }
+        else
+        {
+          return m_lhs->eval_int() || m_rhs->eval_int();
+        }
       case AND:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
         {
@@ -197,15 +213,245 @@ int Expression::eval_int()
           return 1;
         }
       case NOT_EQUAL:
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return (double) m_lhs->eval_int() !=  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_double() != (double) m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
+        {
+          string s_value = m_lhs->eval_string();
+          int int_value = m_rhs->eval_int();
+          stringstream ss;
+          string right_value;
+          ss << int_value;
+          ss >> right_value;
+          return s_value != right_value;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
+        {
+	  int int_value = m_lhs->eval_int();
+          stringstream ss;
+          string left;
+          ss << int_value;
+          ss >> left;
+          string right = m_rhs->eval_string();
+          return left != right;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() != m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+ 	  return m_lhs->eval_double() != m_rhs->eval_double();
+ 	}
+        else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          return m_lhs->eval_string() != m_rhs->eval_string();
+	}
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          return 1;
+        }
         return m_lhs->eval_int() != m_rhs->eval_int();
       case LESS_THAN:
-        return m_lhs->eval_int() < m_rhs->eval_int();
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return (double) m_lhs->eval_int() <  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_double() < (double) m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
+        {
+          string s_value = m_lhs->eval_string();
+          int int_value = m_rhs->eval_int();
+          stringstream ss;
+          string right_value;
+          ss << int_value;
+          ss >> right_value;
+          return s_value < right_value;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
+        {
+	  int int_value = m_lhs->eval_int();
+          stringstream ss;
+          string left;
+          ss << int_value;
+          ss >> left;
+          string right = m_rhs->eval_string();
+          return left < right;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() < m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+ 	  return m_lhs->eval_double() < m_rhs->eval_double();
+ 	}
+        else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          return m_lhs->eval_string() < m_rhs->eval_string();
+	}
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          return 1;
+        }
       case LESS_EQUAL:
-        return m_lhs->eval_int() <= m_rhs->eval_int();
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return (double) m_lhs->eval_int() <=  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_double() <= (double) m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
+        {
+          string s_value = m_lhs->eval_string();
+          int int_value = m_rhs->eval_int();
+          stringstream ss;
+          string right_value;
+          ss << int_value;
+          ss >> right_value;
+          return s_value <= right_value;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
+        {
+	  int int_value = m_lhs->eval_int();
+          stringstream ss;
+          string left;
+          ss << int_value;
+          ss >> left;
+          string right = m_rhs->eval_string();
+          return left <= right;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() <= m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+ 	  return m_lhs->eval_double() <= m_rhs->eval_double();
+ 	}
+        else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          return m_lhs->eval_string() <= m_rhs->eval_string();
+	}
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          return 1;
+        }
       case GREATER_THAN:
-        return m_lhs->eval_int() > m_rhs->eval_int();
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return (double) m_lhs->eval_int() >  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_double() > (double) m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
+        {
+          string s_value = m_lhs->eval_string();
+          int int_value = m_rhs->eval_int();
+          stringstream ss;
+          string right_value;
+          ss << int_value;
+          ss >> right_value;
+          return s_value > right_value;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
+        {
+	  int int_value = m_lhs->eval_int();
+          stringstream ss;
+          string left;
+          ss << int_value;
+          ss >> left;
+          string right = m_rhs->eval_string();
+          return left > right;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() > m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+ 	  return m_lhs->eval_double() > m_rhs->eval_double();
+ 	}
+        else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          return m_lhs->eval_string() > m_rhs->eval_string();
+	}
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          return 1;
+        }
       case GREATER_EQUAL:
-        return m_lhs->eval_int() >= m_rhs->eval_int();
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return (double) m_lhs->eval_int() >=  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_double() >= (double) m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
+        {
+          string s_value = m_lhs->eval_string();
+          int int_value = m_rhs->eval_int();
+          stringstream ss;
+          string right_value;
+          ss << int_value;
+          ss >> right_value;
+          return s_value >= right_value;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
+        {
+	  int int_value = m_lhs->eval_int();
+          stringstream ss;
+          string left;
+          ss << int_value;
+          ss >> left;
+          string right = m_rhs->eval_string();
+          return left >= right;
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() >= m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+ 	  return m_lhs->eval_double() >= m_rhs->eval_double();
+ 	}
+        else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
+        {
+          return m_lhs->eval_string() >= m_rhs->eval_string();
+	}
+        else
+        {
+          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          return 1;
+        }
+      case NOT:
+        if (m_lhs->m_type == DOUBLE)
+        {
+          return !m_lhs->eval_double();
+        }
+        else
+        {
+          return !m_lhs->eval_int();
+        }
       default:
         cerr << "Error: cannot find m_oper in logical_ops of eval_double()!" << endl;
         return 1;
@@ -236,6 +482,10 @@ int Expression::eval_int()
       {
         return rand() % m_lhs->eval_int();
       } 
+    }
+    else if (m_oper ==  UNARY_MINUS)
+    {
+      return -m_lhs->eval_int();
     }
     else
     {
@@ -305,7 +555,7 @@ double Expression::eval_double()
         return 1;
     }
   }
-  else if (m_node == LOGICAL_OPERATOR) 
+/* else if (m_node == LOGICAL_OPERATOR) 
   {
     switch(m_oper)
     {
@@ -329,7 +579,7 @@ double Expression::eval_double()
         cerr << "Error: cannot find m_oper in logical_ops of eval_int()!" << endl;
         return 1;
     }
-  }
+  }*/
   else if (m_node == UNARY_OPERATOR)
   { 
     /* The parenthesis that encapsulates the order of ops is very

@@ -56,7 +56,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
         int *temp_array = new int[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
-          temp_array[i] = 42;
+          temp_array[i] = 0;
         }
         symbol->m_value = (void*) temp_array;
       }
@@ -65,7 +65,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
         double *temp_array = new double[symbol->m_size];   
         for (int i = 0; i < symbol->m_size; i++)
         {
-          temp_array[i] = 3.14159;
+          temp_array[i] = 0.0;
         }
         symbol->m_value = (void*) temp_array;
       }
@@ -74,7 +74,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
         string *temp_array = new string[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
-          temp_array[i] = "Hello world";
+          temp_array[i] = "";
         }
         symbol->m_value = (void*) temp_array;
       }
@@ -83,7 +83,14 @@ void Symbol_table::insert_symbol(Symbol *symbol)
   }
   else
   {
-    Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, symbol->m_name);
+    if (symbol->m_name == "DUMMY")
+    {
+     // cerr << "PRINTINING INSIDE OF SYMBOL_TABLE" << endl;
+    }
+    else
+    {
+      Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, symbol->m_name);
+    }
   }
 }
 

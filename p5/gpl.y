@@ -8,6 +8,7 @@ extern int line_count;            // current line in the input; from record.l
 #include "error.h"      // class for printing errors (used by gpl)
 #include "parser.h"
 #include "symbol_table.h"
+#include "symbol.h"
 #include "gpl_type.h"
 #include "expression.h"
 #include "variable.h"
@@ -159,8 +160,8 @@ using namespace std;
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
-%nonassoc T_NOT T_OR
-%nonassoc T_AND
+%left T_NOT T_OR
+%left T_AND
 %left T_EQUAL T_NOT_EQUAL
 %left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS
 %left T_PLUS T_MINUS
@@ -233,7 +234,7 @@ variable_declaration:
           else if ($3->m_type == DOUBLE)
           {
             stringstream ss;
-            int ret_val;
+            double ret_val;
             ret_val = $3->eval_double();
             string s_ret_val;
             ss << ret_val;
@@ -266,6 +267,22 @@ variable_declaration:
     | simple_type  T_ID  T_LBRACKET expression T_RBRACKET
     {
       Symbol *symbol;
+      Expression *index_expr = $4;
+      switch(index_expr->m_type)
+      {
+        case DOUBLE:
+        case STRING:
+           Error::error(Error::INVALID_ARRAY_SIZE, *$2, index_expr->eval_string());
+           break;           
+        case INT:
+        {
+          if (index_expr->eval_int() < 1)
+          {
+            Error::error(Error::INVALID_ARRAY_SIZE, *$2, index_expr->eval_string());
+	    break;
+          }
+        }
+      }
       int array_size = $4->eval_int();
       if ($1 == INT)
       {
@@ -485,31 +502,52 @@ assign_statement:
 variable:
     T_ID
     {
+      Symbol *return_sym;
       if (Symbol_table::instance()->lookup(*$1))
       {
-        $$ = new Variable(*$1);
+        return_sym = Symbol_table::instance()->lookup(*$1);
+        if (return_sym->m_type == INT_ARRAY)
+        {
+          Error::error(Error::VARIABLE_IS_AN_ARRAY, *$1);
+          $$ = new Variable("DUMMY");
+        }
+        else
+        {
+          $$ = new Variable(*$1);
+        }
       }
       else
       {
         Error::error(Error::UNDECLARED_VARIABLE, *$1);
-        $$ = new Variable(0);
+        $$ = new Variable("DUMMY");
       }
     }
     | T_ID T_LBRACKET expression T_RBRACKET
     {
       Expression *expr = $3;
+      Symbol *ret_sym;
       if (expr->m_type == DOUBLE)
       {
         Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
-        $$ = new Variable(0);
+        $$ = new Variable("DUMMY");
       }
       else if (expr->m_type == STRING)
       {
         Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
+        $$ = new Variable("DUMMY");
+      }
+      else if (ret_sym = Symbol_table::instance()->lookup(*$1))
+      {
+        if(ret_sym->m_type == INT)
+        {
+          Error::error(Error::VARIABLE_NOT_AN_ARRAY, *$1);
+          $$ = new Variable("DUMMY");
+        }        
       }
       else
       {
-        cout << "I AM NOT HANDLING (A+B) as EXP YET!!" << endl;
+        cerr << "I AM NOT HANDLING (A+B) as EXP YET!!" << endl;
+        $$ = new Variable(*$1, $3);
       }  
     }
     | T_ID T_PERIOD T_ID
@@ -541,7 +579,7 @@ expression:
         $$ = new Expression(OR, INT, $1, $3);
       }
     }
-    | expression T_AND expression
+    | expression T_AND expression 
     {
       if ($1->m_type == STRING)
       {
@@ -662,10 +700,41 @@ expression:
     }
     | expression T_MOD expression
     {
+      if ($1->m_type == DOUBLE)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "%");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($3->m_type == DOUBLE)
+      {
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "%");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($1->eval_int() == 0 || $3->eval_int() == 0)
+      {
+        Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME, "%");
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else if ($1->m_type == INT && $3->m_type == INT)
+      {
+        $$ = new Expression(MOD, INT, $1, $3);
+      }
     }
     | T_MINUS  expression %prec UNARY_OPS
     {
-      $$ = new Expression(UNARY_MINUS, DOUBLE, $2, NULL);
+      if ($2->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "-");
+        $$ = new Expression(0, INT, NULL, NULL); 
+      }
+      else if ($2->m_type == INT)
+      {
+        $$ = new Expression(UNARY_MINUS, INT, $2, NULL);
+      }
+      else
+      {
+        $$ = new Expression(UNARY_MINUS, DOUBLE, $2, NULL);
+      }
     }
     | T_NOT  expression  %prec UNARY_OPS
     {
