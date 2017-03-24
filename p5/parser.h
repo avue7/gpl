@@ -29,6 +29,7 @@
 #include <string>
 #include "error.h"  // gpl's error reporting
 #include <iostream>
+#include <sstream>
 #include <stdio.h> 
 #include <ctype.h>
 #include "expression.h"

@@ -134,15 +134,30 @@ int Expression::eval_int()
       case OR: 
         return m_lhs->eval_int() || m_rhs->eval_int();
       case AND:
-        return m_lhs->eval_int() && m_rhs->eval_int();
-      case EQUAL:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
         {
-          return m_lhs->eval_int() == (int) m_rhs->eval_double();
+          return m_lhs->eval_int() && (int) m_rhs->eval_double();
         }
         else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
         {
-          return (int) m_lhs->eval_double() == m_rhs->eval_int();
+          return (int) m_lhs->eval_double() && m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
+        {
+          return m_lhs->eval_double() && m_rhs->eval_double();
+        }
+        else
+        {
+          return m_lhs->eval_int() && m_rhs->eval_int();
+        }
+      case EQUAL:
+        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        {
+          return (double) m_lhs->eval_int() ==  m_rhs->eval_double();
+        }
+        else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_double() == (double) m_rhs->eval_int();
         }
         else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
         {
@@ -299,77 +314,7 @@ double Expression::eval_double()
       case AND:
         return m_lhs->eval_double() && m_rhs->eval_double();
       case EQUAL:
-        {
-          if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
-          { 
-            stringstream ss;
-            string s_left_value = m_lhs->eval_string();
-            int int_value = m_rhs->eval_int();
-            ss << int_value;
-            string s_right_value;
-            ss >> s_right_value;
-            return (double) (s_left_value == s_right_value);
-          }
-          else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
-          {
-            int int_value = m_lhs->eval_int();
-            string s_right = m_rhs->eval_string();
-            string s_left;
-            stringstream ss;
-            ss << int_value;
-            ss >> s_left;
-            return (double) (s_left == s_right);
-          }
-          else if (m_lhs->m_type == STRING && m_rhs->m_type == DOUBLE)
-          { 
-            stringstream ss;
-            string s_left_value = m_lhs->eval_string();
-            double d_value = m_rhs->eval_double();
-            ss << d_value;
-            string s_right_value;
-            ss >> s_right_value;
-            return (double) (s_left_value == s_right_value);
-          }
-          else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == STRING)
-          {
-            cerr << "called in eval_double()" << endl;
-            double d_value = m_lhs->eval_double();
-            string s_right = m_rhs->eval_string();
-            string s_left;
-            stringstream ss;
-            ss << d_value;
-            ss >> s_left;
-            return 1.0;//(double) (s_left == s_right);
-          }
-          else if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
-          { 
-            double d_left = (double) m_lhs->eval_int();
-            double d_right = m_rhs->eval_double();
-            return d_left == d_right;
-          }
-          else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
-          {
-            double d_left = m_lhs->eval_double();
-            double d_right = (double) m_rhs->eval_int();
-            return d_left == d_right;
-          }
-          else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
-          {
-            return (double) (m_lhs->eval_int() == m_rhs->eval_int());
-          }
-          else if (m_lhs->m_type == DOUBLE || m_rhs->m_type == DOUBLE)
-          {
-            return (double) m_lhs->eval_double() == m_rhs->eval_int();
-          }
-          else if (m_lhs->m_type == STRING || m_rhs->m_type == STRING)
-          {
-            return (double) (m_lhs->eval_string() == m_rhs->eval_string());
-          }
-          else
-          {
-            cerr << "Error: EQAUL failed to compare in eval_double()" << endl;
-          }
-        }
+        return m_lhs->eval_double() == m_rhs->eval_double();
       case NOT_EQUAL:
         return m_lhs->eval_double() != m_rhs->eval_double();
       case LESS_THAN:
@@ -520,118 +465,6 @@ string Expression::eval_string()
     else
     {
       cerr << "ERROR: cannot find m_oper in eval_string()!" << endl;
-    }
-  }
-  else if (m_node == LOGICAL_OPERATOR) 
-  {
-    stringstream ss;
-    string s_value;
-    int int_value;
-    if (m_oper == EQUAL)
-    {  
-      if (m_lhs->m_type == INT && m_rhs->m_type == INT)
-      {
-        int_value = m_lhs->eval_int() == m_rhs->eval_int();
-        ss << int_value;
-        ss >> s_value;
-        return s_value;
-      }
-      else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
-      {
-        int_value = m_lhs->eval_double() == m_rhs->eval_double();
-        ss << int_value;
-        ss >> s_value;
-        return s_value;
-      } 
-      else if (m_lhs->m_type == STRING && m_rhs->m_type == INT)
-      { 
-        string s_left_value = m_lhs->eval_string();
-        int_value = m_rhs->eval_int();
-        string result;
-        ss << int_value;
-        string s_right_value;
-        ss >> s_right_value;
-        result = s_left_value == s_right_value;
-        return result;
-      }
-      else if (m_lhs->m_type == INT && m_rhs->m_type == STRING)
-      {
-        int_value = m_lhs->eval_int();
-        string s_right = m_rhs->eval_string();
-        string s_left;
-        ss << int_value;
-        ss >> s_left;
-        string result;
-        result = s_left == s_right;
-        return result;
-      }
-      else if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
-      { 
-        double d_left = (double) m_lhs->eval_int();
-        double d_right = m_rhs->eval_int();
-        string s_left; 
-        string s_right;
-        ss << d_left;
-        ss >> s_left;
-        ss << d_right;
-        ss >> s_right;
-        string result;
-        result = s_left == s_right;
-        return result;
-      }
-      else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
-      {
-        double d_left = m_lhs->eval_double();
-        double d_right = (double) m_rhs->eval_int();
-        double d_result;
-        string s_result;
-        d_result = d_left == d_right;
-        ss << d_result;
-        ss >> s_result;
-        return s_result;       
-      }
-      else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == STRING)
-      {
-        double d_left = m_lhs->eval_double();
-        int int_result;
-        stringstream ss;
-        ss << d_left;
-        string left;
-        ss >> left;
-        string right = m_rhs->eval_string();
-        int_result = left == right;
-        string s_result;
-        ss << int_result;
-        ss >> s_result;
-        return s_result;
-      }
-      else if (m_lhs->m_type == STRING && m_rhs->m_type == DOUBLE)
-      {
-        string left = m_lhs->eval_string();
-        double d_right = m_rhs->eval_double();
-        int int_result;
-        stringstream ss;
-        ss << d_right;
-        string right;
-        ss >> right;
-        int_result = left == right;
-        string s_result;
-        ss << int_result;
-        ss >> s_result;
-        return s_result;
-      } 
-      else if (m_lhs->m_type == STRING && m_rhs->m_type == STRING)
-      {
-        int int_result = m_lhs->eval_string() == m_rhs->eval_string();
-        string result;
-        ss << int_result;
-        ss >> result;
-        return result;
-      }
-      else
-      {
-        return  "ERROR: Trouble in equal of logical of eval_double()!";
-      }
     }
   }
   else

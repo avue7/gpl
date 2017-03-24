@@ -12,6 +12,7 @@ extern int line_count;            // current line in the input; from record.l
 #include "expression.h"
 #include "variable.h"
 #include <iostream>
+#include <sstream>
 #include <string>
 using namespace std;
 
@@ -199,7 +200,7 @@ variable_declaration:
         { 
           if ($3->m_type == DOUBLE)
           {
-            symbol = new Symbol(*$2, INT, $3->eval_double();
+            symbol = new Symbol(*$2, INT, (int) $3->eval_double());
           }
           else if ($3->m_type == INT)
           {
@@ -208,11 +209,41 @@ variable_declaration:
         }
         else if ($1 == DOUBLE)
         { 
-          symbol = new Symbol(*$2, DOUBLE, (double) $3->eval_int());
+          if ($3->m_type == INT)
+          {
+            symbol = new Symbol(*$2, DOUBLE, (double) $3->eval_int());
+          }
+          else if ($3->m_type == DOUBLE)
+          {  
+            symbol = new Symbol(*$2, DOUBLE, $3->eval_double());
+          }
         }
         else if ($1 == STRING)
         {
-          symbol = new Symbol(*$2, STRING, $3->eval_string());
+          if ($3->m_type == INT)
+          {
+            stringstream ss;
+            int ret_val;
+            ret_val = $3->eval_int();
+            string s_ret_val;
+            ss << ret_val;
+            ss >> s_ret_val;
+            symbol = new Symbol(*$2, STRING, s_ret_val);
+          }
+          else if ($3->m_type == DOUBLE)
+          {
+            stringstream ss;
+            int ret_val;
+            ret_val = $3->eval_double();
+            string s_ret_val;
+            ss << ret_val;
+            ss >> s_ret_val;
+            symbol = new Symbol(*$2, STRING, s_ret_val);
+          }
+          else
+          {
+            symbol = new Symbol(*$2, STRING, $3->eval_string());
+          }
         }
       }
       else
