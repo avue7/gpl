@@ -689,10 +689,27 @@ expression:
         Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "/");
         $$ = new Expression(0, INT, NULL, NULL);
       }
-      else if ($1->m_type == DOUBLE || $1->m_type == DOUBLE)
+      else if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
       {
-        $$ = new Expression(DIVIDE, DOUBLE, $1, $3);
+        if ($3->eval_double() == 0.0)
+        {
+          Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
+          $$ = new Expression(0, INT, NULL, NULL);
+        }
+        else
+        {
+          cerr << "THIS RAN FOR DOUBLE AND DOUBLE" << endl;
+          $$ = new Expression(DIVIDE, DOUBLE, $1, $3);
+        }
       }
+      else if ($3->m_type == INT)
+      {
+        if ($3->eval_int() == 0)
+        {
+          Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
+          $$ = new Expression(0, INT, NULL, NULL);
+        }
+      } 
       else if ($1->m_type == INT && $3->m_type == INT)
       {
         $$ = new Expression(DIVIDE, INT, $1, $3);
@@ -704,13 +721,11 @@ expression:
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "%");
         $$ = new Expression(0, INT, NULL, NULL);
-        cerr << "THIS RAN IN LEFT == DOUBLE" << endl;
       }
       if ($3->m_type == DOUBLE || $3->m_type == STRING)
       {
         Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "%");
         $$ = new Expression(0, INT, NULL, NULL);
-        cerr << "THIS RAN IN RIGHT == DOUBLE" << endl;
       }
       if ($1->m_type == INT && $3->m_type == INT)
       {
@@ -718,11 +733,9 @@ expression:
         {
           Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME, "%");
           $$ = new Expression(0, INT, NULL, NULL);
-          cerr << "THIS RAN IN MOD BY 0" << endl;
         }
         else
         {
-          cerr << "THIS RAN in BOTH SIDE INTS" << endl;
           $$ = new Expression(MOD, INT, $1, $3);
         }
       }
