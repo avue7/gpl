@@ -700,24 +700,31 @@ expression:
     }
     | expression T_MOD expression
     {
-      if ($1->m_type == DOUBLE)
+      if ($1->m_type == DOUBLE || $1->m_type == STRING)
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "%");
         $$ = new Expression(0, INT, NULL, NULL);
+        cerr << "THIS RAN IN LEFT == DOUBLE" << endl;
       }
-      else if ($3->m_type == DOUBLE)
+      if ($3->m_type == DOUBLE || $3->m_type == STRING)
       {
         Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "%");
         $$ = new Expression(0, INT, NULL, NULL);
+        cerr << "THIS RAN IN RIGHT == DOUBLE" << endl;
       }
-      else if ($1->eval_int() == 0 || $3->eval_int() == 0)
+      if ($1->m_type == INT && $3->m_type == INT)
       {
-        Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME, "%");
-        $$ = new Expression(0, INT, NULL, NULL);
-      }
-      else if ($1->m_type == INT && $3->m_type == INT)
-      {
-        $$ = new Expression(MOD, INT, $1, $3);
+        if ($1->eval_int() == 0 || $3->eval_int() == 0)
+        {
+          Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME, "%");
+          $$ = new Expression(0, INT, NULL, NULL);
+          cerr << "THIS RAN IN MOD BY 0" << endl;
+        }
+        else
+        {
+          cerr << "THIS RAN in BOTH SIDE INTS" << endl;
+          $$ = new Expression(MOD, INT, $1, $3);
+        }
       }
     }
     | T_MINUS  expression %prec UNARY_OPS

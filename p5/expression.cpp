@@ -555,31 +555,6 @@ double Expression::eval_double()
         return 1;
     }
   }
-/* else if (m_node == LOGICAL_OPERATOR) 
-  {
-    switch(m_oper)
-    {
-      case OR:
-        return m_lhs->eval_double() || m_rhs->eval_double();
-      case AND:
-        return m_lhs->eval_double() && m_rhs->eval_double();
-      case EQUAL:
-        return m_lhs->eval_double() == m_rhs->eval_double();
-      case NOT_EQUAL:
-        return m_lhs->eval_double() != m_rhs->eval_double();
-      case LESS_THAN:
-        return m_lhs->eval_double() < m_rhs->eval_double();
-      case LESS_EQUAL:
-        return m_lhs->eval_double() <= m_rhs->eval_double();
-      case GREATER_THAN:
-        return m_lhs->eval_double() > m_rhs->eval_double();
-      case GREATER_EQUAL:
-        return m_lhs->eval_double() >= m_rhs->eval_double();
-      default:
-        cerr << "Error: cannot find m_oper in logical_ops of eval_int()!" << endl;
-        return 1;
-    }
-  }*/
   else if (m_node == UNARY_OPERATOR)
   { 
     /* The parenthesis that encapsulates the order of ops is very
