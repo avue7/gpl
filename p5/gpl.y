@@ -542,11 +542,14 @@ variable:
         {
           Error::error(Error::VARIABLE_NOT_AN_ARRAY, *$1);
           $$ = new Variable("DUMMY");
-        }        
+        } 
+        cerr << "Found it in the symbol_table" << endl;
+        int value = ((int*)$1)[expr->eval_int()];
+        cerr << "Array value is : " << value;       
+        $$ = new Variable(*$1, $3);
       }
       else
       {
-        cerr << "I AM NOT HANDLING (A+B) as EXP YET!!" << endl;
         $$ = new Variable(*$1, $3);
       }  
     }
@@ -698,21 +701,20 @@ expression:
         }
         else
         {
-          cerr << "THIS RAN FOR DOUBLE AND DOUBLE" << endl;
           $$ = new Expression(DIVIDE, DOUBLE, $1, $3);
         }
       }
-      else if ($3->m_type == INT)
+      else if ($1->m_type == INT && $3->m_type == INT)
       {
         if ($3->eval_int() == 0)
         {
           Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
           $$ = new Expression(0, INT, NULL, NULL);
         }
-      } 
-      else if ($1->m_type == INT && $3->m_type == INT)
-      {
-        $$ = new Expression(DIVIDE, INT, $1, $3);
+        else
+        {
+          $$ = new Expression(DIVIDE, INT, $1, $3);
+        }
       }
     }
     | expression T_MOD expression
