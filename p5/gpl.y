@@ -160,10 +160,10 @@ using namespace std;
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
-%left T_NOT T_OR
+%left T_OR
 %left T_AND
 %left T_EQUAL T_NOT_EQUAL
-%left T_GREATER T_GREATER_EQUAL T_LESS_EQUAL T_LESS
+%left T_LESS T_LESS_EQUAL T_GREATER T_GREATER_EQUAL 
 %left T_PLUS T_MINUS
 %left T_MULTIPLY T_DIVIDE T_MOD
 %nonassoc UNARY_OPS
@@ -201,16 +201,28 @@ variable_declaration:
         { 
           if ($3->m_type == DOUBLE)
           {
-            symbol = new Symbol(*$2, INT, (int) $3->eval_double());
+            Error::error(Error::INVALID_TYPE_FOR_INITIAL_VALUE, gpl_type_to_string($3->m_type), *$2, gpl_type_to_string($1));
+            symbol = new Symbol(*$2, INT, 0);
+          }
+          else if ($3->m_type == STRING)
+          {
+            Error::error(Error::INVALID_TYPE_FOR_INITIAL_VALUE, gpl_type_to_string($3->m_type), *$2, gpl_type_to_string($1));
+            symbol = new Symbol(*$2, INT, 0); 
           }
           else if ($3->m_type == INT || $3->m_type == INT_ARRAY)
           {
             symbol = new Symbol(*$2, INT, $3->eval_int());
           }
+          Symbol_table::instance()->insert_symbol(symbol);
         }
         else if ($1 == DOUBLE)
-        { 
-          if ($3->m_type == INT || $3->m_type == INT_ARRAY)
+        {
+          if ($3->m_type == STRING)
+          {
+            Error::error(Error::INVALID_TYPE_FOR_INITIAL_VALUE, gpl_type_to_string($3->m_type), *$2, gpl_type_to_string($1));
+            symbol = new Symbol(*$2, INT, 0); 
+          } 
+          else if ($3->m_type == INT || $3->m_type == INT_ARRAY)
           {
             symbol = new Symbol(*$2, DOUBLE, (double) $3->eval_int());
           }
@@ -218,6 +230,7 @@ variable_declaration:
           {  
             symbol = new Symbol(*$2, DOUBLE, $3->eval_double());
           }
+          Symbol_table::instance()->insert_symbol(symbol);
         }
         else if ($1 == STRING)
         {
@@ -245,10 +258,12 @@ variable_declaration:
           {
             symbol = new Symbol(*$2, STRING, $3->eval_string());
           }
+          Symbol_table::instance()->insert_symbol(symbol);
         }
       }
       else
       {
+        //cerr << "NO INITIALIZER" << endl;
         switch($1)
         {
           case INT:
@@ -261,32 +276,31 @@ variable_declaration:
             symbol = new Symbol(*$2, $1, "");
             break;
         }
+        Symbol_table::instance()->insert_symbol(symbol);
       }
-      Symbol_table::instance()->insert_symbol(symbol);
     }
     | simple_type  T_ID  T_LBRACKET expression T_RBRACKET
     {
-      if ($4->m_type == DOUBLE || $4->m_type == STRING)
-      {
+      Symbol *symbol;
+      if($4->m_type == DOUBLE || $4->m_type == STRING)
+      { 
         Error::error(Error::ARRAY_SIZE_MUST_BE_AN_INTEGER, gpl_type_to_string($4->m_type), *$2);
-        
       }
-      if($4->m_type == INT)
-      {
+      if ($4->m_type == INT)
+      {      
         if ($4->eval_int() < 1)
         {
           Error::error(Error::INVALID_ARRAY_SIZE, *$2, $4->eval_string());
         }
         else
         {
-          Symbol *symbol;
           int array_size = $4->eval_int();
           if ($1 == INT)
           {
             symbol = new Symbol(*$2, INT_ARRAY, array_size);  
           }      
           else if ($1 == DOUBLE)
-          {       
+          { 
             symbol = new Symbol(*$2, DOUBLE_ARRAY, array_size);
           }
           else
@@ -526,41 +540,44 @@ variable:
       Symbol *ret_sym;
       if (expr->m_type == DOUBLE)
       {
-        Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
+        Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1, "A double expression");
         $$ = new Variable("DUMMY");
       }
-      if (expr->m_type == STRING)
+      else if (expr->m_type == STRING)
       {
-        Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1);
+        Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1, "A string expression");
         $$ = new Variable("DUMMY");
       }
-      if (Symbol_table::instance()->lookup(*$1))
+      else
       {
-        ret_sym = Symbol_table::instance()->lookup(*$1);
-        if (ret_sym->m_type == INT)
+        if (Symbol_table::instance()->lookup(*$1))
         {
-          Error::error(Error::VARIABLE_NOT_AN_ARRAY, *$1);
-          $$ = new Variable("DUMMY");
-        }
-        else
-        {
-          int index_size;
-          index_size = $3->eval_int();
-          if (index_size > (ret_sym->m_size)-1)
+          ret_sym = Symbol_table::instance()->lookup(*$1);
+          if (ret_sym->m_type == INT)
           {
-            Error::error(Error::ARRAY_INDEX_OUT_OF_BOUNDS, *$1, std::to_string(index_size));
+            Error::error(Error::VARIABLE_NOT_AN_ARRAY, *$1);
             $$ = new Variable("DUMMY");
           }
           else
           {
-            $$ = new Variable(*$1, $3);
+            int index_size;
+            index_size = $3->eval_int();
+            if (index_size > (ret_sym->m_size)-1)
+            {
+              Error::error(Error::ARRAY_INDEX_OUT_OF_BOUNDS, *$1, std::to_string(index_size));
+              $$ = new Variable("DUMMY");
+            }
+            else
+            {
+              $$ = new Variable(*$1, $3);
+            }
           }
         }
-      }
-      else
-      {
-        Error::error(Error::UNDECLARED_VARIABLE, *$1+"[]");
-        $$ = new Variable("DUMMY");
+        else
+        {
+          Error::error(Error::UNDECLARED_VARIABLE, *$1+"[]");
+          $$ = new Variable("DUMMY");
+        }
       }
     }
     | T_ID T_PERIOD T_ID
@@ -581,6 +598,11 @@ expression:
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "||");
         $$ = new Expression(0, INT, NULL, NULL);
+        if ($3->m_type == STRING)
+        {
+          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "||");
+          $$ = new Expression(0, INT, NULL, NULL);
+        }
       }
       else if ($3->m_type == STRING)
       {
@@ -598,13 +620,18 @@ expression:
       {
         Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "&&");
         $$ = new Expression(0, INT, NULL, NULL);
+        if ($3->m_type == STRING)
+        {
+          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "&&");
+          $$ = new Expression(0, INT, NULL, NULL);
+        }
       }
       else if ($3->m_type == STRING)
       {
         Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "&&");
         $$ = new Expression(0, INT, NULL, NULL);
       }
-      else 
+      else
       {
         $$ = new Expression(AND, INT, $1, $3);
       }
@@ -741,7 +768,7 @@ expression:
       }
       if ($1->m_type == INT && $3->m_type == INT)
       {
-        if ($1->eval_int() == 0 || $3->eval_int() == 0)
+        if ($3->eval_int() == 0)
         {
           Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME, "%");
           $$ = new Expression(0, INT, NULL, NULL);
@@ -836,7 +863,7 @@ expression:
            }
            else
            {
-             $$ = new Expression($1, $3->m_type, expr, NULL);
+             $$ = new Expression($1, INT, expr, NULL);
            }  
         }
         else if ($3->m_type == INT)
@@ -852,11 +879,33 @@ expression:
            }
            else
            {
-             $$ = new Expression($1, $3->m_type, expr, NULL);
+             $$ = new Expression($1, INT, expr, NULL);
            }
         }
       /*$$ = new Expression($1, $3->m_type, expr, NULL);*/
       } 
+      else if ($1 == FLOOR)
+      {
+        if ($3->m_type == DOUBLE)
+        {
+          $$ = new Expression($1, INT, expr, NULL);
+        }
+        else
+        {
+          $$ = new Expression($1, INT, expr, NULL);
+        }
+      }
+      else if ($1 == ABS)
+      {
+        if ($3->m_type == INT)
+        {
+          $$ = new Expression($1, INT, expr, NULL);
+        }
+        else 
+        {
+          $$ = new Expression($1, DOUBLE, expr, NULL);
+        }
+      }
       else
       {
         //Cannot be a string at all

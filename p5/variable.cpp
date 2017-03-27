@@ -41,12 +41,12 @@ int Variable::get_int_value()
     int value = 0;
     return value;
   }
-/*  if (m_var_type == "EXPRESSION")
+  if (m_var_type == "EXPRESSION")
   {
     int value;
     value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
     return value;
-  }*/
+  }
   void *temp;
   int value;
   temp = m_symbol->m_value;

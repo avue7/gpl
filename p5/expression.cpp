@@ -135,11 +135,11 @@ int Expression::eval_int()
       case OR: 
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
         {
-          return m_lhs->eval_int() || (int)  m_rhs->eval_double();
+          return (double) m_lhs->eval_int() || m_rhs->eval_double();
         }
         else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
         {
-          return  (int) m_lhs->eval_double() ||  m_rhs->eval_int();
+          return  m_lhs->eval_double() || (double) m_rhs->eval_int();
         }
         else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
         {
@@ -152,11 +152,11 @@ int Expression::eval_int()
       case AND:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
         {
-          return m_lhs->eval_int() && (int) m_rhs->eval_double();
+          return (double)m_lhs->eval_int() &&  m_rhs->eval_double();
         }
         else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == INT)
         {
-          return (int) m_lhs->eval_double() && m_rhs->eval_int();
+          return  m_lhs->eval_double() && (double)m_rhs->eval_int();
         }
         else if (m_lhs->m_type == DOUBLE && m_rhs->m_type == DOUBLE)
         {
@@ -196,6 +196,10 @@ int Expression::eval_int()
           return left == right;
         }
         else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        {
+          return m_lhs->eval_int() == m_rhs->eval_int();
+        }
+        else if (m_lhs->m_type == INT && m_rhs->m_type == INT_ARRAY)
         {
           return m_lhs->eval_int() == m_rhs->eval_int();
         }
@@ -255,7 +259,7 @@ int Expression::eval_int()
 	}
         else
         {
-          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          cerr << "ERROR: Trouble in != of logical of eval_int()!" << endl;
           return 1;
         }
         return m_lhs->eval_int() != m_rhs->eval_int();
@@ -302,7 +306,7 @@ int Expression::eval_int()
 	}
         else
         {
-          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          cerr << "ERROR: Trouble in < of logical of eval_int()!" << endl;
           return 1;
         }
       case LESS_EQUAL:
@@ -348,7 +352,7 @@ int Expression::eval_int()
 	}
         else
         {
-          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          cerr << "ERROR: Trouble in <= of logical of eval_int()!" << endl;
           return 1;
         }
       case GREATER_THAN:
@@ -394,7 +398,7 @@ int Expression::eval_int()
 	}
         else
         {
-          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          cerr << "ERROR: Trouble in > of logical of eval_int()!" << endl;
           return 1;
         }
       case GREATER_EQUAL:
@@ -440,7 +444,7 @@ int Expression::eval_int()
 	}
         else
         {
-          cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
+          cerr << "ERROR: Trouble in >= of logical of eval_int()!" << endl;
           return 1;
         }
       case NOT:
@@ -469,7 +473,14 @@ int Expression::eval_int()
     }
     else if (m_oper == FLOOR)
     {
-      return floor(m_lhs->eval_int());
+      if (m_lhs->m_type == DOUBLE)
+      {
+        return floor(m_lhs->eval_double());
+      }
+      else 
+      {
+        return floor(m_lhs->eval_int());
+      }
     }
     else if (m_oper == RANDOM)
     {
@@ -593,17 +604,9 @@ double Expression::eval_double()
     {
       return abs(m_lhs->eval_double());
     }
-    else if (m_oper == FLOOR)
-    {
-      return floor (m_lhs->eval_double());
-    }
     else if (m_oper == UNARY_MINUS)
     {
       return (-m_lhs->eval_double());
-    }
-    else if (m_oper == RANDOM)
-    {  
-      return rand() % (int) floor(m_lhs->eval_double());
     }
   }
   else
