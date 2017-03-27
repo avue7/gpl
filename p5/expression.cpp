@@ -83,7 +83,7 @@ Expression::Expression(string *value, Gpl_type gpl_type, Expression *lhs, Expres
 // Constructor for variable
 Expression::Expression(Variable *variable)
 {
-  m_var = variable;;
+  m_var = variable;
   m_type = variable->m_type;
   m_node = VARIABLE;
 }

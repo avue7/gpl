@@ -18,7 +18,7 @@ Symbol *Symbol_table::lookup(string name)
   
   if (got == m_map.end())
   {
-    cout << "NAME NOT FOUND IN MAP" << endl;   
+    //cout << "NAME NOT FOUND IN MAP" << endl;   
     return NULL;
   }
   else
@@ -46,11 +46,11 @@ void Symbol_table::insert_symbol(Symbol *symbol)
   {
     if (symbol->is_array())
     {
-      if (symbol->m_size == 0)
+/*      if (symbol->m_size == 0)
       {
         string str = "0"; 
         Error::error(Error::INVALID_ARRAY_SIZE, symbol->m_name, str); 
-      }
+      }*/
       if (symbol->m_type == INT_ARRAY)
       { 
         int *temp_array = new int[symbol->m_size];
