@@ -594,19 +594,16 @@ expression:
     { $$ = $1; } 
     | expression T_OR expression
     {
-      if ($1->m_type == STRING)
+      if($1->m_type == STRING || $3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "||");
-        $$ = new Expression(0, INT, NULL, NULL);
+        if ($1->m_type == STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "||");
+        }
         if ($3->m_type == STRING)
         {
           Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "||");
-          $$ = new Expression(0, INT, NULL, NULL);
         }
-      }
-      else if ($3->m_type == STRING)
-      {
-        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "||");
         $$ = new Expression(0, INT, NULL, NULL);
       }
       else 
@@ -616,19 +613,16 @@ expression:
     }
     | expression T_AND expression 
     {
-      if ($1->m_type == STRING)
+      if($1->m_type == STRING || $3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "&&");
-        $$ = new Expression(0, INT, NULL, NULL);
+        if ($1->m_type == STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "&&");
+        }
         if ($3->m_type == STRING)
         {
           Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "&&");
-          $$ = new Expression(0, INT, NULL, NULL);
         }
-      }
-      else if ($3->m_type == STRING)
-      {
-        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "&&");
         $$ = new Expression(0, INT, NULL, NULL);
       }
       else
@@ -677,95 +671,113 @@ expression:
     }
     | expression T_MINUS expression
     {
-      if ($1->m_type == STRING)
+      if ($1->m_type == STRING || $3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "-");
-        $$ = new Expression(0, INT, NULL, NULL); 
-      }
-      if($3->m_type == STRING)
-      {
-        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "-");
+        if ($1->m_type == STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "-");
+        }
+        if($3->m_type == STRING)
+        {
+          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "-");
+        }
         $$ = new Expression(0, INT, NULL, NULL);
       }
-      if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
+      else
       {
-        $$ = new Expression(MINUS, DOUBLE, $1, $3);
-      } 
-      if ($1->m_type == INT && $3->m_type == INT)
-      {
-        $$ = new Expression(MINUS, INT, $1, $3);
+        if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
+        {
+          $$ = new Expression(MINUS, DOUBLE, $1, $3);
+        } 
+        if ($1->m_type == INT && $3->m_type == INT)
+        {
+          $$ = new Expression(MINUS, INT, $1, $3);
+        }
       }
     }
     | expression T_MULTIPLY expression
     {
-      if ($1->m_type == STRING)
+      if ($1->m_type == STRING || $3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
+        if ($1->m_type == STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "*");
+        }
+        if($3->m_type == STRING)
+        {
+          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "*");
+        }
         $$ = new Expression(0, INT, NULL, NULL);
       }
-      if($3->m_type == STRING)
+      else
       {
-        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "*");
-        $$ = new Expression(0, INT, NULL, NULL);
-      }
-      if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
-      {
-        $$ = new Expression(MULTIPLY, DOUBLE, $1, $3);
-      }
-      if ($1->m_type == INT && $3->m_type == INT)
-      {
-        $$ = new Expression(MULTIPLY, INT, $1, $3);
+        if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
+        {
+          $$ = new Expression(MULTIPLY, DOUBLE, $1, $3);
+        }
+        else if ($1->m_type == INT && $3->m_type == INT)
+        {
+          $$ = new Expression(MULTIPLY, INT, $1, $3);
+        }
       }
     }
     | expression T_DIVIDE expression
     {
-      if ($1->m_type == STRING)
+      if ($1->m_type == STRING || $3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "/");
+        if ($1->m_type == STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "/");
+        }
+        if($3->m_type == STRING)
+        {
+          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "/");
+        }
         $$ = new Expression(0, INT, NULL, NULL);
       }
-      if($3->m_type == STRING)
+      else 
       {
-        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "/");
-        $$ = new Expression(0, INT, NULL, NULL);
-      }
-      if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
-      {
-        if ($3->eval_double() == 0.0)
+        if ($1->m_type == DOUBLE || $3->m_type == DOUBLE)
         {
-          Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
-          $$ = new Expression(0, INT, NULL, NULL);
+          if ($3->eval_double() == 0.0)
+          {
+            Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
+            $$ = new Expression(0, INT, NULL, NULL);
+          }
+          else
+          {
+            $$ = new Expression(DIVIDE, DOUBLE, $1, $3);
+          }
         }
-        else
+        if ($1->m_type == INT && $3->m_type == INT)
         {
-          $$ = new Expression(DIVIDE, DOUBLE, $1, $3);
-        }
-      }
-      if ($1->m_type == INT && $3->m_type == INT)
-      {
-        if ($3->eval_int() == 0)
-        {
-          Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
-          $$ = new Expression(0, INT, NULL, NULL);
-        }
-        else
-        {
-          $$ = new Expression(DIVIDE, INT, $1, $3);
+          if ($3->eval_int() == 0)
+          {
+            Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME, "/");
+            $$ = new Expression(0, INT, NULL, NULL);
+          }
+          else
+          {
+            $$ = new Expression(DIVIDE, INT, $1, $3);
+          }
         }
       }
     }
     | expression T_MOD expression
     {
-      if ($1->m_type == DOUBLE || $1->m_type == STRING)
+      if ($1->m_type == DOUBLE || $1->m_type == STRING || 
+            $3->m_type == DOUBLE || $3->m_type == STRING)
       {
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "%");
-        $$ = new Expression(0, INT, NULL, NULL);
-      }
-      if ($3->m_type == DOUBLE || $3->m_type == STRING)
-      {
+        if ($1->m_type == DOUBLE || $1->m_type == STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "%");
+        }
+        if ($3->m_type == DOUBLE || $3->m_type == STRING)
+        {
         Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "%");
+        }
         $$ = new Expression(0, INT, NULL, NULL);
-      }
+      } 
       if ($1->m_type == INT && $3->m_type == INT)
       {
         if ($3->eval_int() == 0)

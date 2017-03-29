@@ -9,7 +9,7 @@ int Constant::get_int_value()
 
 double Constant::get_double_value() 
 {
-//  assert(m_type == DOUBLE);
+  assert(m_type == DOUBLE);
   return m_union_value.union_double;
 }
 
