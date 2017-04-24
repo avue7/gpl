@@ -33,7 +33,6 @@ class Symbol
     Symbol(string name, Gpl_type type, double value);
     Symbol(string name, Gpl_type type, string value);
     Symbol(string name, Gpl_type type);
-    void print();
    
     /* Get and set functions */
     int get_int_value();

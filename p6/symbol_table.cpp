@@ -132,8 +132,11 @@ void Symbol_table::print(ostream &os)
     }
     else if (temp->m_type == GAME_OBJECT)
     {
-      // Game_object::print(temp->m_name, os);
-      cerr << (temp->m_value) << endl;
+      Game_object *obj_tmp;
+      obj_tmp = temp->get_game_object_value();
+      obj_tmp->print(temp->m_name, os);
+      os << endl;
+      cerr << "this printed inside of print in symbol_table" << endl;
     }
     /* ARRAYS PRINTOUT BEGINS HERE */
     else if (temp->m_type == INT_ARRAY)

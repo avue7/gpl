@@ -201,3 +201,4 @@ void Symbol::set(int value)
   assert(m_type == INT);
   m_value = (void*) new int(value);
 }
+
