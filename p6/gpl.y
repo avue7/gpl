@@ -4,7 +4,7 @@
 extern int yylex();               // this lexer function returns next token
 extern int yyerror(const char *); // used to print errors
 extern int line_count;            // current line in the input; from record.l
-
+ 
 #include "error.h"      // class for printing errors (used by gpl)
 #include "parser.h"
 #include "symbol_table.h"
@@ -15,7 +15,15 @@ extern int line_count;            // current line in the input; from record.l
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "rectangle.h"
+#include "circle.h"
+#include "triangle.h"
+#include "pixmap.h"
+#include "textbox.h"
+#include "animation_block.h"
 using namespace std;
+string cur_obj_under_construction;
+Game_object* cur_obj;
 
 // bison syntax to indicate the end of the header
 %} 
@@ -157,6 +165,8 @@ using namespace std;
 %type <union_expression> primary_expression
 %type <union_expression> optional_initializer
 %type <union_oper_type> math_operator
+%type <union_int> object_type
+%type <union_string> animation_parameter
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -341,10 +351,15 @@ object_declaration:
 //---------------------------------------------------------------------
 object_type:
     T_TRIANGLE
+    { $$ = T_TRIANGLE; }
     | T_PIXMAP
+    { $$ = T_PIXMAP; }
     | T_CIRCLE
+    { $$ = T_CIRCLE; }
     | T_RECTANGLE
+    { $$ = T_RECTANGLE; }
     | T_TEXTBOX
+    { $$ = T_TEXTBOX; }
     ;
 
 //---------------------------------------------------------------------

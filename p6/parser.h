@@ -39,6 +39,13 @@
 #include "variable.h"
 #include "constant.h"
 #include "gpl_type.h"
+#include "rectangle.h"
+#include "circle.h"
+#include "triangle.h"
+#include "pixmap.h"
+#include "textbox.h"
+#include "animation_block.h"
+#include "game_object.h"
 // put new included ABOVE this line
 #include "y.tab.h"
 #endif // #ifndef PARSER_H

@@ -1,5 +1,6 @@
 #include "symbol.h"
 
+
 /****************************************
  * Constructors for int, double, string *
 ****************************************/
@@ -38,19 +39,24 @@ Symbol::Symbol(string name, Gpl_type type, int value)
 
 Symbol::Symbol(string name, Gpl_type type, double value)
 {
-   m_name = name;
-   m_type = type;
-   m_value = (void *) new double(value);
+  m_name = name;
+  m_type = type;
+  m_value = (void *) new double(value);
 }
 
 Symbol::Symbol(string name, Gpl_type type, string value)
 {
-   m_name = name;
-   m_type = type;
-   m_value = (void*) new string(value);
+  m_name = name;
+  m_type = type;
+  m_value = (void*) new string(value);
 }
 
-
+Symbol::Symbol(string name, Game_object* value)
+{
+  m_name = name;
+  m_type = GAME_OBJECT;
+  m_value = value;
+}
 /*  // THIS FUNCTION CAN BE USED INSTEAD FOR SIMPLICITY //
 ****************************************************************
     If you want to use this function, then you must dynamically
@@ -103,10 +109,22 @@ bool Symbol::is_array()
   }
 }
 
-// Get the string type instead of a digit
-string Symbol::get_type()
+bool Symbol::is_game_object()
 {
-  return  gpl_type_to_string(m_type);
+  if (m_type == GAME_OBJECT)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+// Get the string type instead of a digit
+Gpl_type Symbol::get_type()
+{
+  return m_type;
 }
 
 // Get the base type of an array
@@ -120,3 +138,37 @@ string Symbol::get_name()
   return m_name;
 }
 
+int Symbol::get_int_value()
+{
+  assert(m_type == INT);
+  return *(int*) m_value;
+}
+ 
+double Symbol::get_double_value()
+{
+  // Make sure m_type is really a double
+  assert(m_type == DOUBLE);
+  return *(double*) m_value;
+}
+
+string Symbol::get_string_value()
+{
+  assert(m_type == STRING);
+  stringstream ss;
+  string value;
+  ss << m_value;
+  ss >> value;
+  return value;
+}
+
+Game_object *Symbol::get_game_object_value()
+{
+  assert(m_type == GAME_OBJECT);
+  return (Game_object*) m_value;
+}
+
+void Symbol::set(int value)
+{
+  assert(m_type == INT);
+  m_value = (void*) new int(value);
+}

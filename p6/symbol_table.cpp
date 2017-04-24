@@ -69,7 +69,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
         }
         symbol->m_value = (void*) temp_array;
       }
-      else
+      else  // It's a string
       {
         string *temp_array = new string[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
@@ -122,12 +122,12 @@ void Symbol_table::print(ostream &os)
     Symbol *temp = *it; // Need to set new temp object to work
     if (temp->m_type == INT)
     {
-      os << temp->get_type() << " " << 
+      os << gpl_type_to_string(temp->get_type()) << " " << 
       temp->m_name << " = " << *(int *)(temp->m_value) << endl;
     }
     else if (temp->m_type == DOUBLE)
     {
-      os << temp->get_type() << " " << 
+      os << gpl_type_to_string(temp->get_type()) << " " << 
       temp->m_name << " = " << *(double *)(temp->m_value) << endl;
     }
     /* ARRAYS PRINTOUT BEGINS HERE */
@@ -160,7 +160,7 @@ void Symbol_table::print(ostream &os)
     }
     else  // Print non-array strings here
     {
-      os << temp->get_type() << " " <<
+      os << gpl_type_to_string(temp->get_type()) << " " <<
       temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
        << "\"" << endl;
     }
