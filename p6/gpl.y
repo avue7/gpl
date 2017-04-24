@@ -344,7 +344,21 @@ optional_initializer:
 
 //---------------------------------------------------------------------
 object_declaration:
-    object_type T_ID T_LPAREN parameter_list_or_empty T_RPAREN
+    object_type T_ID
+    {
+      switch($1)
+      {
+        case T_RECTANGLE: 
+             cur_obj = new Rectangle();
+             break;
+      }
+      cerr << "this printed in gpl.y of rectangle" << endl;
+      Symbol *symbol = new Symbol(*$2, cur_obj);
+      Symbol_table::instance()->insert_symbol(symbol);
+    }
+    T_LPAREN parameter_list_or_empty T_RPAREN
+    {
+    }
     | object_type T_ID T_LBRACKET expression T_RBRACKET
     ;
 

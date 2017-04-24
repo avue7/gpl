@@ -8,6 +8,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include "game_object.h"
 #include "error.h"
 using namespace std;
 

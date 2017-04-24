@@ -130,6 +130,11 @@ void Symbol_table::print(ostream &os)
       os << gpl_type_to_string(temp->get_type()) << " " << 
       temp->m_name << " = " << *(double *)(temp->m_value) << endl;
     }
+    else if (temp->m_type == GAME_OBJECT)
+    {
+      // Game_object::print(temp->m_name, os);
+      cerr << (temp->m_value) << endl;
+    }
     /* ARRAYS PRINTOUT BEGINS HERE */
     else if (temp->m_type == INT_ARRAY)
     {

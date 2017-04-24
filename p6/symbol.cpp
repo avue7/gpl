@@ -53,6 +53,7 @@ Symbol::Symbol(string name, Gpl_type type, string value)
 
 Symbol::Symbol(string name, Game_object* value)
 {
+  cerr << "this was called in symbol game_object" << endl;
   m_name = name;
   m_type = GAME_OBJECT;
   m_value = value;
