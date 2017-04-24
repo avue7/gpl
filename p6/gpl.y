@@ -15,15 +15,8 @@ extern int line_count;            // current line in the input; from record.l
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "rectangle.h"
-#include "circle.h"
-#include "triangle.h"
-#include "pixmap.h"
-#include "textbox.h"
-#include "animation_block.h"
 using namespace std;
-string cur_obj_under_construction;
-Game_object* cur_obj;
+Game_object* cur_obj; // Global variable that stores current obj under const.
 
 // bison syntax to indicate the end of the header
 %} 
@@ -346,14 +339,32 @@ optional_initializer:
 object_declaration:
     object_type T_ID
     {
+      Symbol *symbol; 
       switch($1)
       {
-        case T_RECTANGLE: 
-             cur_obj = new Rectangle();
+        case TRIANGLE:
+             symbol = new Symbol(*$2, TRIANGLE);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case CIRCLE:
+             symbol = new Symbol(*$2, CIRCLE);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case RECTANGLE: 
+             symbol = new Symbol(*$2, RECTANGLE);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case TEXTBOX:
+             symbol = new Symbol(*$2, TEXTBOX);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case PIXMAP:
+             symbol = new Symbol(*$2, PIXMAP);
+             cur_obj = symbol->get_game_object_value();
              break;
       }
-      cerr << "this printed in gpl.y of rectangle" << endl;
-      Symbol *symbol = new Symbol(*$2, cur_obj);
+      cerr << "this printed in gpl.y of object declaration" << endl;
+      cerr << "current object is " << cur_obj->type() << endl;
       Symbol_table::instance()->insert_symbol(symbol);
     }
     T_LPAREN parameter_list_or_empty T_RPAREN
@@ -365,15 +376,15 @@ object_declaration:
 //---------------------------------------------------------------------
 object_type:
     T_TRIANGLE
-    { $$ = T_TRIANGLE; }
+    { $$ = TRIANGLE; }
     | T_PIXMAP
-    { $$ = T_PIXMAP; }
+    { $$ = PIXMAP; }
     | T_CIRCLE
-    { $$ = T_CIRCLE; }
+    { $$ = CIRCLE; }
     | T_RECTANGLE
-    { $$ = T_RECTANGLE; }
+    { $$ = RECTANGLE; }
     | T_TEXTBOX
-    { $$ = T_TEXTBOX; }
+    { $$ = TEXTBOX; }
     ;
 
 //---------------------------------------------------------------------

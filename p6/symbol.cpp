@@ -51,12 +51,40 @@ Symbol::Symbol(string name, Gpl_type type, string value)
   m_value = (void*) new string(value);
 }
 
-Symbol::Symbol(string name, Game_object* value)
+Symbol::Symbol(string name, Gpl_type type)
 {
-  cerr << "this was called in symbol game_object" << endl;
+  //cerr << "this was called in symbol game_object" << endl;
   m_name = name;
   m_type = GAME_OBJECT;
-  m_value = value;
+  if (type == TRIANGLE)
+  {
+    cerr << "M_name is : " << name << endl;
+    m_value = (void*) new Triangle();
+  }
+  else if (type == CIRCLE)
+  {
+    cerr << "M_name is : " << name << endl;
+    m_value = (void*) new Circle();
+  }
+  else if (type == RECTANGLE)
+  {
+    cerr << "M_name is : " << name << endl;
+    m_value = (void*) new Rectangle();
+  }
+  else if (type == TEXTBOX)
+  {
+    cerr << "M_name is : " << name << endl;
+    m_value = (void*) new Textbox();
+  }
+  else if (type == PIXMAP)
+  {
+    cerr << "M_name is : " << name << endl;
+    m_value = (void*) new Pixmap();
+  } 
+  else
+  {
+    cerr << "Trouble in game_object constr" << endl;
+  }
 }
 /*  // THIS FUNCTION CAN BE USED INSTEAD FOR SIMPLICITY //
 ****************************************************************

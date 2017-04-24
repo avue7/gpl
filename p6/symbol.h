@@ -6,6 +6,12 @@
 #include "gpl_type.h"
 #include "game_object.h"
 #include "expression.h"
+#include "rectangle.h"
+#include "circle.h"
+#include "triangle.h"
+#include "pixmap.h"
+#include "textbox.h"
+#include "animation_block.h"
 using namespace std;
 
 /* We need the symbol class to store
@@ -26,7 +32,7 @@ class Symbol
     Symbol(string name, Gpl_type type, int value);
     Symbol(string name, Gpl_type type, double value);
     Symbol(string name, Gpl_type type, string value);
-    Symbol(string name, Game_object* value);
+    Symbol(string name, Gpl_type type);
     void print();
    
     /* Get and set functions */
