@@ -15,19 +15,27 @@ Symbol::Symbol(string name, Gpl_type type, int value)
     m_type = type;
     m_value = (void*) new int[value];
   }
-  if (type == DOUBLE_ARRAY)
+  else if (type == DOUBLE_ARRAY)
   {
     m_size = value;
     m_name = name;
     m_type = type;
     m_value = (void*) new double[value];
   }
-  if (type == STRING_ARRAY)
+  else if (type == STRING_ARRAY)
   {
     m_size = value;
     m_name = name;
     m_type = type;
     m_value = (void*) new string[value];
+  }
+  else if (type == RECTANGLE_ARRAY)
+  {
+    cerr << "This printed inside of rect_array in symbol" << endl;
+    m_size = value;
+    m_name = name;
+    m_type = type;
+    m_value = (void*) new Rectangle*[value];
   }
   else
   {
@@ -132,6 +140,10 @@ bool Symbol::is_array()
   {
     return true;
   }
+  else if (m_type == RECTANGLE_ARRAY)
+  {
+    return true;
+  }
   else
   {
     return false;
@@ -140,7 +152,7 @@ bool Symbol::is_array()
 
 bool Symbol::is_game_object()
 {
-  if (m_type == GAME_OBJECT)
+  if (m_type == 16)
   {
     return true;
   }
@@ -192,7 +204,6 @@ string Symbol::get_string_value()
 
 Game_object *Symbol::get_game_object_value()
 {
-  assert(m_type == GAME_OBJECT);
   return (Game_object*) m_value;
 }
 

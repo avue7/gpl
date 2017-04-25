@@ -69,6 +69,24 @@ void Symbol_table::insert_symbol(Symbol *symbol)
         }
         symbol->m_value = (void*) temp_array;
       }
+     else if (symbol->m_type == RECTANGLE_ARRAY)
+      {
+        cerr << "this printed inside of symbol_table for rect array " << endl;
+        Rectangle** temp_array = new Rectangle*[symbol->m_size];
+        Rectangle* tmp;
+        for (int i = 0; i < symbol->m_size; i++)
+        {
+          tmp = new Rectangle();
+          temp_array[i] = &tmp[i];
+          cerr << "Array for rect is :" << temp_array[i] << endl;
+        }
+        cerr << "type for tmp is : " << tmp->type() << endl;
+        symbol->m_value = (void*) temp_array;
+        cerr << "first element for temp_array is at: " << temp_array[0] << endl;
+        cerr << "second element for temp_array is at: " << temp_array[1] << endl;
+        cerr << "first elelment of symbol value is at : " << symbol->m_value << endl;
+        cerr << "first location of tmp_array is at : " << temp_array << endl;
+      }
       else  // It's a string
       {
         string *temp_array = new string[symbol->m_size];
@@ -130,13 +148,18 @@ void Symbol_table::print(ostream &os)
       os << gpl_type_to_string(temp->get_type()) << " " << 
       temp->m_name << " = " << *(double *)(temp->m_value) << endl;
     }
+    else if (temp->m_type == STRING)
+    {
+      os << gpl_type_to_string(temp->get_type()) << " " <<
+      temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
+       << "\"" << endl;
+    }
     else if (temp->m_type == GAME_OBJECT)
     {
       Game_object *obj_tmp;
       obj_tmp = temp->get_game_object_value();
       obj_tmp->print(temp->m_name, os);
       os << endl;
-      cerr << "this printed inside of print in symbol_table" << endl;
     }
     /* ARRAYS PRINTOUT BEGINS HERE */
     else if (temp->m_type == INT_ARRAY)
@@ -166,11 +189,29 @@ void Symbol_table::print(ostream &os)
         << *(string *)(temp->m_value) << "\"" << endl;
       }
     }
-    else  // Print non-array strings here
+    else if (temp->m_type == RECTANGLE_ARRAY)
     {
-      os << gpl_type_to_string(temp->get_type()) << " " <<
-      temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
-       << "\"" << endl;
+     
+      Rectangle** temp_array = new Rectangle*[temp->m_size];
+      temp_array = (Rectangle**) temp->m_value;
+      Rectangle *obj_tmp;
+      for (int i=0; i < temp->m_size; i++)
+      {
+        os << temp->get_base_type() << " " << 
+        temp->m_name << "[" << i << "]" << endl;
+        //temp_array[i] = (Rectangle*) temp->m_value;
+        
+        cerr << "Address for temp_array is " << temp_array[i]<< endl;
+       // obj_tmp->print(temp->m_name, os);
+        os << endl;
+       // cerr << "type is : " << obj_tmp->type() << endl; 
+      } 
+     //   cerr << "Address for temp_array is " << *temp_array[0]<< endl;
+      cerr << "this printed inside of print in symbol_table" << endl;
+    }
+    else
+    {
+      cerr << "ERROR: inside of symbol_table print(). Cannot find m_type!" << endl;
     }
   }
 }

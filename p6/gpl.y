@@ -369,8 +369,37 @@ object_declaration:
     }
     T_LPAREN parameter_list_or_empty T_RPAREN
     {
+      // Not yet fixed
     }
     | object_type T_ID T_LBRACKET expression T_RBRACKET
+    {
+      Symbol *symbol; 
+      switch($1)
+      {
+        case TRIANGLE:
+             symbol = new Symbol(*$2, TRIANGLE_ARRAY, $4->eval_int());
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case CIRCLE:
+             symbol = new Symbol(*$2, CIRCLE_ARRAY, $4->eval_int());
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case RECTANGLE: 
+             symbol = new Symbol(*$2, RECTANGLE_ARRAY, $4->eval_int());
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case TEXTBOX:
+             symbol = new Symbol(*$2, TEXTBOX_ARRAY, $4->eval_int());
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case PIXMAP:
+             symbol = new Symbol(*$2, PIXMAP_ARRAY, $4->eval_int());
+             cur_obj = symbol->get_game_object_value();
+             break;
+      }
+      Symbol_table::instance()->insert_symbol(symbol);
+      cerr << "THIS PRINTED INSIDE GPL.y the rect symbol is " << symbol->m_type << endl;
+    }
     ;
 
 //---------------------------------------------------------------------
