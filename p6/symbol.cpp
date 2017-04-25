@@ -29,13 +29,40 @@ Symbol::Symbol(string name, Gpl_type type, int value)
     m_type = type;
     m_value = (void*) new string[value];
   }
+  else if (type == CIRCLE_ARRAY)
+  {
+    m_size = value;
+    m_name = name;
+    m_type = type;
+    m_value = (void*) new Circle*[value];
+  }
   else if (type == RECTANGLE_ARRAY)
   {
-    cerr << "This printed inside of rect_array in symbol" << endl;
     m_size = value;
     m_name = name;
     m_type = type;
     m_value = (void*) new Rectangle*[value];
+  }
+  else if (type == TRIANGLE_ARRAY)
+  {
+    m_size = value;
+    m_name = name;
+    m_type = type;
+    m_value = (void*) new Triangle*[value];
+  }
+  else if (type == TEXTBOX_ARRAY)
+  {
+    m_size = value;
+    m_name = name;
+    m_type = type;
+    m_value = (void*) new Textbox*[value];
+  }
+  else if (type == PIXMAP_ARRAY)
+  {
+    m_size = value;
+    m_name = name;
+    m_type = type;
+    m_value = (void*) new Pixmap*[value];
   }
   else
   {
@@ -66,27 +93,22 @@ Symbol::Symbol(string name, Gpl_type type)
   m_type = GAME_OBJECT;
   if (type == TRIANGLE)
   {
-    cerr << "M_name is : " << name << endl;
     m_value = (void*) new Triangle();
   }
   else if (type == CIRCLE)
   {
-    cerr << "M_name is : " << name << endl;
     m_value = (void*) new Circle();
   }
   else if (type == RECTANGLE)
   {
-    cerr << "M_name is : " << name << endl;
     m_value = (void*) new Rectangle();
   }
   else if (type == TEXTBOX)
   {
-    cerr << "M_name is : " << name << endl;
     m_value = (void*) new Textbox();
   }
   else if (type == PIXMAP)
   {
-    cerr << "M_name is : " << name << endl;
     m_value = (void*) new Pixmap();
   } 
   else
