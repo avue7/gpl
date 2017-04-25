@@ -363,8 +363,8 @@ object_declaration:
              cur_obj = symbol->get_game_object_value();
              break;
       }
-      cerr << "this printed in gpl.y of object declaration" << endl;
-      cerr << "current object is " << cur_obj->type() << endl;
+      //cerr << "this printed in gpl.y of object declaration" << endl;
+      //cerr << "current object is " << cur_obj->type() << endl;
       Symbol_table::instance()->insert_symbol(symbol);
     }
     T_LPAREN parameter_list_or_empty T_RPAREN
@@ -398,7 +398,7 @@ object_declaration:
              break;
       }
       Symbol_table::instance()->insert_symbol(symbol);
-      cerr << "THIS PRINTED INSIDE GPL.y the rect symbol is " << symbol->m_type << endl;
+      //cerr << "THIS PRINTED INSIDE GPL.y the rect symbol is " << symbol->m_type << endl;
     }
     ;
 
@@ -431,6 +431,29 @@ parameter_list :
 //---------------------------------------------------------------------
 parameter:
     T_ID T_ASSIGN expression
+    {
+      Gpl_type member_type;
+      Status status;
+      if ((status = cur_obj->get_member_variable_type(*$1, member_type)) != OK)
+      {
+        Error::error(Error::UNKNOWN_CONSTRUCTOR_PARAMETER, 
+        gpl_type_to_string(cur_obj->type()), *$1);
+        cerr << "STATUS is " << status << endl;
+      }
+      else
+      {
+        switch(member_type)
+        {
+          case INT:
+          {
+            int int_value;
+            int_value = $3->eval_int();
+            status = cur_obj->set_member_variable(*$1, int_value);
+            break; 
+          }
+        }
+      }
+    }
     ;
 
 //---------------------------------------------------------------------

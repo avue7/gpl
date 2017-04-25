@@ -46,6 +46,7 @@
 #include "textbox.h"
 #include "animation_block.h"
 #include "game_object.h"
+#include "window.h"
 // put new included ABOVE this line
 #include "y.tab.h"
 #endif // #ifndef PARSER_H

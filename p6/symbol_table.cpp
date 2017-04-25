@@ -106,12 +106,17 @@ void Symbol_table::insert_symbol(Symbol *symbol)
       }
       else  // It's a string
       {
-        string *temp_array = new string[symbol->m_size];
+/*        string *temp_array = new string[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
           temp_array[i] = "";
         }
-        symbol->m_value = (void*) temp_array;
+        symbol->m_value = (void*) temp_array;*/
+        for (int i = 0; i < symbol->m_size; i++)
+        {
+          ((string**) symbol->m_value)[i] = new string("");
+        }
+        
       }
     }
     m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol)); 
@@ -167,9 +172,14 @@ void Symbol_table::print(ostream &os)
     }
     else if (temp->m_type == STRING)
     {
+      //cerr << "this printed in string of sym_table " << endl;
       os << gpl_type_to_string(temp->get_type()) << " " <<
       temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
        << "\"" << endl;
+      string window_title = *(string*)(temp->m_value);
+     // cerr << temp->m_value << endl;
+     // cerr << window_title << endl;
+
     }
     else if (temp->m_type == GAME_OBJECT)
     {
