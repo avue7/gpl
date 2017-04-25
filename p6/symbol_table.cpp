@@ -72,20 +72,24 @@ void Symbol_table::insert_symbol(Symbol *symbol)
      else if (symbol->m_type == RECTANGLE_ARRAY)
       {
         cerr << "this printed inside of symbol_table for rect array " << endl;
-        Rectangle** temp_array = new Rectangle*[symbol->m_size];
-        Rectangle* tmp;
+//        Rectangle** temp_array = new Rectangle*[symbol->m_size];
+//        Rectangle* tmp;
         for (int i = 0; i < symbol->m_size; i++)
         {
-          tmp = new Rectangle();
-          temp_array[i] = &tmp[i];
-          cerr << "Array for rect is :" << temp_array[i] << endl;
+            ((Rectangle**) symbol->m_value)[i] = new Rectangle();
+            cerr << " symbol m value is " << ((Rectangle**)symbol->m_value)[i] << endl;
+//          tmp = new Rectangle();
+//          temp_array[i] = &tmp[i];
+//          cerr << "type for tmp is : " << tmp->type() << endl;
+//          cerr << "Array for rect is :" << temp_array[i] << endl;
+//          cerr << " value for pointer array is :" << temp_array[i]->type() << endl;
+           
         }
-        cerr << "type for tmp is : " << tmp->type() << endl;
-        symbol->m_value = (void*) temp_array;
-        cerr << "first element for temp_array is at: " << temp_array[0] << endl;
+//        symbol->m_value = (void*) temp_array;
+/*        cerr << "first element for temp_array is at: " << temp_array[0] << endl;
         cerr << "second element for temp_array is at: " << temp_array[1] << endl;
         cerr << "first elelment of symbol value is at : " << symbol->m_value << endl;
-        cerr << "first location of tmp_array is at : " << temp_array << endl;
+        cerr << "first location of tmp_array is at : " << temp_array << endl; */
       }
       else  // It's a string
       {
@@ -192,19 +196,19 @@ void Symbol_table::print(ostream &os)
     else if (temp->m_type == RECTANGLE_ARRAY)
     {
      
-      Rectangle** temp_array = new Rectangle*[temp->m_size];
+      Rectangle** temp_array;
       temp_array = (Rectangle**) temp->m_value;
-      Rectangle *obj_tmp;
       for (int i=0; i < temp->m_size; i++)
       {
+        Rectangle* obj_tmp = new Rectangle();
         os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << endl;
-        //temp_array[i] = (Rectangle*) temp->m_value;
-        
+        cerr << " type for temp symbol is : " << temp->m_type << endl;
+        obj_tmp = temp_array[i];        
         cerr << "Address for temp_array is " << temp_array[i]<< endl;
-       // obj_tmp->print(temp->m_name, os);
+        cerr << "type is for obj_tmp is : " << obj_tmp->type() << endl; 
+        obj_tmp->print(temp->m_name, os);
         os << endl;
-       // cerr << "type is : " << obj_tmp->type() << endl; 
       } 
      //   cerr << "Address for temp_array is " << *temp_array[0]<< endl;
       cerr << "this printed inside of print in symbol_table" << endl;
