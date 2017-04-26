@@ -95,27 +95,27 @@ Symbol::Symbol(string name, Gpl_type type)
   m_name = name;
   if (type == TRIANGLE)
   {
-    m_type = GAME_OBJECT;
+    m_type = TRIANGLE;
     m_value = (void*) new Triangle();
   }
   else if (type == CIRCLE)
   {
-    m_type = GAME_OBJECT;
+    m_type = CIRCLE;
     m_value = (void*) new Circle();
   }
   else if (type == RECTANGLE)
   {
-    m_type = GAME_OBJECT;
+    m_type = RECTANGLE;
     m_value = (void*) new Rectangle();
   }
   else if (type == TEXTBOX)
   {
-    m_type = GAME_OBJECT;
+    m_type = TEXTBOX;
     m_value = (void*) new Textbox();
   }
   else if (type == PIXMAP)
   {
-    m_type = GAME_OBJECT;
+    m_type = PIXMAP;
     m_value = (void*) new Pixmap();
   }
   else if (type == ANIMATION_BLOCK)

@@ -182,12 +182,12 @@ void Symbol_table::print(ostream &os)
       temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
        << "\"" << endl;
     }
-    else if (temp->m_type == GAME_OBJECT)
+    else if (temp->is_game_object())
     {
-      Game_object *obj_tmp;
-      obj_tmp = temp->get_game_object_value();
-      obj_tmp->print(temp->m_name, os);
-      os << endl;
+        Game_object *obj_tmp;
+        obj_tmp = temp->get_game_object_value();
+        obj_tmp->print(temp->m_name, os);
+        os << endl;
     }
     else if (temp->m_type == ANIMATION_BLOCK)
     {
@@ -224,83 +224,83 @@ void Symbol_table::print(ostream &os)
     }
     else if (temp->m_type == CIRCLE_ARRAY)
     {
-      string count;
-      Circle** temp_array = new Circle*[temp->m_size];
-      Circle* obj_tmp = new Circle();
-      temp_array = (Circle**) temp->m_value;
-      for (int i=0; i < temp->m_size; i++)
-      {
-        stringstream ss;
-        ss << i;
-        count = ss.str();
-        obj_tmp = temp_array[i];        
-        obj_tmp->print(temp->m_name + "["+count+"]" , os);
-        os << endl;
-      } 
+        string count;
+        Circle** temp_array = new Circle*[temp->m_size];
+        Circle* obj_tmp = new Circle();
+        temp_array = (Circle**) temp->m_value;
+        for (int i=0; i < temp->m_size; i++)
+        {
+          stringstream ss;
+          ss << i;
+          count = ss.str();
+          obj_tmp = temp_array[i];        
+          obj_tmp->print(temp->m_name + "["+count+"]" , os);
+          os << endl;
+        } 
     }
     else if (temp->m_type == RECTANGLE_ARRAY)
     {
-      string count;
-      Rectangle** temp_array = new Rectangle*[temp->m_size];
-      Rectangle* obj_tmp = new Rectangle();
-      temp_array = (Rectangle**) temp->m_value;
-      for (int i=0; i < temp->m_size; i++)
-      {
-        stringstream ss;
-        ss << i;
-        count = ss.str();
-        obj_tmp = temp_array[i];        
-        obj_tmp->print(temp->m_name + "["+count+"]" , os);
-        os << endl;
-      } 
+        string count;
+        Rectangle** temp_array = new Rectangle*[temp->m_size];
+        Rectangle* obj_tmp = new Rectangle();
+        temp_array = (Rectangle**) temp->m_value;
+        for (int i=0; i < temp->m_size; i++)
+        {
+          stringstream ss;
+          ss << i;
+          count = ss.str();
+          obj_tmp = temp_array[i];        
+          obj_tmp->print(temp->m_name + "["+count+"]" , os);
+          os << endl;
+        } 
     }
     else if (temp->m_type == TRIANGLE_ARRAY)
     {
-      string count;
-      Triangle** temp_array = new Triangle*[temp->m_size];
-      Triangle* obj_tmp = new Triangle();
-      temp_array = (Triangle**) temp->m_value;
-      for (int i=0; i < temp->m_size; i++)
-      {
-        stringstream ss;
-        ss << i;
-        count = ss.str();
-        obj_tmp = temp_array[i];        
-        obj_tmp->print(temp->m_name + "["+count+"]" , os);
-        os << endl;
-      } 
+        string count;
+        Triangle** temp_array = new Triangle*[temp->m_size];
+        Triangle* obj_tmp = new Triangle();
+        temp_array = (Triangle**) temp->m_value;
+        for (int i=0; i < temp->m_size; i++)
+        {
+          stringstream ss;
+          ss << i;
+          count = ss.str();
+          obj_tmp = temp_array[i];        
+          obj_tmp->print(temp->m_name + "["+count+"]" , os);
+          os << endl;
+        } 
     }
     else if (temp->m_type == TEXTBOX_ARRAY)
     {
-      string count;
-      Textbox** temp_array = new Textbox*[temp->m_size];
-      Textbox* obj_tmp = new Textbox();
-      temp_array = (Textbox**) temp->m_value;
-      for (int i=0; i < temp->m_size; i++)
-      {
-        stringstream ss;
-        ss << i;
-        count = ss.str();
-        obj_tmp = temp_array[i];        
-        obj_tmp->print(temp->m_name + "["+count+"]" , os);
-        os << endl;
-      } 
+        string count;
+        Textbox** temp_array = new Textbox*[temp->m_size];
+        Textbox* obj_tmp = new Textbox();
+        temp_array = (Textbox**) temp->m_value;
+        for (int i=0; i < temp->m_size; i++)
+        { 
+          stringstream ss;
+          ss << i;
+          count = ss.str();
+          obj_tmp = temp_array[i];        
+          obj_tmp->print(temp->m_name + "["+count+"]" , os);
+          os << endl;
+        } 
     }
     else if (temp->m_type == PIXMAP_ARRAY)
     {
-      string count;
-      Pixmap** temp_array = new Pixmap*[temp->m_size];
-      Pixmap* obj_tmp = new Pixmap();
-      temp_array = (Pixmap**) temp->m_value;
-      for (int i=0; i < temp->m_size; i++)
-      {
-        stringstream ss;
-        ss << i;
-        count = ss.str();
-        obj_tmp = temp_array[i];        
-        obj_tmp->print(temp->m_name + "["+count+"]" , os);
-        os << endl;
-      } 
+        string count;
+        Pixmap** temp_array = new Pixmap*[temp->m_size];
+        Pixmap* obj_tmp = new Pixmap();
+        temp_array = (Pixmap**) temp->m_value;
+        for (int i=0; i < temp->m_size; i++)
+        {
+          stringstream ss;
+          ss << i;
+          count = ss.str();
+          obj_tmp = temp_array[i];        
+          obj_tmp->print(temp->m_name + "["+count+"]" , os);
+          os << endl;
+        } 
     }
     else
     {

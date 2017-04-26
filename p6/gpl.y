@@ -464,6 +464,7 @@ parameter:
       Status status;
       if ((status = cur_obj->get_member_variable_type(*$1, member_type)) != OK)
       {
+        cerr << "this ran in error on line 467" << endl;
         switch(status)
         {
           case MEMBER_NOT_DECLARED:
@@ -545,9 +546,13 @@ forward_declaration:
       {
         Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$3);
       }
-      found_sym = Symbol_table::instance()->lookup(*$5);       
-      anim_block = (Animation_block*) symbol->m_value; 
-      anim_block->initialize(found_sym, *$3);
+      if ($5)
+      {
+        found_sym = Symbol_table::instance()->lookup(*$5);       
+        anim_block = (Animation_block*) symbol->m_value; 
+        anim_block->initialize(found_sym, *$3);
+      }
+
     }
     ;
 
@@ -587,15 +592,9 @@ animation_parameter:
       cur_name = *$2;
       $$ = $2;
       Symbol *symbol; 
-/*      if (Symbol_table::instance()->lookup(*$2))
+      
+      switch($1)
       {
-        Error::error(Error::ANIMATION_PARAMETER_NAME_NOT_UNIQUE, *$2);
-        symbol = new Symbol("DUMMY", INT, 0);
-      }
-      else
-      {*/
-        switch($1)
-        {
           case TRIANGLE:
              symbol = new Symbol(*$2, TRIANGLE);
              cur_obj = symbol->get_game_object_value();
@@ -616,15 +615,16 @@ animation_parameter:
              symbol = new Symbol(*$2, PIXMAP);
              cur_obj = symbol->get_game_object_value();
              break;
-        }
-        cur_obj->never_animate();
-        cur_obj->never_draw();
-     // }
+      }
+      cur_obj->never_animate();
+      cur_obj->never_draw();
+
       if (!Symbol_table::instance()->insert_symbol(symbol))
       {
         Error::error(Error::ANIMATION_PARAMETER_NAME_NOT_UNIQUE, *$2);
-      }
-    
+        symbol = new Symbol("DUMMY", INT, 0);
+        $$ = 0;
+      }    
     }
     ;
 
