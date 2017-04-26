@@ -43,6 +43,52 @@ Variable::Variable(string symbol_name, string param)
   m_param = param;
 }
 
+Variable::Variable(string symbol_name, string param, int array_index)
+{
+  m_symbol = Symbol_table::instance()->lookup(symbol_name);
+  m_expr = NULL;
+  m_var_type = "GAME_OBJECT_ARRAY";
+  if (m_symbol->m_type == TRIANGLE_ARRAY)
+  {
+    ((Game_object*)((Triangle**)(m_symbol->m_value))
+      [array_index])->get_member_variable_type(param, m_type);
+     m_param = param;
+     m_array_index = array_index; 
+  }
+  else if (m_symbol->m_type == RECTANGLE_ARRAY)
+  {
+    ((Game_object*)((Rectangle**)(m_symbol->m_value))
+      [array_index])->get_member_variable_type(param, m_type);
+     m_param = param;
+     m_array_index = array_index; 
+  }
+  else if (m_symbol->m_type == CIRCLE_ARRAY)
+  {
+    ((Game_object*)((Circle**)(m_symbol->m_value))
+      [array_index])->get_member_variable_type(param, m_type);
+     m_param = param;
+     m_array_index = array_index; 
+  }
+  else if (m_symbol->m_type == TEXTBOX_ARRAY)
+  {
+    ((Game_object*)((Textbox**)(m_symbol->m_value))
+      [array_index])->get_member_variable_type(param, m_type);
+     m_param = param;
+     m_array_index = array_index; 
+  }
+  else if (m_symbol->m_type == PIXMAP_ARRAY)
+  {
+    ((Game_object*)((Pixmap**)(m_symbol->m_value))
+      [array_index])->get_member_variable_type(param, m_type);
+     m_param = param;
+     m_array_index = array_index; 
+  }
+  else
+  {
+    cerr << "Trouble in Variable.cpp constr for game_object_array!" << endl;
+  }
+}
+
 int Variable::get_int_value()
 {
   if (m_var_type == "DUMMY")
@@ -56,13 +102,57 @@ int Variable::get_int_value()
     value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
     return value;
   }
-  if (m_var_type == "GAME_OBJECT")
+  else if (m_var_type == "GAME_OBJECT")
   {
     int ret_value;
     Game_object* temp_obj;
     temp_obj = (Game_object*)(m_symbol->m_value);
     temp_obj->get_member_variable(this->m_param, ret_value);
     return ret_value;
+  }
+  else if (m_var_type == "GAME_OBJECT_ARRAY")
+  {
+    int ret_value;
+    Game_object* temp_obj;
+    if (m_symbol->m_type == TRIANGLE_ARRAY)
+    {
+      temp_obj = (Game_object*)((Triangle**)
+                  (m_symbol->m_value))[m_array_index];
+      temp_obj->get_member_variable(this->m_param, ret_value);
+      return ret_value;
+    }
+    else if (m_symbol->m_type == RECTANGLE_ARRAY)
+    {
+      temp_obj = (Game_object*)((Rectangle**)
+                  (m_symbol->m_value))[m_array_index];
+      temp_obj->get_member_variable(this->m_param, ret_value);
+      return ret_value;
+    }
+    else if (m_symbol->m_type == PIXMAP_ARRAY)
+    {
+      temp_obj = (Game_object*)((Pixmap**)
+                  (m_symbol->m_value))[m_array_index];
+      temp_obj->get_member_variable(this->m_param, ret_value);
+      return ret_value;
+    }
+    else if (m_symbol->m_type == TEXTBOX_ARRAY)
+    {
+      temp_obj = (Game_object*)((Textbox**)
+                  (m_symbol->m_value))[m_array_index];
+      temp_obj->get_member_variable(this->m_param, ret_value);
+      return ret_value;
+    }
+    else if (m_symbol->m_type == CIRCLE_ARRAY)
+    {
+      temp_obj = (Game_object*)((Circle**)
+                  (m_symbol->m_value))[m_array_index];
+      temp_obj->get_member_variable(this->m_param, ret_value);
+      return ret_value;
+    }
+    else
+    {
+      cerr << "Trouble in Var::get_int_value for object_array!" << endl;
+    }
   }
   void *temp;
   int value;

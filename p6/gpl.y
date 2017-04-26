@@ -198,7 +198,12 @@ variable_declaration:
     {
       Symbol *symbol;
       Expression *expr = $3;
-      if ($3)
+      if ($3 && ($3->m_type > $1))
+      {
+        Error::error(Error::INVALID_TYPE_FOR_INITIAL_VALUE, 
+               gpl_type_to_string($3->m_type), *$2, gpl_type_to_string($1));
+      }
+      else if ($3)
       {
         if ($1 == INT)
         { 
@@ -376,31 +381,38 @@ object_declaration:
     {
       Symbol *symbol; 
       cur_name = *$2;
-      switch($1)
+      if ($4->m_type != INT || $4->eval_int() <= 0)
       {
-        case TRIANGLE:
+        Error::error(Error::INVALID_ARRAY_SIZE, *$2, $4->eval_string());
+        symbol = new Symbol(*$2, INT, 0);
+      }
+      else
+      {
+        switch($1)
+        {
+          case TRIANGLE:
              symbol = new Symbol(*$2, TRIANGLE_ARRAY, $4->eval_int());
              cur_obj = symbol->get_game_object_value();
              break;
-        case CIRCLE:
+          case CIRCLE:
              symbol = new Symbol(*$2, CIRCLE_ARRAY, $4->eval_int());
              cur_obj = symbol->get_game_object_value();
              break;
-        case RECTANGLE: 
+          case RECTANGLE: 
              symbol = new Symbol(*$2, RECTANGLE_ARRAY, $4->eval_int());
              cur_obj = symbol->get_game_object_value();
              break;
-        case TEXTBOX:
+          case TEXTBOX:
              symbol = new Symbol(*$2, TEXTBOX_ARRAY, $4->eval_int());
              cur_obj = symbol->get_game_object_value();
              break;
-        case PIXMAP:
+          case PIXMAP:
              symbol = new Symbol(*$2, PIXMAP_ARRAY, $4->eval_int());
              cur_obj = symbol->get_game_object_value();
              break;
+        }
       }
       Symbol_table::instance()->insert_symbol(symbol);
-      //cerr << "THIS PRINTED INSIDE GPL.y the rect symbol is " << symbol->m_type << endl;
     }
     ;
 
@@ -771,7 +783,7 @@ variable:
           if (status == MEMBER_NOT_DECLARED)
           {
             Error::error(Error::UNDECLARED_MEMBER, *$1, *$3);
-            $$ = NULL;
+            $$ = new Variable("DUMMY");
           }
           else
           {
@@ -784,6 +796,21 @@ variable:
     }
     | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
     {
+      Symbol* symbol;
+      symbol = Symbol_table::instance()->lookup(*$1);
+      Status status;
+      if (symbol != NULL)
+      {
+        if (!(symbol->is_game_object()))
+        {         
+          Error::error(Error::LHS_OF_PERIOD_MUST_BE_OBJECT, *$1);
+          $$ = new Variable("DUMMY");
+        }
+        else
+        {
+          $$ = new Variable(symbol->m_name, *$6, $3->eval_int());
+        }
+      }     
     }
     ;
 

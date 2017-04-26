@@ -19,6 +19,7 @@ class Variable
     Symbol *m_symbol;   // Pointer to class
     string m_var_type;
     string m_param;    
+    int m_array_index;
 
     // Member functions
     string get_type();
@@ -31,6 +32,7 @@ class Variable
     Variable(string symbol_name);
     Variable(string symbol_name, Expression *expr);
     Variable(string symbol_name, string param);
+    Variable(string symbol_name, string param, int array_index);
 };
 
 #endif

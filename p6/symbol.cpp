@@ -31,6 +31,7 @@ Symbol::Symbol(string name, Gpl_type type, int value)
   }
   else if (type == CIRCLE_ARRAY)
   {
+    //cerr << "this printed inside circle array of symbol.cpp " << endl;
     m_size = value;
     m_name = name;
     m_type = type;
@@ -38,6 +39,7 @@ Symbol::Symbol(string name, Gpl_type type, int value)
   }
   else if (type == RECTANGLE_ARRAY)
   {
+    //cerr << "this printed inside rectangle array of symbol.cpp " << endl;
     m_size = value;
     m_name = name;
     m_type = type;
@@ -45,6 +47,7 @@ Symbol::Symbol(string name, Gpl_type type, int value)
   }
   else if (type == TRIANGLE_ARRAY)
   {
+    //cerr << "this printed inside triangle array of symbol.cpp " << endl;
     m_size = value;
     m_name = name;
     m_type = type;
@@ -175,6 +178,22 @@ bool Symbol::is_array()
   {
     return true;
   }
+  else if (m_type == TRIANGLE_ARRAY)
+  {
+    return true;
+  }
+  else if (m_type == CIRCLE_ARRAY)
+  {
+    return true;
+  }
+  else if (m_type == TEXTBOX_ARRAY)
+  {
+    return true;
+  }
+  else if (m_type == PIXMAP_ARRAY)
+  {
+    return true;
+  }
   else
   {
     return false;
@@ -183,12 +202,17 @@ bool Symbol::is_array()
 
 bool Symbol::is_game_object()
 {
-  if (m_type == 16)
+  if (m_type >= 16 && m_type <= 528)
+  {
+    return true;
+  }
+  else if (m_type >= 1040 && m_type <= 1552)
   {
     return true;
   }
   else
   {
+    cerr << "symbol class failed as game object" << endl;
     return false;
   }
 }

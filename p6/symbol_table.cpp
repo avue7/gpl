@@ -71,6 +71,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
       }
       else if (symbol->m_type == CIRCLE_ARRAY)
       {
+       // cerr << "this printed from circle_array in sym_table" << endl;
         for (int i = 0; i < symbol->m_size; i++)
         {
           ((Circle**) symbol->m_value)[i] = new Circle();
@@ -87,6 +88,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
       {
         for (int i = 0; i < symbol->m_size; i++)
         {
+          //cerr << "this printed in trangle array of sym_table " << endl;
           ((Triangle**) symbol->m_value)[i] = new Triangle();
         }
       }
@@ -112,6 +114,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
           temp_array[i] = "";
         }
         symbol->m_value = (void*) temp_array;*/
+        //cerr << "this printed from string in sym_table " << endl;
         for (int i = 0; i < symbol->m_size; i++)
         {
           ((string**) symbol->m_value)[i] = new string("");
