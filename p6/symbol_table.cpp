@@ -188,6 +188,11 @@ void Symbol_table::print(ostream &os)
       obj_tmp->print(temp->m_name, os);
       os << endl;
     }
+    else if (temp->m_type == ANIMATION_BLOCK)
+    {
+      os << gpl_type_to_string(temp->get_type()) << " " << 
+      temp->m_name << endl;
+    }
     /* ARRAYS PRINTOUT BEGINS HERE */
     else if (temp->m_type == INT_ARRAY)
     {

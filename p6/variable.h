@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "gpl_type.h"
+#include "animation_block.h"
 using namespace std;
 
 class Symbol; // Class forwarding
@@ -23,6 +24,7 @@ class Variable
     int get_int_value();
     double get_double_value();
     string get_string_value();
+    Animation_block * get_animation_block();
     
     // Constructors 
     Variable(string symbol_name);

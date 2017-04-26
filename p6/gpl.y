@@ -17,7 +17,7 @@ extern int line_count;            // current line in the input; from record.l
 #include <string>
 using namespace std;
 Game_object* cur_obj; // Global variable that stores current obj under const.
-
+string cur_name; // Current name for object 
 // bison syntax to indicate the end of the header
 %} 
 
@@ -340,6 +340,7 @@ object_declaration:
     object_type T_ID
     {
       Symbol *symbol; 
+      cur_name = *$2;
       switch($1)
       {
         case TRIANGLE:
@@ -374,6 +375,7 @@ object_declaration:
     | object_type T_ID T_LBRACKET expression T_RBRACKET
     {
       Symbol *symbol; 
+      cur_name = *$2;
       switch($1)
       {
         case TRIANGLE:
@@ -451,7 +453,30 @@ parameter:
             status = cur_obj->set_member_variable(*$1, int_value);
             break; 
           }
-        }
+          case DOUBLE:
+          {
+            double d_value;
+            d_value = $3->eval_double();
+            status = cur_obj->set_member_variable(*$1, d_value);
+            break; 
+          }
+          case STRING:
+          {
+            string s_value;
+            s_value = $3->eval_string();
+            status = cur_obj->set_member_variable(*$1, s_value);
+            break; 
+          }
+          case ANIMATION_BLOCK:
+          {
+            cerr << "this was called in animation block para" << endl;
+            Animation_block *a_value;
+            a_value = $3->eval_animation_block();
+            status = cur_obj->set_member_variable(*$1, a_value);
+            cerr << "status : " << status_to_string(status)<< endl;
+            break; 
+          }
+        } 
       }
     }
     ;
@@ -459,6 +484,19 @@ parameter:
 //---------------------------------------------------------------------
 forward_declaration:
     T_FORWARD T_ANIMATION T_ID T_LPAREN animation_parameter T_RPAREN
+    {
+      Animation_block* anim_block;
+      Symbol *found_sym, *symbol; 
+      found_sym = Symbol_table::instance()->lookup(cur_name);
+      cerr << "FOUND SYM " << found_sym->m_name << endl; 
+
+      symbol = new Symbol(*$3, ANIMATION_BLOCK);
+      Symbol_table::instance()->insert_symbol(symbol);    
+
+      anim_block = (Animation_block*) symbol->m_value; 
+      anim_block->initialize(found_sym, *$3);
+
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -493,6 +531,41 @@ animation_block:
 //---------------------------------------------------------------------
 animation_parameter:
     object_type T_ID
+    {
+      Symbol *symbol; 
+      if (Symbol_table::instance()->lookup(*$2))
+      {
+        Error::error(Error::ANIMATION_PARAMETER_NAME_NOT_UNIQUE, *$2);
+      }
+      switch($1)
+      {
+        case TRIANGLE:
+             symbol = new Symbol(*$2, TRIANGLE);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case CIRCLE:
+             symbol = new Symbol(*$2, CIRCLE);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case RECTANGLE: 
+             symbol = new Symbol(*$2, RECTANGLE);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case TEXTBOX:
+             symbol = new Symbol(*$2, TEXTBOX);
+             cur_obj = symbol->get_game_object_value();
+             break;
+        case PIXMAP:
+             symbol = new Symbol(*$2, PIXMAP);
+             cur_obj = symbol->get_game_object_value();
+             break;
+      }
+      Symbol_table::instance()->insert_symbol(symbol);
+
+      cur_obj->never_animate();
+      cur_obj->never_draw();
+      cur_name = *$2;
+    }
     ;
 
 //---------------------------------------------------------------------

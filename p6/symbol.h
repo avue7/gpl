@@ -42,6 +42,7 @@ class Symbol
     double get_double_value();
     string get_string_value();
     Game_object *get_game_object_value();
+    Animation_block* get_animation_block();
     void set(int value);
    
     /* If you want to use the below constructor instead

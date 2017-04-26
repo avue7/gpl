@@ -90,27 +90,36 @@ Symbol::Symbol(string name, Gpl_type type)
 {
   //cerr << "this was called in symbol game_object" << endl;
   m_name = name;
-  m_type = GAME_OBJECT;
   if (type == TRIANGLE)
   {
+    m_type = GAME_OBJECT;
     m_value = (void*) new Triangle();
   }
   else if (type == CIRCLE)
   {
+    m_type = GAME_OBJECT;
     m_value = (void*) new Circle();
   }
   else if (type == RECTANGLE)
   {
+    m_type = GAME_OBJECT;
     m_value = (void*) new Rectangle();
   }
   else if (type == TEXTBOX)
   {
+    m_type = GAME_OBJECT;
     m_value = (void*) new Textbox();
   }
   else if (type == PIXMAP)
   {
+    m_type = GAME_OBJECT;
     m_value = (void*) new Pixmap();
-  } 
+  }
+  else if (type == ANIMATION_BLOCK)
+  {
+    m_type = ANIMATION_BLOCK;
+    m_value = (void*) new Animation_block();
+  }
   else
   {
     cerr << "Trouble in game_object constr" << endl;
@@ -235,3 +244,8 @@ void Symbol::set(int value)
   m_value = (void*) new int(value);
 }
 
+Animation_block* Symbol::get_animation_block()
+{
+  assert(m_type == ANIMATION_BLOCK);
+  return (Animation_block*) m_value;
+}

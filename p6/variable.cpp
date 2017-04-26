@@ -111,3 +111,11 @@ string Variable::get_string_value()
   value = *(string*)temp;
   return value;
 }
+ 
+Animation_block *Variable::get_animation_block()
+{
+  if (m_type == ANIMATION_BLOCK)
+  {
+    return m_symbol->get_animation_block();
+  }
+}

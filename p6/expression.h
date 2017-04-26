@@ -11,6 +11,7 @@
 #include <cmath>
 #include <math.h>
 #include <assert.h>
+#include "animation_block.h"
 using namespace std;
 
 class Variable; // Forwarding class to avoid inf. loop
@@ -30,7 +31,8 @@ class Expression
     // Member functions: 
     int eval_int();         // To return evaluated ints
     double eval_double();   // to return evaluated doubles
-    string eval_string();   // To return evaluated strings     
+    string eval_string();   // To return evaluated strings
+    Animation_block* eval_animation_block();     
     
     // Constructor for unary and binary operator
     Expression (Operator_type operator_type, Gpl_type gpl_type, Expression *lhs, Expression *rhs);

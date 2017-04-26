@@ -700,3 +700,12 @@ string Expression::eval_string()
     return "ERROR: TROUBLE IN EVAL_STRING()!";
   }
 }
+
+Animation_block* Expression::eval_animation_block()
+{
+  if (m_node == VARIABLE)
+  {
+   assert(m_var->m_type == ANIMATION_BLOCK);
+   return m_var->get_animation_block();
+  }
+}
