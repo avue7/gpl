@@ -17,7 +17,7 @@ class Symbol_table
   public:
     static Symbol_table *instance();
     Symbol *lookup(string name);
-    void insert_symbol(Symbol *symbol); // Making this function to add symbols
+    bool insert_symbol(Symbol *symbol); // Making this function to add symbols
     void print(ostream &os);
     static bool compare_symbols(Symbol *a, Symbol *b);
     unordered_map<string, Symbol*> m_map;   

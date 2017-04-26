@@ -212,7 +212,6 @@ bool Symbol::is_game_object()
   }
   else
   {
-    cerr << "symbol class failed as game object" << endl;
     return false;
   }
 }

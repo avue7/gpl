@@ -206,7 +206,8 @@ variable_declaration:
       else if ($3)
       {
         if ($1 == INT)
-        { 
+        {
+          bool status; 
           if ($3->m_type == DOUBLE)
           {
             Error::error(Error::INVALID_TYPE_FOR_INITIAL_VALUE, gpl_type_to_string($3->m_type), *$2, gpl_type_to_string($1));
@@ -221,7 +222,6 @@ variable_declaration:
           {
             symbol = new Symbol(*$2, INT, $3->eval_int());
           }
-          Symbol_table::instance()->insert_symbol(symbol);
         }
         else if ($1 == DOUBLE)
         {
@@ -238,7 +238,6 @@ variable_declaration:
           {  
             symbol = new Symbol(*$2, DOUBLE, $3->eval_double());
           }
-          Symbol_table::instance()->insert_symbol(symbol);
         }
         else if ($1 == STRING)
         {
@@ -266,7 +265,10 @@ variable_declaration:
           {
             symbol = new Symbol(*$2, STRING, $3->eval_string());
           }
-          Symbol_table::instance()->insert_symbol(symbol);
+        }
+        if(!Symbol_table::instance()->insert_symbol(symbol))
+        {
+          Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
         }
       }
       else
@@ -284,7 +286,10 @@ variable_declaration:
             symbol = new Symbol(*$2, $1, "");
             break;
         }
-        Symbol_table::instance()->insert_symbol(symbol);
+        if(!Symbol_table::instance()->insert_symbol(symbol))
+        {
+          Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
+        }
       }
     }
     | simple_type  T_ID  T_LBRACKET expression T_RBRACKET
@@ -315,7 +320,10 @@ variable_declaration:
           { 
             symbol = new Symbol(*$2, STRING_ARRAY, array_size);
           }
-          Symbol_table::instance()->insert_symbol(symbol);
+          if(!Symbol_table::instance()->insert_symbol(symbol))
+          {
+            Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
+          }
         }
       }
     }
@@ -371,7 +379,10 @@ object_declaration:
       }
       //cerr << "this printed in gpl.y of object declaration" << endl;
       //cerr << "current object is " << cur_obj->type() << endl;
-      Symbol_table::instance()->insert_symbol(symbol);
+      if(!Symbol_table::instance()->insert_symbol(symbol))
+      {
+        Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
+      }
     }
     T_LPAREN parameter_list_or_empty T_RPAREN
     {
@@ -412,7 +423,10 @@ object_declaration:
              break;
         }
       }
-      Symbol_table::instance()->insert_symbol(symbol);
+      if(!Symbol_table::instance()->insert_symbol(symbol))
+      {
+        Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
+      }
     }
     ;
 
@@ -450,43 +464,6 @@ parameter:
       Status status;
       if ((status = cur_obj->get_member_variable_type(*$1, member_type)) != OK)
       {
-        Error::error(Error::UNKNOWN_CONSTRUCTOR_PARAMETER, 
-        gpl_type_to_string(cur_obj->type()), *$1);
-        cerr << "STATUS is " << status << endl;
-      }
-      else
-      {
-        switch(member_type)
-        {
-          case INT:
-          {
-            int int_value;
-            int_value = $3->eval_int();
-            status = cur_obj->set_member_variable(*$1, int_value);
-            break; 
-          }
-          case DOUBLE:
-          {
-            double d_value;
-            d_value = $3->eval_double();
-            status = cur_obj->set_member_variable(*$1, d_value);
-            break; 
-          }
-          case STRING:
-          {
-            string s_value;
-            s_value = $3->eval_string();
-            status = cur_obj->set_member_variable(*$1, s_value);
-            break; 
-          }
-          case ANIMATION_BLOCK:
-          {
-            Animation_block *a_value;
-            a_value = $3->eval_animation_block();
-            status = cur_obj->set_member_variable(*$1, a_value);
-            break; 
-          }
-        }
         switch(status)
         {
           case MEMBER_NOT_DECLARED:
@@ -499,6 +476,60 @@ parameter:
             break;
         } 
       }
+      else
+      { 
+       // cerr << "STATUS IS LINE 467 : " << status_to_string(status) << endl;
+        switch(member_type)
+        {
+          case INT:
+          {
+            if ($3->m_type != INT)
+            {
+              Error::error(Error::INCORRECT_CONSTRUCTOR_PARAMETER_TYPE, 
+                     cur_name, *$1);
+              break;  
+            }
+            else
+            {
+              int int_value;
+              int_value = $3->eval_int();
+              status = cur_obj->set_member_variable(*$1, int_value);
+              break;
+            } 
+          }
+          case DOUBLE:
+          {
+              double d_value;
+              d_value = $3->eval_double();
+              status = cur_obj->set_member_variable(*$1, d_value);
+              break;
+          }
+          case STRING:
+          {
+              string s_value;
+              s_value = $3->eval_string();
+              status = cur_obj->set_member_variable(*$1, s_value);
+              break;
+           
+          }
+          case ANIMATION_BLOCK:
+          {      
+            Animation_block *a_value;
+            a_value = $3->eval_animation_block();
+            if (cur_obj->type() != a_value->get_parameter_symbol()->m_type)
+            {
+              Error::error(Error::TYPE_MISMATCH_BETWEEN_ANIMATION_BLOCK_AND_OBJECT, cur_name, a_value->name());
+              break;
+            }
+            else
+            {
+              status = cur_obj->set_member_variable(*$1, a_value);
+              break;
+            } 
+          }
+        }
+       //cerr << status_to_string(status) << endl;
+      }
     }
     ;
 
@@ -508,14 +539,15 @@ forward_declaration:
     {
       Animation_block* anim_block;
       Symbol *found_sym, *symbol; 
-      found_sym = Symbol_table::instance()->lookup(cur_name);
 
-      symbol = new Symbol(*$3, ANIMATION_BLOCK);
-      Symbol_table::instance()->insert_symbol(symbol);    
-
+      symbol = new Symbol(*$3, ANIMATION_BLOCK);            
+      if(!Symbol_table::instance()->insert_symbol(symbol))
+      {
+        Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$3);
+      }
+      found_sym = Symbol_table::instance()->lookup(*$5);       
       anim_block = (Animation_block*) symbol->m_value; 
       anim_block->initialize(found_sym, *$3);
-
     }
     ;
 
@@ -552,39 +584,47 @@ animation_block:
 animation_parameter:
     object_type T_ID
     {
+      cur_name = *$2;
+      $$ = $2;
       Symbol *symbol; 
-      if (Symbol_table::instance()->lookup(*$2))
+/*      if (Symbol_table::instance()->lookup(*$2))
       {
         Error::error(Error::ANIMATION_PARAMETER_NAME_NOT_UNIQUE, *$2);
+        symbol = new Symbol("DUMMY", INT, 0);
       }
-      switch($1)
-      {
-        case TRIANGLE:
+      else
+      {*/
+        switch($1)
+        {
+          case TRIANGLE:
              symbol = new Symbol(*$2, TRIANGLE);
              cur_obj = symbol->get_game_object_value();
              break;
-        case CIRCLE:
+          case CIRCLE:
              symbol = new Symbol(*$2, CIRCLE);
              cur_obj = symbol->get_game_object_value();
              break;
-        case RECTANGLE: 
+          case RECTANGLE: 
              symbol = new Symbol(*$2, RECTANGLE);
              cur_obj = symbol->get_game_object_value();
              break;
-        case TEXTBOX:
+          case TEXTBOX:
              symbol = new Symbol(*$2, TEXTBOX);
              cur_obj = symbol->get_game_object_value();
              break;
-        case PIXMAP:
+          case PIXMAP:
              symbol = new Symbol(*$2, PIXMAP);
              cur_obj = symbol->get_game_object_value();
              break;
+        }
+        cur_obj->never_animate();
+        cur_obj->never_draw();
+     // }
+      if (!Symbol_table::instance()->insert_symbol(symbol))
+      {
+        Error::error(Error::ANIMATION_PARAMETER_NAME_NOT_UNIQUE, *$2);
       }
-      Symbol_table::instance()->insert_symbol(symbol);
-
-      cur_obj->never_animate();
-      cur_obj->never_draw();
-      cur_name = *$2;
+    
     }
     ;
 
@@ -775,6 +815,7 @@ variable:
         if (symbol->m_type != GAME_OBJECT)
         {
           Error::error(Error::LHS_OF_PERIOD_MUST_BE_OBJECT, *$1);
+          $$ = new Variable("DUMMY");
         }
         else
         {
@@ -792,7 +833,11 @@ variable:
           }
         }
       }
-       
+      else
+      { 
+        Error::error(Error::UNDECLARED_VARIABLE, *$1);
+        $$ = new Variable("DUMMY");
+      }
     }
     | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
     {

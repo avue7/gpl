@@ -37,7 +37,7 @@ bool Symbol_table::compare_symbols (Symbol *a, Symbol *b)
  * NEED THE INSERT FUNCTION TO ADD SYMBOLS TO SYMBOL TABLE *
 ********************************************************/
 
-void Symbol_table::insert_symbol(Symbol *symbol)
+bool Symbol_table::insert_symbol(Symbol *symbol)
 {
   /* Use find() to see if we can find the symbol
      name to the end of the map. If it reaches end
@@ -123,6 +123,7 @@ void Symbol_table::insert_symbol(Symbol *symbol)
       }
     }
     m_map.insert(pair<string, Symbol*>(symbol->m_name, symbol)); 
+    return true;
   }
   else
   {
@@ -130,10 +131,11 @@ void Symbol_table::insert_symbol(Symbol *symbol)
     {
      // cerr << "PRINTINING INSIDE OF SYMBOL_TABLE" << endl;
     }
-    else
+/*    else
     {
       Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, symbol->m_name);
-    }
+    }*/
+    return false;
   }
 }
 
