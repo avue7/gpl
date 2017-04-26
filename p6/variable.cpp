@@ -34,6 +34,15 @@ Variable::Variable(string symbol_name, Expression *expression)
   m_var_type = "EXPRESSION";
 }
 
+Variable::Variable(string symbol_name, string param)
+{
+  m_symbol = Symbol_table::instance()->lookup(symbol_name);
+  ((Game_object*)(m_symbol->m_value))->get_member_variable_type(param, m_type);
+  m_expr = NULL;
+  m_var_type = "GAME_OBJECT";
+  m_param = param;
+}
+
 int Variable::get_int_value()
 {
   if (m_var_type == "DUMMY")
@@ -47,12 +56,19 @@ int Variable::get_int_value()
     value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
     return value;
   }
+  if (m_var_type == "GAME_OBJECT")
+  {
+    int ret_value;
+    Game_object* temp_obj;
+    temp_obj = (Game_object*)(m_symbol->m_value);
+    temp_obj->get_member_variable(this->m_param, ret_value);
+    return ret_value;
+  }
   void *temp;
   int value;
   temp = m_symbol->m_value;
   value = *(int*)temp;
   return value;
-
 }
 
 double Variable::get_double_value()
@@ -72,6 +88,14 @@ double Variable::get_double_value()
     value = get_int_value();
     d_value = (double)value;
     return d_value;
+  }
+  if (m_var_type == "GAME_OBJECT")
+  {
+    double ret_value;
+    Game_object* temp_obj;
+    temp_obj = (Game_object*)(m_symbol->m_value);
+    temp_obj->get_member_variable(this->m_param, ret_value);
+    return ret_value;
   }
   void *temp;
   double value;
@@ -105,6 +129,14 @@ string Variable::get_string_value()
     ss >> s_value;
     return s_value;
   }
+  if (m_var_type == "GAME_OBJECT")
+  {
+    string ret_value;
+    Game_object* temp_obj;
+    temp_obj = (Game_object*)(m_symbol->m_value);
+    temp_obj->get_member_variable(this->m_param, ret_value);
+    return ret_value;
+  }
 //  cerr << "THIS PRINT INSIDE OF STRING IN VAR.CPP" << endl;
   string value;
   temp = m_symbol->m_value;
@@ -119,3 +151,5 @@ Animation_block *Variable::get_animation_block()
     return m_symbol->get_animation_block();
   }
 }
+
+

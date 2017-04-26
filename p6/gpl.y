@@ -469,13 +469,22 @@ parameter:
           }
           case ANIMATION_BLOCK:
           {
-            cerr << "this was called in animation block para" << endl;
             Animation_block *a_value;
             a_value = $3->eval_animation_block();
             status = cur_obj->set_member_variable(*$1, a_value);
-            cerr << "status : " << status_to_string(status)<< endl;
             break; 
           }
+        }
+        switch(status)
+        {
+          case MEMBER_NOT_DECLARED:
+            Error::error(Error::UNKNOWN_CONSTRUCTOR_PARAMETER, 
+            gpl_type_to_string(cur_obj->type()), *$1);
+            break;
+          case MEMBER_NOT_OF_GIVEN_TYPE:
+            Error::error(Error::INCORRECT_CONSTRUCTOR_PARAMETER_TYPE, 
+            gpl_type_to_string(cur_obj->type()), *$1);
+            break;
         } 
       }
     }
@@ -488,7 +497,6 @@ forward_declaration:
       Animation_block* anim_block;
       Symbol *found_sym, *symbol; 
       found_sym = Symbol_table::instance()->lookup(cur_name);
-      cerr << "FOUND SYM " << found_sym->m_name << endl; 
 
       symbol = new Symbol(*$3, ANIMATION_BLOCK);
       Symbol_table::instance()->insert_symbol(symbol);    
@@ -747,6 +755,32 @@ variable:
     }
     | T_ID T_PERIOD T_ID
     {
+      Symbol* symbol;
+      symbol = Symbol_table::instance()->lookup(*$1);
+      Status status;
+      if (symbol != NULL)
+      {
+        if (symbol->m_type != GAME_OBJECT)
+        {
+          Error::error(Error::LHS_OF_PERIOD_MUST_BE_OBJECT, *$1);
+        }
+        else
+        {
+          Gpl_type temp_type;
+          status = ((Game_object*)(symbol->m_value))->get_member_variable_type(*$3, temp_type);
+          if (status == MEMBER_NOT_DECLARED)
+          {
+            Error::error(Error::UNDECLARED_MEMBER, *$1, *$3);
+            $$ = NULL;
+          }
+          else
+          {
+           //cerr << "need to implement new variable" << endl;
+           $$ = new Variable(symbol->m_name, *$3);
+          }
+        }
+      }
+       
     }
     | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
     {

@@ -17,7 +17,8 @@ class Variable
     Gpl_type m_type;
     Expression *m_expr; // Pointer to class
     Symbol *m_symbol;   // Pointer to class
-    string m_var_type;    
+    string m_var_type;
+    string m_param;    
 
     // Member functions
     string get_type();
@@ -29,6 +30,7 @@ class Variable
     // Constructors 
     Variable(string symbol_name);
     Variable(string symbol_name, Expression *expr);
+    Variable(string symbol_name, string param);
 };
 
 #endif

@@ -172,14 +172,10 @@ void Symbol_table::print(ostream &os)
     }
     else if (temp->m_type == STRING)
     {
-      //cerr << "this printed in string of sym_table " << endl;
+     // cerr << "this printed in string of sym_table " << endl;
       os << gpl_type_to_string(temp->get_type()) << " " <<
       temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
        << "\"" << endl;
-      string window_title = *(string*)(temp->m_value);
-     // cerr << temp->m_value << endl;
-     // cerr << window_title << endl;
-
     }
     else if (temp->m_type == GAME_OBJECT)
     {
