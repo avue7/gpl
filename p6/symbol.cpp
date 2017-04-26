@@ -249,11 +249,7 @@ double Symbol::get_double_value()
 string Symbol::get_string_value()
 {
   assert(m_type == STRING);
-  stringstream ss;
-  string value;
-  ss << m_value;
-  ss >> value;
-  return value;
+  return *(string*) m_value;
 }
 
 Game_object *Symbol::get_game_object_value()

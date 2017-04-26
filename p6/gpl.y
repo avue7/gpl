@@ -464,7 +464,7 @@ parameter:
       Status status;
       if ((status = cur_obj->get_member_variable_type(*$1, member_type)) != OK)
       {
-        cerr << "this ran in error on line 467" << endl;
+        //cerr << "this ran in error on line 467" << endl;
         switch(status)
         {
           case MEMBER_NOT_DECLARED:
@@ -812,7 +812,7 @@ variable:
       Status status;
       if (symbol != NULL)
       {
-        if (symbol->m_type != GAME_OBJECT)
+        if (!symbol->is_game_object())
         {
           Error::error(Error::LHS_OF_PERIOD_MUST_BE_OBJECT, *$1);
           $$ = new Variable("DUMMY");

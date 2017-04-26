@@ -182,7 +182,7 @@ void Symbol_table::print(ostream &os)
       temp->m_name << " = " << "\"" << *(string *)(temp->m_value)
        << "\"" << endl;
     }
-    else if (temp->is_game_object())
+    else if (temp->m_type >= 16 && temp->m_type <= 528)
     {
         Game_object *obj_tmp;
         obj_tmp = temp->get_game_object_value();
