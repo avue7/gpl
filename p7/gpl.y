@@ -811,7 +811,6 @@ print_statement:
       /* As per instructed, need to insert this statement onto the empty 
          statement block created earlier at the top of the global statement
          block stack.  */
-      cerr << "EHAASDAS line 780 gpl.y" << endl;
       global_stack.top()->m_statements.push_back(print_stmt);      
     }
     ;
@@ -833,15 +832,6 @@ assign_statement:
       /* params goes like this:
          (Variable* lhs, Expression* rhs, Assignment_type type)
       */
-      
-      /* My assumptions: you will always start at the index 0 for assigning
-         to any array variables. For example: you will never, do ints[1] = 1
-         (that is starting at index number 1 before 0),  
-         unless you have assigned ints[0] = 0. If this is not the case then 
-         I will need to add literal strings to the symbol name and store it in
-         the symbol table as such. For example, for self-reference: 
-         m_name == ints[0] instead of just ints. 
-      */ 
       Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
       global_stack.top()->m_statements.push_back(ass_stmt); 
     }

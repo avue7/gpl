@@ -243,15 +243,57 @@ Animation_block *Variable::get_animation_block()
 }
 
 // Added in p7
-void Variable::set_new_value(int new_value)
+void Variable::set_new_value(void* new_value)
 {
   if (m_var_type == "CONSTANT")
   {
-    m_symbol->m_value = (void*) new int(new_value);
+    m_symbol->m_value =  new_value;
   }
   else if (m_var_type == "EXPRESSION")
   {
     // Arrays
-    ((int*)m_symbol->m_value)[m_expr->eval_int()] = new_value;
+     if (m_symbol->m_type == INT_ARRAY)
+     {
+     ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
+     }
+  }
+  else if (m_var_type == "GAME_OBJECT_ARRAY")
+  {
+    Game_object* temp_obj;
+    if (m_symbol->m_type == TRIANGLE_ARRAY)
+    {
+      temp_obj = (Game_object*)((Triangle**)
+                  (m_symbol->m_value))[m_array_index];
+    }
+    else if (m_symbol->m_type == RECTANGLE_ARRAY)
+    {
+      temp_obj = (Game_object*)((Rectangle**)
+                  (m_symbol->m_value))[m_array_index];
+    }
+    else if (m_symbol->m_type == PIXMAP_ARRAY)
+    {
+      temp_obj = (Game_object*)((Pixmap**)
+                  (m_symbol->m_value))[m_array_index];
+    }
+    else if (m_symbol->m_type == TEXTBOX_ARRAY)
+    {
+      temp_obj = (Game_object*)((Textbox**)
+                  (m_symbol->m_value))[m_array_index];
+    }
+    else if (m_symbol->m_type == CIRCLE_ARRAY)
+    {
+      temp_obj = (Game_object*)((Circle**)
+                  (m_symbol->m_value))[m_array_index];
+    }
+    else
+    {
+      cerr << "Trouble in Var::set_new_value for object_array!" << endl;
+    }
+    temp_obj->set_member_variable(this->m_param, *(int*) new_value); 
+  }
+  else 
+  {
+     cerr << "Error: cannot find m_var_type in var::set_new_value!" << endl;
   }
 }
+

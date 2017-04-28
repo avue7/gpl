@@ -1,11 +1,10 @@
 int ints[3];
-int fuck;
+
 on akey
 {
-  ints[0] = 0;
-  ints[2] = 1;
-  ints[1] = 2;
-  print("WHAT THE SHIT!");
+    ints[0] = 0;
+    ints[1] = 1;
+    ints[2] = 2;
 }
 
 on skey
@@ -14,11 +13,3 @@ on skey
     print("ints[1] = " + ints[1]);
     print("ints[2] = " + ints[2]);
 }
-
-on dkey
-{
-  fuck = 1;
-  fuck = 2;
-  fuck = 3;
-}
-

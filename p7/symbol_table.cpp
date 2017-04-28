@@ -53,13 +53,17 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
       }*/
       if (symbol->m_type == INT_ARRAY)
       { 
-        string count;
+        for (int i = 0; i < symbol->m_size; i++)
+        {
+          ((int*) symbol->m_value)[i] = 0;
+        }
+/*        string count;
         int *temp_array = new int[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
           temp_array[i] = 0;
         }
-        symbol->m_value = (void*) temp_array;
+        symbol->m_value = (void*) temp_array;*/
       }
       else if (symbol->m_type == DOUBLE_ARRAY)
       {
@@ -202,7 +206,7 @@ void Symbol_table::print(ostream &os)
       {
         os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << " = " <<
-        *(int *)(temp->m_value)<< endl;
+       ((int *) temp->m_value)[i] << endl;
       }
     }
     else if (temp->m_type == DOUBLE_ARRAY)

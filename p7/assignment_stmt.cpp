@@ -15,14 +15,27 @@ void Assignment_stmt::execute()
     {
       int value;
       value = m_expr_rhs->eval_int();
-      cerr << "the value to set is : " << value << endl;
-      m_var_lhs->set_new_value(value);
-     
-      cerr << "Am I an array type: " << m_var_lhs->m_symbol->is_array() << endl;
-
-      cerr << "from ass.cpp new value is : " << m_var_lhs->get_int_value() << endl;
-      cerr << "m_name is " << m_var_lhs->m_symbol->m_name << endl;
-      
+      void* v_value = (void*) new int(value);
+      m_var_lhs->set_new_value(v_value);
     }
+    else if (m_expr_rhs->m_type == DOUBLE)
+    {
+      double d_value;
+      d_value = m_expr_rhs->eval_double();
+      void* v_value = (void*) new double(d_value);
+      m_var_lhs->set_new_value(v_value);
+    }     
+    else if (m_expr_rhs->m_type == STRING)
+    {
+      string s_value;
+      s_value = m_expr_rhs->eval_string();
+      void* v_value = (void*) new string(s_value);
+      m_var_lhs->set_new_value(v_value);
+    }
+    else
+    {
+      cerr << "Error: Trouble finding (RHS) expr->m_type in";
+      cerr << " Assignment_stmt::execute()!!!" << endl;
+    }     
   }
 }
