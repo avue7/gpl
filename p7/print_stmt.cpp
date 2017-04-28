@@ -8,6 +8,10 @@ Print_stmt::Print_stmt(int line_number, Expression* expr)
 
 void Print_stmt::execute()
 {
-  assert(false);
-  // ......need to implement
+  //assert(false);
+  /* So the expression here is evaluated to a string and the string 
+     should be printed */
+  string s_value;
+  s_value = m_expr->eval_string();
+  cout << "whoo hoo you did it" << endl;
 }
