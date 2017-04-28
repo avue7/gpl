@@ -717,7 +717,8 @@ if_block:
 statement_block:
     T_LBRACE statement_block_creator statement_list T_RBRACE end_of_statement_block
     { 
-      assert(false);
+      /* assert(false); */
+      $$ = $2;
     }
     ;
 
