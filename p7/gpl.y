@@ -773,7 +773,11 @@ for_statement:
 print_statement:
     T_PRINT T_LPAREN expression T_RPAREN
     {
-      cerr << "IF YOU SEE THIS YOU ARE LOOKING AT LOOKING AT THE RIGHT SPOT" << endl;
+      Print_stmt* print_stmt = new Print_stmt($1, $3);
+      /* As per instructed, need to insert this statement onto the empty 
+         statement block created earlier at the top of the global statement
+         block stack.  */
+      global_stack.top()->m_statements.push_back(print_stmt);      
     }
     ;
 
