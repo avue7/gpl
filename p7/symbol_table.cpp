@@ -53,10 +53,15 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
       }*/
       if (symbol->m_type == INT_ARRAY)
       { 
+        string count;
         int *temp_array = new int[symbol->m_size];
         for (int i = 0; i < symbol->m_size; i++)
         {
           temp_array[i] = 0;
+          stringstream ss;
+          ss << i;
+          count = ss.str();
+          symbol->m_name + "[" + count +"]";
         }
         symbol->m_value = (void*) temp_array;
       }

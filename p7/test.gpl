@@ -1,4 +1,5 @@
 int ints[3];
+int fuck;
 on akey
 {
   ints[0] = 0;
@@ -7,4 +8,10 @@ on akey
   print("WHAT THE SHIT!");
 }
 
+on dkey
+{
+  fuck = 1;
+  fuck = 2;
+  fuck = 3;
+}
 
