@@ -55,6 +55,7 @@
 #include "for_stmt.h"
 #include "statement_block.h"
 #include "event_manager.h"
+#include <stack> // Need this for p7 to work. 
 // put new included ABOVE this line
 #include "y.tab.h"
 #endif // #ifndef PARSER_H

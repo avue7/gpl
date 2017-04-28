@@ -17,6 +17,8 @@
 #define STATEMENT_BLOCK_H
 
 #include <iostream>
+#include <vector>
+#include "statement.h"
 
 class Game_object;
 
@@ -29,6 +31,8 @@ class Statement_block
     // Implement it for p7
     void execute();
   
+    //Need a vector for holding collection of statements
+    std::vector<Statement*> m_statements;
 };
 
 #endif // #ifndef STATEMENT_BLOCK_H

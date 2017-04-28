@@ -17,7 +17,11 @@ extern int line_count;            // current line in the input; from record.l
 #include <string>
 using namespace std;
 Game_object* cur_obj; // Global variable that stores current obj under const.
-string cur_name; // Current name for object 
+string cur_name; // Current name for object
+
+// Globalizing the declaring of stack. Library header is included
+// in the parser.h
+stack <Statement_block*> global_stack; 
 // bison syntax to indicate the end of the header
 %} 
 
@@ -164,6 +168,7 @@ string cur_name; // Current name for object
 %type <union_string> animation_parameter
 %type <union_keystroke> keystroke
 %type <union_statement_block> statement_block
+%type <union_statement_block> statement_block_creator
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -719,14 +724,21 @@ statement_block:
 //---------------------------------------------------------------------
 statement_block_creator:
     {
-      assert(false);
+      /*assert(false);*/
+      /* Need to create empty statement block and push it on the global
+         stack declared at the start of this file */
+      Statement_block* stmt_block = new Statement_block();
+      global_stack.push(stmt_block);
+      /* Need to pass something up tree*/
+      $$ = stmt_block;      
     }
     ;
 
 //---------------------------------------------------------------------
 end_of_statement_block:
     {
-      assert(false);
+      /* Pop a statement block off the stack when we see T_RBRACE */
+      global_stack.pop();
     }
     ;
 
