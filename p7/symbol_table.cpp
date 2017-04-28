@@ -57,22 +57,13 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
         {
           ((int*) symbol->m_value)[i] = 0;
         }
-/*        string count;
-        int *temp_array = new int[symbol->m_size];
-        for (int i = 0; i < symbol->m_size; i++)
-        {
-          temp_array[i] = 0;
-        }
-        symbol->m_value = (void*) temp_array;*/
       }
       else if (symbol->m_type == DOUBLE_ARRAY)
       {
-        double *temp_array = new double[symbol->m_size];   
         for (int i = 0; i < symbol->m_size; i++)
         {
-          temp_array[i] = 0.0;
+          ((double*) symbol->m_value)[i] = 0.0;
         }
-        symbol->m_value = (void*) temp_array;
       }
       else if (symbol->m_type == CIRCLE_ARRAY)
       {
@@ -113,13 +104,6 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
       }
       else  // It's a string
       {
-/*        string *temp_array = new string[symbol->m_size];
-        for (int i = 0; i < symbol->m_size; i++)
-        {
-          temp_array[i] = "";
-        }
-        symbol->m_value = (void*) temp_array;*/
-        //cerr << "this printed from string in sym_table " << endl;
         for (int i = 0; i < symbol->m_size; i++)
         {
           ((string**) symbol->m_value)[i] = new string("");
@@ -215,7 +199,7 @@ void Symbol_table::print(ostream &os)
       {
         os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << " = " <<
-         *(double *)(temp->m_value) << endl;
+         ((double *)temp->m_value)[i] << endl;
       }
     }
     else if (temp->m_type == STRING_ARRAY)
@@ -224,7 +208,7 @@ void Symbol_table::print(ostream &os)
       {
         os << temp->get_base_type() << " " << 
         temp->m_name << "[" << i << "]" << " = " << "\""
-        << *(string *)(temp->m_value) << "\"" << endl;
+        << ((string *)temp->m_value)[i] << "\"" << endl;
       }
     }
     else if (temp->m_type == CIRCLE_ARRAY)

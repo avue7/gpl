@@ -1,1 +1,7 @@
-EHAASDAS line 780 gpl.y
+VAR 251 new value = 0
+VAR 251 new value = 1
+VAR 251 new value = 2
+this ran in ass.cpp line 36
+String value is : zero
+this ran in ass.cpp line 36
+String value is : one

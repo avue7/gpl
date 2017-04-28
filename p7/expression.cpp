@@ -681,6 +681,7 @@ string Expression::eval_string()
     }
     else
     {
+      cerr << "exp.cpp 684 this ran" << endl;
       return m_var->get_string_value();
     }
   }

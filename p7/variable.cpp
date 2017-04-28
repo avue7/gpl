@@ -1,6 +1,6 @@
 #include "variable.h"
 #include "expression.h"
-//#include "symbol.h"
+#include "symbol.h"
 #include "symbol_table.h"
 
 Variable::Variable(string symbol_name)
@@ -163,21 +163,11 @@ int Variable::get_int_value()
 
 double Variable::get_double_value()
 {
-  if (m_type == INT_ARRAY)
-  {    
-    int value;
-    double d_value;
-    value = get_int_value();
-    d_value = (double)value;
-    return d_value;
-  }
-  if (m_type == DOUBLE_ARRAY)
+  if (m_var_type == "EXPRESSION")
   {
-    int value;
-    double d_value;
-    value = get_int_value();
-    d_value = (double)value;
-    return d_value;
+    double value;
+    value = ((double*)m_symbol->m_value)[m_expr->eval_int()];
+    return value;
   }
   if (m_var_type == "GAME_OBJECT")
   {
@@ -205,19 +195,11 @@ string Variable::get_string_value()
   void *temp;
   stringstream ss;
   string s_value;
-  if (m_type == INT_ARRAY)
+  if (m_var_type == "EXPRESSION")
   {
-    int value = get_int_value();
-    ss << value;
-    ss >> s_value;
-    return s_value;
-  }
-  if (m_type == DOUBLE_ARRAY)
-  {
-    double value = get_double_value();
-    ss << value;
-    ss >> s_value;
-    return s_value;
+    string value;
+    value = ((string*)m_symbol->m_value)[m_expr->eval_int()];
+    return value;
   }
   if (m_var_type == "GAME_OBJECT")
   {
@@ -254,7 +236,16 @@ void Variable::set_new_value(void* new_value)
     // Arrays
      if (m_symbol->m_type == INT_ARRAY)
      {
-     ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
+       ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
+     }
+     else if (m_symbol->m_type == DOUBLE_ARRAY)
+     {
+       cerr << "VAR 251 new value = " << *(double*) new_value << endl;
+       ((double*)m_symbol->m_value)[m_expr->eval_int()] = *(double*) new_value;
+     }
+     else if (m_symbol->m_type == STRING_ARRAY)
+     {
+       ((string*)m_symbol->m_value)[m_expr->eval_int()] = *(string*) new_value;
      }
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
