@@ -582,16 +582,25 @@ block:
 //---------------------------------------------------------------------
 initialization_block:
     T_INITIALIZATION statement_block
+    {
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
 termination_block:
     T_TERMINATION statement_block
+    {
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
 animation_block:
     T_ANIMATION T_ID T_LPAREN check_animation_parameter T_RPAREN T_LBRACE statement_list T_RBRACE end_of_statement_block
+    {
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -640,10 +649,25 @@ animation_parameter:
 //---------------------------------------------------------------------
 check_animation_parameter:
     T_TRIANGLE T_ID
+    {
+      assert(false);
+    }
     | T_PIXMAP T_ID
+    {
+      assert(false);
+    }
     | T_CIRCLE T_ID
+    {
+      assert(false);
+    }
     | T_RECTANGLE T_ID
+    {
+      assert(false);
+    }
     | T_TEXTBOX T_ID
+    {
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -711,6 +735,9 @@ if_block:
       assert(false);
     }
     | statement_block
+    {
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -746,6 +773,10 @@ end_of_statement_block:
 //---------------------------------------------------------------------
 statement_list:
     statement_list statement
+    {
+      assert(false);
+
+    }
     | empty
     ;
 
@@ -762,11 +793,18 @@ statement:
 if_statement:
     T_IF T_LPAREN expression T_RPAREN if_block %prec IF_NO_ELSE
     | T_IF T_LPAREN expression T_RPAREN if_block T_ELSE if_block 
+    {
+      assert(false);
+
+    }
     ;
 
 //---------------------------------------------------------------------
 for_statement:
     T_FOR T_LPAREN statement_block_creator assign_statement end_of_statement_block T_SEMIC expression T_SEMIC statement_block_creator assign_statement end_of_statement_block T_RPAREN statement_block
+    {  
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -777,6 +815,7 @@ print_statement:
       /* As per instructed, need to insert this statement onto the empty 
          statement block created earlier at the top of the global statement
          block stack.  */
+      cerr << "EHAASDAS line 780 gpl.y" << endl;
       global_stack.top()->m_statements.push_back(print_stmt);      
     }
     ;
@@ -784,15 +823,37 @@ print_statement:
 //---------------------------------------------------------------------
 exit_statement:
     T_EXIT T_LPAREN expression T_RPAREN
+    {   
+      assert(false);
+    }
     ;
 
 //---------------------------------------------------------------------
 assign_statement:
     variable T_ASSIGN expression
+    {
+      assert(false);
+    }
     | variable T_PLUS_ASSIGN expression
+    {
+      
+      assert(false);
+    }
     | variable T_MINUS_ASSIGN expression
+    {
+      assert(false);
+
+    }
     | variable T_PLUS_PLUS
+    {
+      assert(false);
+
+    }
     | variable T_MINUS_MINUS
+    {
+      assert(false);
+ 
+    }
     ;
 
 //---------------------------------------------------------------------

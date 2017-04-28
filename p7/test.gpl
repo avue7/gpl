@@ -1,0 +1,8 @@
+int ints[3];
+on akey
+{
+  ints[0] = 0;
+  print("WHAT THE SHIT!");
+}
+
+

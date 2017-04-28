@@ -13,5 +13,5 @@ void Print_stmt::execute()
      should be printed */
   string s_value;
   s_value = m_expr->eval_string();
-  cout << "whoo hoo you did it" << endl;
+  cout << "print[" << m_line_number << "]: " << s_value << endl;
 }
