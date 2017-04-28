@@ -58,10 +58,6 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
         for (int i = 0; i < symbol->m_size; i++)
         {
           temp_array[i] = 0;
-          stringstream ss;
-          ss << i;
-          count = ss.str();
-          symbol->m_name + "[" + count +"]";
         }
         symbol->m_value = (void*) temp_array;
       }

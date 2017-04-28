@@ -249,4 +249,9 @@ void Variable::set_new_value(int new_value)
   {
     m_symbol->m_value = (void*) new int(new_value);
   }
+  else if (m_var_type == "EXPRESSION")
+  {
+    // Arrays
+    ((int*)m_symbol->m_value)[m_expr->eval_int()] = new_value;
+  }
 }
