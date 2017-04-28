@@ -242,4 +242,11 @@ Animation_block *Variable::get_animation_block()
   }
 }
 
-
+// Added in p7
+void Variable::set_new_value(int new_value)
+{
+  if (m_var_type == "CONSTANT")
+  {
+    m_symbol->m_value = (void*) new int(new_value);
+  }
+}

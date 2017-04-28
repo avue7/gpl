@@ -773,10 +773,6 @@ end_of_statement_block:
 //---------------------------------------------------------------------
 statement_list:
     statement_list statement
-    {
-      assert(false);
-
-    }
     | empty
     ;
 
@@ -832,7 +828,13 @@ exit_statement:
 assign_statement:
     variable T_ASSIGN expression
     {
-      assert(false);
+      /* assert(false); */
+
+      /* params goes like this:
+         (Variable* lhs, Expression* rhs, Assignment_type type)
+      */
+      Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
+      global_stack.top()->m_statements.push_back(ass_stmt); 
     }
     | variable T_PLUS_ASSIGN expression
     {

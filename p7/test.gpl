@@ -2,6 +2,8 @@ int ints[3];
 on akey
 {
   ints[0] = 0;
+  ints[1] = 1;
+  ints[2] = 2;
   print("WHAT THE SHIT!");
 }
 

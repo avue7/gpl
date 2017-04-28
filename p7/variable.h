@@ -27,6 +27,10 @@ class Variable
     double get_double_value();
     string get_string_value();
     Animation_block * get_animation_block();
+
+    //Added in p7.. Must create for assignment->execute() in 
+    // assignment class to work. 
+    void set_new_value(int new_value);
     
     // Constructors 
     Variable(string symbol_name);
