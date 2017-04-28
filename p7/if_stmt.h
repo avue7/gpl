@@ -3,6 +3,7 @@
 
 #include "expression.h"
 #include "statement_block.h"
+#include "statement.h"
 
 // Use class <NAME> : public <INHERENT_CLASS_NAME> {} 
 // for inherentency to happen. 

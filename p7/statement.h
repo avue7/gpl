@@ -1,4 +1,4 @@
-#ifdef STATEMENT_H
+#ifndef STATEMENT_H
 #define STATEMENT_H
 
 class Statement
