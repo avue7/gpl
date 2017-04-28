@@ -31,6 +31,8 @@ string cur_name; // Current name for object
  Expression     *union_expression;
  Variable 	*union_variable;
  Operator_type  union_oper_type;
+ Statement_block *union_statement_block;
+ Window::Keystroke union_keystroke;
 }
 
 // if a token has a type associated with it, put that type (as named in the
@@ -160,6 +162,8 @@ string cur_name; // Current name for object
 %type <union_oper_type> math_operator
 %type <union_int> object_type
 %type <union_string> animation_parameter
+%type <union_keystroke> keystroke
+%type <union_statement_block> statement_block
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -662,7 +666,7 @@ keystroke:
     | T_MIDDLEMOUSE_DOWN
     { $$ = Window::MIDDLEMOUSE_DOWN; }
     | T_RIGHTMOUSE_DOWN
-    { $$ = Window::RIGHTMOUS_DOWN; }
+    { $$ = Window::RIGHTMOUSE_DOWN; }
     | T_LEFTMOUSE_UP
     { $$ = Window::LEFTMOUSE_UP; }
     | T_MIDDLEMOUSE_UP
@@ -699,7 +703,7 @@ keystroke:
 if_block:
     statement_block_creator statement end_of_statement_block
     {
-      assert(FALSE);
+      assert(false);
     }
     | statement_block
     ;
@@ -708,21 +712,21 @@ if_block:
 statement_block:
     T_LBRACE statement_block_creator statement_list T_RBRACE end_of_statement_block
     { 
-      assert(FALSE);
+      assert(false);
     }
     ;
 
 //---------------------------------------------------------------------
 statement_block_creator:
     {
-      assert(FALSE);
+      assert(false);
     }
     ;
 
 //---------------------------------------------------------------------
 end_of_statement_block:
     {
-      assert(FALSE);
+      assert(false);
     }
     ;
 

@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "window.h" // for Keystroke enum
+#include "statement_block.h"
 
 class Statement_block;
 
@@ -35,6 +36,12 @@ class Event_manager
     void execute_handlers(Window::Keystroke keystroke);
 
     ~Event_manager();
+
+    // P7 modification below:
+    
+    // Need vector for statement_blocks
+    std::vector<Statement_block*> m_events[Window::NUMBER_OF_KEYS];
+    void register_event(Window::Keystroke key, Statement_block* block);
 
   private:
     // hide default constructor because this is a singleton
