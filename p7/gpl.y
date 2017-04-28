@@ -640,54 +640,90 @@ check_animation_parameter:
 //---------------------------------------------------------------------
 on_block:
     T_ON keystroke statement_block
+    {
+      Event_manager::instance()->register_event($2, $3);
+    }
     ;
 
 //---------------------------------------------------------------------
 keystroke:
     T_SPACE
+    { $$ = Window::SPACE; }
     | T_UPARROW
+    { $$ = Window::UPARROW; }
     | T_DOWNARROW
+    { $$ = Window::DOWNARROW; }
     | T_LEFTARROW
+    { $$ = Window::LEFTARROW; }
     | T_RIGHTARROW
+    { $$ = Window::RIGHTARROW; }
     | T_LEFTMOUSE_DOWN
+    { $$ = Window::LEFTMOUSE_DOWN; }
     | T_MIDDLEMOUSE_DOWN
+    { $$ = Window::MIDDLEMOUSE_DOWN; }
     | T_RIGHTMOUSE_DOWN
+    { $$ = Window::RIGHTMOUS_DOWN; }
     | T_LEFTMOUSE_UP
+    { $$ = Window::LEFTMOUSE_UP; }
     | T_MIDDLEMOUSE_UP
+    { $$ = Window::MIDDLEMOUSE_UP; }
     | T_RIGHTMOUSE_UP
+    { $$ = Window::RIGHTMOUSE_UP; }
     | T_MOUSE_MOVE
+    { $$ = Window::MOUSE_MOVE; }
     | T_MOUSE_DRAG
+    { $$ = Window::MOUSE_DRAG; }
     | T_AKEY 
+    { $$ = Window::AKEY; }
     | T_SKEY 
+    { $$ = Window::SKEY; }
     | T_DKEY 
+    { $$ = Window::DKEY; }
     | T_FKEY 
+    { $$ = Window::FKEY; }
     | T_HKEY 
+    { $$ = Window::HKEY; }
     | T_JKEY 
+    { $$ = Window::JKEY; }
     | T_KKEY 
+    { $$ = Window::KKEY; }
     | T_LKEY 
+    { $$ = Window::LKEY; }
     | T_WKEY 
+    { $$ = Window::WKEY; }
     | T_F1
+    { $$ = Window::F1; }
     ;
 
 //---------------------------------------------------------------------
 if_block:
     statement_block_creator statement end_of_statement_block
+    {
+      assert(FALSE);
+    }
     | statement_block
     ;
 
 //---------------------------------------------------------------------
 statement_block:
     T_LBRACE statement_block_creator statement_list T_RBRACE end_of_statement_block
+    { 
+      assert(FALSE);
+    }
     ;
 
 //---------------------------------------------------------------------
 statement_block_creator:
-    // this goes to nothing so that you can put an action here in p7
+    {
+      assert(FALSE);
+    }
     ;
 
 //---------------------------------------------------------------------
 end_of_statement_block:
-    // this goes to nothing so that you can put an action here in p7
+    {
+      assert(FALSE);
+    }
     ;
 
 //---------------------------------------------------------------------

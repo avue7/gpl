@@ -47,6 +47,14 @@
 #include "animation_block.h"
 #include "game_object.h"
 #include "window.h"
+#include "statement.h"
+#include "if_stmt.h"
+#include "print_stmt.h"
+#include "exit_stmt.h"
+#include "assignment_stmt.h"
+#include "for_stmt.h"
+#include "statement_block.h"
+#include "event_manager.h"
 // put new included ABOVE this line
 #include "y.tab.h"
 #endif // #ifndef PARSER_H
