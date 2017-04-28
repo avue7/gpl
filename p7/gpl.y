@@ -772,6 +772,9 @@ for_statement:
 //---------------------------------------------------------------------
 print_statement:
     T_PRINT T_LPAREN expression T_RPAREN
+    {
+      cerr << "IF YOU SEE THIS YOU ARE LOOKING AT LOOKING AT THE RIGHT SPOT" << endl;
+    }
     ;
 
 //---------------------------------------------------------------------
