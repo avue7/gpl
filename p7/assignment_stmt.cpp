@@ -15,8 +15,14 @@ void Assignment_stmt::execute()
     {
       int value;
       value = m_expr_rhs->eval_int();
+      cerr << "the value to set is : " << value << endl;
       m_var_lhs->set_new_value(value);
+     
+      cerr << "Am I an array type: " << m_var_lhs->m_symbol->is_array() << endl;
+
       cerr << "from ass.cpp new value is : " << m_var_lhs->get_int_value() << endl;
+      cerr << "m_name is " << m_var_lhs->m_symbol->m_name << endl;
+      
     }
   }
 }

@@ -1,6 +1,6 @@
 #include "variable.h"
 #include "expression.h"
-#include "symbol.h"
+//#include "symbol.h"
 #include "symbol_table.h"
 
 Variable::Variable(string symbol_name)
