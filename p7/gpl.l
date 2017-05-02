@@ -176,7 +176,7 @@ void error()
 [/][/][^\n]*\n                      line_count++;
 "forward"                           get_int_value(); return T_FORWARD;
 "print"                             get_line_number(); return T_PRINT;
-"exit"                              get_int_value(); return T_EXIT;
+"exit"                              get_line_number(); return T_EXIT;
 [0-9]+                              get_int_value(); return T_INT_CONSTANT;
 ([0-9]*\.+[0-9]+|[0-9]+\.+[0-9]*)   get_double_value(); return T_DOUBLE_CONSTANT;
 \"[^\"\n]*\]*\"                     get_string_constant_value(); return T_STRING_CONSTANT;

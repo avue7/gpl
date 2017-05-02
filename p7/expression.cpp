@@ -264,7 +264,8 @@ int Expression::eval_int()
         }
         return m_lhs->eval_int() != m_rhs->eval_int();
       case LESS_THAN:
-        if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
+        if ((m_lhs->m_type == INT || m_lhs->m_type==INT_ARRAY)
+            && m_rhs->m_type == DOUBLE)
         {
           return (double) m_lhs->eval_int() <  m_rhs->eval_double();
         }
@@ -292,7 +293,8 @@ int Expression::eval_int()
           string right = m_rhs->eval_string();
           return left < right;
         }
-        else if (m_lhs->m_type == INT && m_rhs->m_type == INT)
+        else if ((m_lhs->m_type == INT || m_lhs->m_type == INT_ARRAY) 
+                  && m_rhs->m_type == INT)
         {
           return m_lhs->eval_int() < m_rhs->eval_int();
         }
@@ -486,11 +488,31 @@ int Expression::eval_int()
     {
       if (m_lhs->m_type == DOUBLE)
       { 
+        if(m_lhs->eval_double() < 1.0)
+        {
+            stringstream ss;
+             double value;
+             value = m_lhs->eval_double();
+             ss << value;
+             Error::starting_execution();
+             Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
+          return rand() % 2;
+        }
         // If lhs is take the floor and cast it to an int
         return rand() % (int) floor(m_lhs->eval_double());
       }
       else
       {
+        if(m_lhs->eval_int() < 1)
+        {
+            stringstream ss;
+            int value;
+            value = m_lhs->eval_double();
+            ss << value;
+            Error::starting_execution();
+            Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
+          return rand() % 2;
+        }
         return rand() % m_lhs->eval_int();
       } 
     }

@@ -169,6 +169,7 @@ stack <Statement_block*> global_stack;
 %type <union_keystroke> keystroke
 %type <union_statement_block> statement_block
 %type <union_statement_block> statement_block_creator
+%type <union_statement_block> if_block
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -732,11 +733,11 @@ keystroke:
 if_block:
     statement_block_creator statement end_of_statement_block
     {
-      assert(false);
+      $$ = $1;
     }
     | statement_block
     {
-      assert(false);
+
     }
     ;
 
@@ -788,10 +789,28 @@ statement:
 //---------------------------------------------------------------------
 if_statement:
     T_IF T_LPAREN expression T_RPAREN if_block %prec IF_NO_ELSE
+    {
+      if ($3->m_type != INT)
+      {
+        Error::error(Error::INVALID_TYPE_FOR_IF_STMT_EXPRESSION);
+      }
+      else
+      {
+        If_stmt* if_stmt = new If_stmt($3, $5);
+        global_stack.top()->m_statements.push_back(if_stmt);
+      }
+    }
     | T_IF T_LPAREN expression T_RPAREN if_block T_ELSE if_block 
     {
-      assert(false);
-
+      if ($3->m_type != INT)
+      {
+        Error::error(Error::INVALID_TYPE_FOR_IF_STMT_EXPRESSION);
+      }
+      else
+      {
+        If_stmt* if_stmt = new If_stmt($3, $5, $7);
+        global_stack.top()->m_statements.push_back(if_stmt);
+      }
     }
     ;
 
@@ -799,7 +818,12 @@ if_statement:
 for_statement:
     T_FOR T_LPAREN statement_block_creator assign_statement end_of_statement_block T_SEMIC expression T_SEMIC statement_block_creator assign_statement end_of_statement_block T_RPAREN statement_block
     {  
-      assert(false);
+      if ($7->m_type != INT)
+      {
+        Error::error(Error::INVALID_TYPE_FOR_FOR_STMT_EXPRESSION);
+      }
+      For_stmt* for_stmt = new For_stmt($3,$9,$13,$7);
+      global_stack.top()->m_statements.push_back(for_stmt); 
     }
     ;
 
@@ -818,8 +842,24 @@ print_statement:
 //---------------------------------------------------------------------
 exit_statement:
     T_EXIT T_LPAREN expression T_RPAREN
-    {   
-      assert(false);
+    {
+      if ($3->m_type != INT)
+      {
+        string s_value;
+        if ($3->m_type == DOUBLE)
+        {
+          Error::error(Error::EXIT_STATUS_MUST_BE_AN_INTEGER, gpl_type_to_string($3->m_type));
+        }
+        else if ($3->m_type == STRING)
+        {
+          Error::error(Error::EXIT_STATUS_MUST_BE_AN_INTEGER, gpl_type_to_string($3->m_type));
+        }
+      }
+      else
+      {
+        Exit_stmt* exit_stmt = new Exit_stmt($3, $1);
+        global_stack.top()->m_statements.push_back(exit_stmt);
+      }   
     }
     ;
 
@@ -1255,7 +1295,7 @@ expression:
       {
         /* Check the Random for any values < 1 since any value 
            < 1 is not legal. In p6 need to change this to default to 2 */
-        if ($3->m_type == DOUBLE)
+        /*if ($3->m_type == DOUBLE)
         {
            if ($3->eval_double() < 1)
            {
@@ -1263,31 +1303,23 @@ expression:
              double value;
              value = $3->eval_double();
              ss << value;
-             Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
-             $$ = new Expression(0, INT, NULL, NULL);
+             Error::starting_execution()
+             cerr << Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
            }
-           else
-           {
-             $$ = new Expression($1, INT, expr, NULL);
-           }  
         }
-        else if ($3->m_type == INT)
+        if ($3->m_type == INT)
         {
-           if ($3->eval_int() < 1)
-           {
-             stringstream ss;
-             int value;
-             value = $3->eval_double();
-             ss << value;
-             Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
-             $$ = new Expression(0, INT, NULL, NULL);
-           }
-           else
-           {
-             $$ = new Expression($1, INT, expr, NULL);
-           }
-        }
-      /*$$ = new Expression($1, $3->m_type, expr, NULL);*/
+          if ($3->eval_int() < 1)
+          {
+            stringstream ss;
+            int value;
+            value = $3->eval_double();
+            ss << value;
+            Error::starting_execution();
+            cerr << Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
+          }
+        }*/
+       $$ = new Expression($1, INT, expr, NULL);         
       } 
       else if ($1 == FLOOR)
       {

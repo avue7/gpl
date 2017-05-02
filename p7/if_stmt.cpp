@@ -16,5 +16,16 @@ If_stmt::If_stmt(Expression* expr, Statement_block* then, Statement_block* b_els
 
 void If_stmt::execute()
 {
-  // NOT SURE WHAT TO DO HERE YET.
+  if(m_expr->eval_int()) //If true
+  {
+    m_then->execute();
+  }
+  else if (m_else) // If m_else exists and not null
+  {
+    m_else->execute();
+  }
+  else
+  {
+    cerr << "ERROR: trouble in execute() of if_stmt.cpp" << endl;
+  }
 }

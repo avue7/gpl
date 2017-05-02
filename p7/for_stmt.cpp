@@ -10,6 +10,8 @@ For_stmt::For_stmt(Statement_block* initializer, Statement_block* incrementor, S
 
 void For_stmt::execute()
 {
-  assert(false);
-  // Need to implement
+  for(m_initializer->execute(); m_expr->eval_int(); m_incrementor->execute())
+  {
+    m_body->execute();
+  }
 }
