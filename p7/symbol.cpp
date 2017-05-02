@@ -27,7 +27,7 @@ Symbol::Symbol(string name, Gpl_type type, int value)
     m_size = value;
     m_name = name;
     m_type = type;
-    m_value = (void*) new string*[value];
+    m_value = (void*) new string[value];
   }
   else if (type == CIRCLE_ARRAY)
   {

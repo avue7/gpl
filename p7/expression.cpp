@@ -689,6 +689,8 @@ string Expression::eval_string()
   {
     if (m_oper == PLUS)
     { 
+      cerr << " expres:692 " << m_lhs->eval_string();
+      cerr << " m_rih " << m_rhs->eval_string();
       return m_lhs->eval_string() + m_rhs->eval_string();   
     }
     else

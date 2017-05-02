@@ -37,7 +37,7 @@ void Assignment_stmt::execute()
       string s_value;
       s_value = m_expr_rhs->eval_string();
       void* v_value = (void*) new string(s_value);
-      cerr << "String value is : " << s_value << endl;
+      cerr << "Ass 40: S: string value is : " << s_value << endl;
       m_var_lhs->set_new_value(v_value);
     }
     else

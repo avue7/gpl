@@ -197,9 +197,30 @@ string Variable::get_string_value()
   string s_value;
   if (m_var_type == "EXPRESSION")
   {
-    string value;
-    value = ((string*)m_symbol->m_value)[m_expr->eval_int()];
-    return value;
+    if (m_type == INT_ARRAY)
+    {
+      int int_value;
+      stringstream ss;
+      string s_value;
+      int_value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
+      ss << int_value;
+      ss >> s_value;
+      return s_value;
+    }
+    if (m_type == DOUBLE_ARRAY)
+    {
+      double d_value;
+      stringstream ss;
+      string s_value;
+      d_value = ((double*)m_symbol->m_value)[m_expr->eval_int()];
+      ss << d_value;
+      ss >> s_value;
+      return s_value;
+    }
+    else 
+    {
+      return ((string*)m_symbol->m_value)[m_expr->eval_int()];
+    }
   }
   if (m_var_type == "GAME_OBJECT")
   {
@@ -209,7 +230,7 @@ string Variable::get_string_value()
     temp_obj->get_member_variable(this->m_param, ret_value);
     return ret_value;
   }
-//  cerr << "THIS PRINT INSIDE OF STRING IN VAR.CPP" << endl;
+  cerr << "THIS PRINT INSIDE OF STRING IN VAR.CPP" << endl;
   string value;
   temp = m_symbol->m_value;
   value = *(string*)temp;
@@ -236,6 +257,7 @@ void Variable::set_new_value(void* new_value)
     // Arrays
      if (m_symbol->m_type == INT_ARRAY)
      {
+       int value = *(int*) new_value;
        ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
      }
      else if (m_symbol->m_type == DOUBLE_ARRAY)
@@ -245,6 +267,7 @@ void Variable::set_new_value(void* new_value)
      }
      else if (m_symbol->m_type == STRING_ARRAY)
      {
+       cerr << "var 248: string value is" << *(string*) new_value << " index is:" << m_expr->eval_int() << endl;
        ((string*)m_symbol->m_value)[m_expr->eval_int()] = *(string*) new_value;
      }
   }
