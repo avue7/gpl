@@ -3,10 +3,10 @@ int count = 0;
 
 on skey
 {
-  index[0] = index[0] + 1;
-  index[0] = index[1] + 1;
-  index[0] = index[2] + 10;
+  count = count + 1;
 }
+
+
 
 on akey
 {

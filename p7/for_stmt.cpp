@@ -18,6 +18,6 @@ void For_stmt::execute()
    cerr << "for_statment: type should be int_array : ";
    cerr << m_expr->m_lhs->m_var->m_type << endl;
    cerr << "is index[?] < 3? :" << m_expr->eval_int() << endl;
-   // m_body->execute();
+    m_body->execute();
   }
 }
