@@ -12,6 +12,9 @@ void For_stmt::execute()
 {
   for(m_initializer->execute(); m_expr->eval_int(); m_incrementor->execute())
   {
-    m_body->execute();
+   cerr << "body executed" << endl;  
+   cerr << "m_body in m_expr os : " << m_expr->m_type << endl;
+   cerr << "end condition value is :" << m_expr->eval_int() << endl;
+   // m_body->execute();
   }
 }

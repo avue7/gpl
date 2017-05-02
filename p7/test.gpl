@@ -1,21 +1,10 @@
-int ints[3];
-double doubles[3];
-string strings[3];
-on skey
-{
-    ints[0] = 0;
-    ints[1] = 1;
-    ints[2] = 2;
-    doubles[0] = 0;
-    doubles[1] = 1;
-    doubles[2] = 2;
-    strings[0] = "zero";
-    strings[1] = "one";
-    strings[2] = "two";
-}
+int index[7];
+int count = 0;
 
 on akey
 {
-    print(ints[1]);
-    print(strings[0]); 
+ for (index[0] = 0; index[0] < 3; index[0] = index[0] + 1)
+ {
+   count = count + 1;
+ }
 }

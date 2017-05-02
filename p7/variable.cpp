@@ -98,9 +98,19 @@ int Variable::get_int_value()
   }
   if (m_var_type == "EXPRESSION")
   {
-    int value;
-    value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
-    return value;
+    cerr << "M_type in variable is " << m_type << endl;
+    if (m_type == INT_ARRAY)
+    { 
+      int value;
+      value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
+      cerr << "this printed after the value" << value << endl;
+      cerr << "M_VALUE IS var:107" << endl;
+      return value;
+    }
+    else
+    {
+      cerr << "Error: cannot find array_type: var.cpp:line 109." << endl;
+    }
   }
   else if (m_var_type == "GAME_OBJECT")
   {

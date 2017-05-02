@@ -46,4 +46,17 @@ void Assignment_stmt::execute()
       cerr << " Assignment_stmt::execute()!!!" << endl;
     }     
   }
+  else if (m_oper == ASS_PLUS)
+  {
+    cerr << "this ran in ass plus : 51" << endl;
+    Expression* lhs_expr = new Expression(m_var_lhs);
+    Expression* plus_expr = new Expression(PLUS, m_var_lhs->m_type, lhs_expr, m_expr_rhs);
+    int int_value = plus_expr->eval_int();
+    void* v_value = (void*) new int(int_value);
+    m_var_lhs->set_new_value(v_value);
+  }
+  else
+  {
+     cerr << "ERROR: CANNOT FIND TYPE IN ASS.CPP" << endl;
+  }
 }

@@ -872,13 +872,47 @@ assign_statement:
       /* params goes like this:
          (Variable* lhs, Expression* rhs, Assignment_type type)
       */
+      if ($1->m_type < $3->m_type)
+      {
+        stringstream ss;
+        ss << $1->m_type;
+        string s_f_type;
+        string s_s_type;
+        ss >> s_f_type;
+        ss << $3->m_type;
+        ss >> s_s_type;
+        Error::error(Error::ASSIGNMENT_TYPE_ERROR, s_f_type, s_s_type);
+      }
+      else if ($1->m_type == GAME_OBJECT)
+      {
+        string s1, s2;
+        s1 = $1->m_symbol->m_name;
+        Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, s1, "game_object");
+      }
       Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
       global_stack.top()->m_statements.push_back(ass_stmt); 
     }
     | variable T_PLUS_ASSIGN expression
     {
-      
-      assert(false);
+      if ($1->m_type == GAME_OBJECT)
+      {
+        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+                     $1->m_symbol->m_name, "game_object");
+      }
+      cout << "this ran in gpl.y:902 " << endl;
+      if ($1->m_type < $3->m_type)
+      {
+        stringstream ss;
+        ss << $1->m_type;
+        string s1;
+        ss >> s1;
+        ss << $3->m_type;
+        string s2;
+        ss >> s2;
+        Error::error(Error::PLUS_ASSIGNMENT_TYPE_ERROR, s1, s2);
+      }
+      Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_PLUS);
+      global_stack.top()->m_statements.push_back(plus_stmt); 
     }
     | variable T_MINUS_ASSIGN expression
     {
