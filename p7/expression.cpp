@@ -1,5 +1,5 @@
 #include "expression.h"
-#include "variable.h"
+///#include "variable.h" if problems add this back and go add class up in .h
 #include "constant.h"
 
 
@@ -107,6 +107,8 @@ int Expression::eval_int()
   }
   else if (m_node == VARIABLE)
   {
+    cerr << "THIS RAN IN VAIRABLE IN EVAL INT 110" << endl;
+    cerr << "m_var type is " << m_var->m_type << endl;
     return m_var->get_int_value();
   }
   else if (m_node == BINARY_OPERATOR)

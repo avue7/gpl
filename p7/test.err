@@ -1,7 +1,31 @@
-VAR 251 new value = 0
-VAR 251 new value = 1
-VAR 251 new value = 2
-this ran in ass.cpp line 36
-String value is : zero
-this ran in ass.cpp line 36
-String value is : one
+gpl:(826) THIS SHOULD RUN ONCE ONLY!!!!!
+THIS RAN IN INT_ARRAY: ass_stmt(26) 
+THIS RAN IN VAIRABLE IN EVAL INT 110
+m_var type is 1025
+M_type in variable is 1025
+get_int_value returned (var:106) 0
+M_new value for array should be +1 (var:107) : 0
+THIS RAN ASS: new value should be 1: 1
+THIS RAN IN ASS: m_oper should be +: 1
+THIS VALUE var:270 shouldnt have changed1
+ SHOULD MATCH ABOVE 1
+THIS RAN IN INT_ARRAY: ass_stmt(26) 
+THIS RAN IN VAIRABLE IN EVAL INT 110
+m_var type is 1025
+M_type in variable is 1025
+get_int_value returned (var:106) 0
+M_new value for array should be +1 (var:107) : 0
+THIS RAN ASS: new value should be 1: 1
+THIS RAN IN ASS: m_oper should be +: 1
+THIS VALUE var:270 shouldnt have changed1
+ SHOULD MATCH ABOVE 1
+THIS RAN IN INT_ARRAY: ass_stmt(26) 
+THIS RAN IN VAIRABLE IN EVAL INT 110
+m_var type is 1025
+M_type in variable is 1025
+get_int_value returned (var:106) 0
+M_new value for array should be +1 (var:107) : 0
+THIS RAN ASS: new value should be 1: 10
+THIS RAN IN ASS: m_oper should be +: 1
+THIS VALUE var:270 shouldnt have changed10
+ SHOULD MATCH ABOVE 10

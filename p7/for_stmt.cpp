@@ -13,8 +13,11 @@ void For_stmt::execute()
   for(m_initializer->execute(); m_expr->eval_int(); m_incrementor->execute())
   {
    cerr << "body executed" << endl;  
-   cerr << "m_body in m_expr os : " << m_expr->m_type << endl;
-   cerr << "end condition value is :" << m_expr->eval_int() << endl;
+   cerr << "for_stmt: new end condition should be: ";
+   cerr << m_expr->m_lhs->m_var->get_int_value() << endl;
+   cerr << "for_statment: type should be int_array : ";
+   cerr << m_expr->m_lhs->m_var->m_type << endl;
+   cerr << "is index[?] < 3? :" << m_expr->eval_int() << endl;
    // m_body->execute();
   }
 }

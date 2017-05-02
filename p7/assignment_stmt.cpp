@@ -13,12 +13,27 @@ void Assignment_stmt::execute()
   {
     if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
     {
-      if (m_expr_rhs->m_type == INT)
+      if (m_var_lhs->m_type == INT)
       {
-        int value;
+        int value; 
         value = m_expr_rhs->eval_int();
+        cerr << " value in assignment.cpp to be set is " << value << endl;
         void* v_value = (void*) new int(value);
         m_var_lhs->set_new_value(v_value);
+      }
+      else if (m_var_lhs->m_type == INT_ARRAY)
+      {
+        cerr << "THIS RAN IN INT_ARRAY: ass_stmt(26) " << endl;
+        int value; 
+        value = m_expr_rhs->eval_int();
+        cerr << "THIS RAN ASS: new value should be 1: " << value << endl;
+        cerr << "THIS RAN IN ASS: m_oper should be +: " << m_expr_rhs->m_oper << endl;
+        void* v_value = (void*) new int(value);
+        m_var_lhs->set_new_value(v_value);
+      }
+      else
+      {
+        cerr << "ERROR::ASS_STMT(line:34): don't know type!" << endl; 
       }
     }
     else if (m_var_lhs->m_type == DOUBLE || m_var_lhs->m_type == DOUBLE_ARRAY)
@@ -48,11 +63,12 @@ void Assignment_stmt::execute()
   }
   else if (m_oper == ASS_PLUS)
   {
-    cerr << "this ran in ass plus : 51" << endl;
-    Expression* lhs_expr = new Expression(m_var_lhs);
-    Expression* plus_expr = new Expression(PLUS, m_var_lhs->m_type, lhs_expr, m_expr_rhs);
-    int int_value = plus_expr->eval_int();
-    void* v_value = (void*) new int(int_value);
+    cout << "this printed in assPlus " << endl;
+    int expr_ret_val = m_expr_rhs->eval_int();
+    int var_ret_val = m_var_lhs->get_int_value();
+    int sum = expr_ret_val + var_ret_val;
+    void* v_value = (void*) new int(sum);
+    cout << "New sum value of int array is : " << sum << endl;
     m_var_lhs->set_new_value(v_value);
   }
   else

@@ -1,10 +1,17 @@
 int index[7];
 int count = 0;
 
+on skey
+{
+  index[0] = index[0] + 1;
+  index[0] = index[1] + 1;
+  index[0] = index[2] + 10;
+}
+
 on akey
 {
  for (index[0] = 0; index[0] < 3; index[0] = index[0] + 1)
  {
-   count = count + 1;
+   print("hello");
  }
 }

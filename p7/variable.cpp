@@ -103,8 +103,8 @@ int Variable::get_int_value()
     { 
       int value;
       value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
-      cerr << "this printed after the value" << value << endl;
-      cerr << "M_VALUE IS var:107" << endl;
+      cerr << "get_int_value returned (var:106) " << value << endl;
+      cerr << "M_new value for array should be +1 (var:107) : " << ((int*)m_symbol->m_value)[m_expr->eval_int()] << endl;
       return value;
     }
     else
@@ -267,8 +267,10 @@ void Variable::set_new_value(void* new_value)
     // Arrays
      if (m_symbol->m_type == INT_ARRAY)
      {
+       cerr << "THIS VALUE var:270 shouldnt have changed" << *(int*) new_value<< endl;
        int value = *(int*) new_value;
        ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
+       cerr << " SHOULD MATCH ABOVE " << ((int*)m_symbol->m_value)[m_expr->eval_int()] << endl;
      }
      else if (m_symbol->m_type == DOUBLE_ARRAY)
      {

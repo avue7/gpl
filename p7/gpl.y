@@ -18,6 +18,7 @@ extern int line_count;            // current line in the input; from record.l
 using namespace std;
 Game_object* cur_obj; // Global variable that stores current obj under const.
 string cur_name; // Current name for object
+int counter=0; //THis is for debugging....
 
 // Globalizing the declaring of stack. Library header is included
 // in the parser.h
@@ -822,6 +823,7 @@ for_statement:
       {
         Error::error(Error::INVALID_TYPE_FOR_FOR_STMT_EXPRESSION);
       }
+      cerr << "gpl:(826) THIS SHOULD RUN ONCE ONLY!!!!!" << endl;
       For_stmt* for_stmt = new For_stmt($3,$9,$13,$7);
       global_stack.top()->m_statements.push_back(for_stmt); 
     }
@@ -889,8 +891,12 @@ assign_statement:
         s1 = $1->m_symbol->m_name;
         Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, s1, "game_object");
       }
+
+
       Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
       global_stack.top()->m_statements.push_back(ass_stmt); 
+      
+
     }
     | variable T_PLUS_ASSIGN expression
     {
@@ -1134,6 +1140,14 @@ expression:
       else if ($1->m_type == INT && $1->m_type == INT)
       {
         $$= new Expression(PLUS, INT, $1, $3);
+      }
+      else if ($1->m_type == INT_ARRAY)
+      {
+        $$= new Expression(PLUS, INT, $1, $3);
+      }
+      else
+      {
+        cerr << "ERROR: GPL(1146): cannot find type!" << endl;
       }
     }
     | expression T_MINUS expression

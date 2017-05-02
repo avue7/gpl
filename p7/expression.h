@@ -12,9 +12,10 @@
 #include <math.h>
 #include <assert.h>
 #include "animation_block.h"
+#include "variable.h" //If something infinite loop go delete this...
 using namespace std;
 
-class Variable; // Forwarding class to avoid inf. loop
+//class Variable; // Forwarding class to avoid inf. loop
 class Constant;
 
 class Expression
