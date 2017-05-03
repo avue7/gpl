@@ -9,12 +9,15 @@ Assignment_stmt::Assignment_stmt(Variable* lhs, Expression* rhs, Assignment_type
 
 void Assignment_stmt::execute()
 {
+  /* We dont really care what the lhs is since we are not setting the values
+     here....however, I just wanted to be sure....HOWEVER, we must check the
+     quality or type of the right hand side to correctly allocate the correct
+     amount of space. */
   if (m_oper == ASS_ASSIGN)
   {
     cerr << "THIS RAN IN ASS" << endl;
-    if (m_var_lhs->m_var_type == "CONSTANT")
+    if (m_var_lhs->m_var_type == "CONSTANT" && m_var_lhs->m_var_type == "EXPRESSION")
     {
-      cerr << "ASS PRINT:: yes m_var_lhs is constant" << endl;
       if (m_expr_rhs->m_type == INT)
       {
         cerr << " THIS SHIT IS a double" << endl;
@@ -50,22 +53,6 @@ void Assignment_stmt::execute()
       else
       {
         cerr << "ERROR::(ASS.CPP:41) cannot find m_expr->m_type for CONSTANT!" << endl;
-      }
-    }
-    else if (m_var_lhs->m_var_type == "EXPRESSION")
-    {
-      cerr << "ASS PRINT:: YES m_var is an expression"<< endl;
-      if (m_var_lhs->m_type == INT_ARRAY)
-      {
-        int value; 
-        value = m_expr_rhs->eval_int();
-        cerr << " ASS(32) m_expr- type is : " << m_expr_rhs->m_type << endl;
-        void* v_value = (void*) new int(value);
-        m_var_lhs->set_new_value(v_value);
-      }
-      else
-      {
-        cerr << "ERROR::ASS_STMT(line:34): don't know type!" << endl; 
       }
     }
     else if (m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
