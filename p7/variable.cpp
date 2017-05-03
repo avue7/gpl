@@ -52,6 +52,7 @@ Variable::Variable(string symbol_name, string param, int array_index)
   {
     ((Game_object*)((Triangle**)(m_symbol->m_value))
       [array_index])->get_member_variable_type(param, m_type);
+     m_type = TRIANGLE_ARRAY;
      m_param = param;
      m_array_index = array_index; 
   }
@@ -60,12 +61,14 @@ Variable::Variable(string symbol_name, string param, int array_index)
     ((Game_object*)((Rectangle**)(m_symbol->m_value))
       [array_index])->get_member_variable_type(param, m_type);
      m_param = param;
+     m_type = RECTANGLE_ARRAY;
      m_array_index = array_index; 
   }
   else if (m_symbol->m_type == CIRCLE_ARRAY)
   {
     ((Game_object*)((Circle**)(m_symbol->m_value))
       [array_index])->get_member_variable_type(param, m_type);
+     m_type = CIRCLE_ARRAY;
      m_param = param;
      m_array_index = array_index; 
   }
@@ -74,12 +77,14 @@ Variable::Variable(string symbol_name, string param, int array_index)
     ((Game_object*)((Textbox**)(m_symbol->m_value))
       [array_index])->get_member_variable_type(param, m_type);
      m_param = param;
+     m_type = TEXTBOX_ARRAY;
      m_array_index = array_index; 
   }
   else if (m_symbol->m_type == PIXMAP_ARRAY)
   {
     ((Game_object*)((Pixmap**)(m_symbol->m_value))
       [array_index])->get_member_variable_type(param, m_type);
+     m_type = PIXMAP_ARRAY;
      m_param = param;
      m_array_index = array_index; 
   }
@@ -96,15 +101,17 @@ int Variable::get_int_value()
     int value = 0;
     return value;
   }
-  if (m_var_type == "EXPRESSION")
+  if (m_var_type == "CONSTANT")
   {
-    cerr << "M_type in variable is " << m_type << endl;
+    return *(int*) m_symbol->m_value;
+  } 
+  else if (m_var_type == "EXPRESSION")
+  {
+    //cerr << "M_type in variable is " << m_type << endl;
     if (m_type == INT_ARRAY)
     { 
       int value;
       value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
-      cerr << "get_int_value returned (var:106) " << value << endl;
-      cerr << "M_new value for array should be +1 (var:107) : " << ((int*)m_symbol->m_value)[m_expr->eval_int()] << endl;
       return value;
     }
     else
@@ -253,34 +260,38 @@ Animation_block *Variable::get_animation_block()
   {
     return m_symbol->get_animation_block();
   }
+  else 
+  {
+    cerr << "ERROR:VAR(256): M_TYPE == ANIMATION_BLOCK?" << endl;
+  }
 }
 
 // Added in p7
 void Variable::set_new_value(void* new_value)
 {
   if (m_var_type == "CONSTANT")
-  {
-    m_symbol->m_value =  new_value;
+  { 
+    cerr << "VAR.CPP:274: set value in set_new Value ks " << *(int*) new_value << endl;
+    m_symbol->m_value = new_value;
   }
   else if (m_var_type == "EXPRESSION")
   {
-    // Arrays
+     // Arrays
      if (m_symbol->m_type == INT_ARRAY)
      {
-       cerr << "THIS VALUE var:270 shouldnt have changed" << *(int*) new_value<< endl;
-       int value = *(int*) new_value;
        ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
-       cerr << " SHOULD MATCH ABOVE " << ((int*)m_symbol->m_value)[m_expr->eval_int()] << endl;
      }
      else if (m_symbol->m_type == DOUBLE_ARRAY)
      {
-       cerr << "VAR 251 new value = " << *(double*) new_value << endl;
        ((double*)m_symbol->m_value)[m_expr->eval_int()] = *(double*) new_value;
      }
      else if (m_symbol->m_type == STRING_ARRAY)
      {
-       cerr << "var 248: string value is" << *(string*) new_value << " index is:" << m_expr->eval_int() << endl;
        ((string*)m_symbol->m_value)[m_expr->eval_int()] = *(string*) new_value;
+     }
+     else
+     {
+        cerr << "ERROR: VAR(281): CANNOT FIND TYPE!" << endl;
      }
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")

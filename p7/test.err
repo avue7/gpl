@@ -1,4 +1,9 @@
-gpl:(826) THIS SHOULD RUN ONCE ONLY!!!!!
-THIS RAN IN VAIRABLE IN EVAL INT 110
-m_var type is 1
- value in assignment.cpp to be set is 1
+THIS RAN IN ASS
+ASS PRINT:: yes m_var_lhs is constant
+ THIS SHIT IS a double
+ASS(22):: new value is 2
+VAR.CPP:274: set value in set_new Value ks 2
+ NEW VALUE SHOULD BE: 2 at address :0x1fb35d0
+THIS RAN IN ASS
+ASS PRINT:: YES m_var is an expression
+ ASS(32) m_expr- type is : 1

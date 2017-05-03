@@ -11,23 +11,55 @@ void Assignment_stmt::execute()
 {
   if (m_oper == ASS_ASSIGN)
   {
-    if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
+    cerr << "THIS RAN IN ASS" << endl;
+    if (m_var_lhs->m_var_type == "CONSTANT")
     {
-      if (m_var_lhs->m_type == INT)
+      cerr << "ASS PRINT:: yes m_var_lhs is constant" << endl;
+      if (m_expr_rhs->m_type == INT)
       {
+        cerr << " THIS SHIT IS a double" << endl;
         int value; 
-        value = m_expr_rhs->eval_int();
-        cerr << " value in assignment.cpp to be set is " << value << endl;
+        value = m_expr_rhs->eval_double();
+        //m_var_lhs->m_symbol->set(value);
+        cerr << "ASS(22):: new value is " << value << endl;
         void* v_value = (void*) new int(value);
         m_var_lhs->set_new_value(v_value);
-      }
-      else if (m_var_lhs->m_type == INT_ARRAY)
+        cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_int_value(); 
+        cerr << " at address :" << m_var_lhs->m_symbol<< endl;
+      }    
+      else if (m_expr_rhs->m_type == DOUBLE)
       {
-        cerr << "THIS RAN IN INT_ARRAY: ass_stmt(26) " << endl;
+        cerr << " THIS SHIT IS a double" << endl;
+        double value; 
+        value = m_expr_rhs->eval_double();
+        //m_var_lhs->m_symbol->set(value);
+        cerr << "ASS(22):: new value is " << value << endl;
+        void* v_value = (void*) new double(value);
+        m_var_lhs->set_new_value(v_value);
+        cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_int_value(); 
+        cerr << " at address :" << m_var_lhs->m_symbol<< endl;
+      }    
+      else if (m_expr_rhs->m_type == STRING)
+      {
+        string s_value;
+        s_value = m_expr_rhs->eval_string();
+        cerr << "s_value is " << s_value << endl;
+        void* v_value = (void*) new string(s_value);
+        m_var_lhs->set_new_value(v_value);
+      }
+      else
+      {
+        cerr << "ERROR::(ASS.CPP:41) cannot find m_expr->m_type for CONSTANT!" << endl;
+      }
+    }
+    else if (m_var_lhs->m_var_type == "EXPRESSION")
+    {
+      cerr << "ASS PRINT:: YES m_var is an expression"<< endl;
+      if (m_var_lhs->m_type == INT_ARRAY)
+      {
         int value; 
         value = m_expr_rhs->eval_int();
-        cerr << "THIS RAN ASS: new value should be 1: " << value << endl;
-        cerr << "THIS RAN IN ASS: m_oper should be +: " << m_expr_rhs->m_oper << endl;
+        cerr << " ASS(32) m_expr- type is : " << m_expr_rhs->m_type << endl;
         void* v_value = (void*) new int(value);
         m_var_lhs->set_new_value(v_value);
       }
@@ -36,40 +68,30 @@ void Assignment_stmt::execute()
         cerr << "ERROR::ASS_STMT(line:34): don't know type!" << endl; 
       }
     }
-    else if (m_var_lhs->m_type == DOUBLE || m_var_lhs->m_type == DOUBLE_ARRAY)
+    else if (m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
     {
-      if (m_expr_rhs->m_type == DOUBLE || m_expr_rhs->m_type == INT)
+      cerr << " M_VAR IS AN GAME_OBJECT" << endl;
+      if (m_expr_rhs->m_type == INT)
       {
-        double d_value;
-        d_value = m_expr_rhs->eval_double();
-        void* v_value = (void*) new double(d_value);
+        int int_value = m_expr_rhs->eval_int();
+        void* v_value = (void*) new int(int_value);
         m_var_lhs->set_new_value(v_value);
       }
-    }     
-    else if (m_expr_rhs->m_type == STRING || m_var_lhs->m_type == STRING_ARRAY)
-    {
-      cerr << "this ran in ass.cpp line 36" << endl;
-      string s_value;
-      s_value = m_expr_rhs->eval_string();
-      void* v_value = (void*) new string(s_value);
-      cerr << "Ass 40: S: string value is : " << s_value << endl;
-      m_var_lhs->set_new_value(v_value);
+      else
+      {
+        cerr << "ERROR::(ASS.CPP:71) cannot find m_expr_rhs type!" << endl;
+      }
     }
     else
     {
-      cerr << "Error: Trouble finding (RHS) expr->m_type in";
+      cerr << "ERROR::TROUBLE FINDING M_VAR_TYPE in";
       cerr << " Assignment_stmt::execute()!!!" << endl;
     }     
   }
   else if (m_oper == ASS_PLUS)
   {
-    cout << "this printed in assPlus " << endl;
-    int expr_ret_val = m_expr_rhs->eval_int();
-    int var_ret_val = m_var_lhs->get_int_value();
-    int sum = expr_ret_val + var_ret_val;
-    void* v_value = (void*) new int(sum);
-    cout << "New sum value of int array is : " << sum << endl;
-    m_var_lhs->set_new_value(v_value);
+    cerr << "NEED TO IMPLEMENT THE += (Ass: 62) " << endl;
+    exit(1);
   }
   else
   {

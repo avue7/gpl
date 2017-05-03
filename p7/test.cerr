@@ -1,0 +1,10 @@
+gpl.cpp::main()
+  input file(test.gpl)
+  random seed(1493724792)
+  read_keypresses_from_standard_input(false)
+  dump_pixels(false)
+  symbol_table(true)
+  graphics(true)
+
+gpl.cpp::main() Calling yyparse()
+

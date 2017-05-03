@@ -1,17 +1,11 @@
-int index[7];
-int count = 0;
-
-on skey
-{
-  count = count + 1;
-}
-
-
+int i = 7000;
+int ints[3];
+//rectangle rect[5];
 
 on akey
 {
- for (index[0] = 0; index[0] < 3; index[0] = index[0] + 1)
- {
-   print("hello");
- }
+  i = 2;
+  ints[2] = 5;
+ // should not be an error
+  //rect[i].x = 21;
 }
