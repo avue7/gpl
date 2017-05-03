@@ -1,9 +1,128 @@
+this ran in symTable: 109
+this ran in symTable: 109
+this ran in symTable: 109
+ TYPE IS : Var.cpp (88) : 1025
+ TYPE IS : Var.cpp (88) : 1025
+ TYPE IS : Var.cpp (88) : 1025
+ TYPE IS : Var.cpp (88) : 1026
+ TYPE IS : Var.cpp (88) : 1026
+ TYPE IS : Var.cpp (88) : 1026
+ TYPE IS : Var.cpp (88) : 1028
+ TYPE IS : Var.cpp (88) : 1028
+ TYPE IS : Var.cpp (88) : 1028
+ TYPE IS : Var.cpp (88) : 1072
 THIS RAN IN ASS
-ASS PRINT:: yes m_var_lhs is constant
+ THIS SHIT IS a int
+ASS(22):: new value is 0
+ VARIABLE.CPP : m_var_TYPE : EXPRESSION
+M_type in variable is 1025
+ NEW VALUE SHOULD BE: 0 at address :0x8145d0
+THIS RAN IN ASS
+ THIS SHIT IS a int
+ASS(22):: new value is 1
+ VARIABLE.CPP : m_var_TYPE : EXPRESSION
+M_type in variable is 1025
+ NEW VALUE SHOULD BE: 1 at address :0x8145d0
+THIS RAN IN ASS
+ THIS SHIT IS a int
+ASS(22):: new value is 2
+ VARIABLE.CPP : m_var_TYPE : EXPRESSION
+M_type in variable is 1025
+ NEW VALUE SHOULD BE: 2 at address :0x8145d0
+THIS RAN IN ASS
+ THIS SHIT IS a double
+ASS(22):: new value is 0
+ NEW VALUE SHOULD BE: 0 at address :0x814720
+THIS RAN IN ASS
+ THIS SHIT IS a double
+ASS(22):: new value is 1
+ NEW VALUE SHOULD BE: 1 at address :0x814720
+THIS RAN IN ASS
  THIS SHIT IS a double
 ASS(22):: new value is 2
-VAR.CPP:274: set value in set_new Value ks 2
- NEW VALUE SHOULD BE: 2 at address :0x1fb35d0
+ NEW VALUE SHOULD BE: 2 at address :0x814720
 THIS RAN IN ASS
-ASS PRINT:: YES m_var is an expression
- ASS(32) m_expr- type is : 1
+THIS SHI IS A STRING
+s_value is zero
+THIS RAN IN ASS
+THIS SHI IS A STRING
+s_value is one
+THIS RAN IN ASS
+THIS SHI IS A STRING
+s_value is two
+THIS RAN IN ASS
+ M_VAR IS AN GAME_OBJECT
+ VALUE is 0
+THIS RAN IN ASS
+ M_VAR IS AN GAME_OBJECT
+ VALUE is 1
+THIS RAN IN ASS
+ M_VAR IS AN GAME_OBJECT
+ VALUE is 2
+ expres:692 ints[0] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih 0exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : ints[0] = 0
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 ints[1] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih 1exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : ints[1] = 1
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 ints[2] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih 2exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : ints[2] = 2
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 doubles[0] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih 0exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : doubles[0] = 0
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 doubles[1] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih 1exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : doubles[1] = 1
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 doubles[2] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih 2exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : doubles[2] = 2
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 strings[0] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih zeroexp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : strings[0] = zero
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 strings[1] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih oneexp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : strings[1] = one
+ ___m_TYPE is : 4
+    m_node is : 2
+ expres:692 strings[2] = exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+ m_rih twoexp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+PRINT_STMT.CPP(16) VALUE IS : strings[2] = two
+ ___m_TYPE is : 4
+    m_node is : 2
+exp.cpp 684 this ran
+ THIS RAN IN GET STRING VAL OF VAR>CPP 
+  THIS RAN IN GAME_OBJECT _ARRAY
+     VAR:296 YES I AM A CIRCLE ARRAY 

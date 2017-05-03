@@ -13,24 +13,24 @@ void Assignment_stmt::execute()
      here....however, I just wanted to be sure....HOWEVER, we must check the
      quality or type of the right hand side to correctly allocate the correct
      amount of space. */
+
   if (m_oper == ASS_ASSIGN)
   {
     cerr << "THIS RAN IN ASS" << endl;
-    if (m_var_lhs->m_var_type == "CONSTANT" && m_var_lhs->m_var_type == "EXPRESSION")
+    if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
     {
-      if (m_expr_rhs->m_type == INT)
+      if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
       {
-        cerr << " THIS SHIT IS a double" << endl;
+        cerr << " THIS SHIT IS a int" << endl;
         int value; 
-        value = m_expr_rhs->eval_double();
-        //m_var_lhs->m_symbol->set(value);
+        value = m_expr_rhs->eval_int();
         cerr << "ASS(22):: new value is " << value << endl;
         void* v_value = (void*) new int(value);
         m_var_lhs->set_new_value(v_value);
         cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_int_value(); 
         cerr << " at address :" << m_var_lhs->m_symbol<< endl;
       }    
-      else if (m_expr_rhs->m_type == DOUBLE)
+      else if (m_var_lhs->m_type == DOUBLE || m_var_lhs->m_type == DOUBLE_ARRAY)
       {
         cerr << " THIS SHIT IS a double" << endl;
         double value; 
@@ -39,15 +39,16 @@ void Assignment_stmt::execute()
         cerr << "ASS(22):: new value is " << value << endl;
         void* v_value = (void*) new double(value);
         m_var_lhs->set_new_value(v_value);
-        cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_int_value(); 
+        cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_double_value(); 
         cerr << " at address :" << m_var_lhs->m_symbol<< endl;
       }    
-      else if (m_expr_rhs->m_type == STRING)
+      else if (m_var_lhs->m_type == STRING || m_var_lhs->m_type == STRING_ARRAY)
       {
+        cerr << "THIS SHI IS A STRING" << endl;
         string s_value;
         s_value = m_expr_rhs->eval_string();
-        cerr << "s_value is " << s_value << endl;
         void* v_value = (void*) new string(s_value);
+        cerr << "s_value is " << s_value << endl;
         m_var_lhs->set_new_value(v_value);
       }
       else
@@ -55,12 +56,13 @@ void Assignment_stmt::execute()
         cerr << "ERROR::(ASS.CPP:41) cannot find m_expr->m_type for CONSTANT!" << endl;
       }
     }
-    else if (m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
+    else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
     {
       cerr << " M_VAR IS AN GAME_OBJECT" << endl;
       if (m_expr_rhs->m_type == INT)
       {
         int int_value = m_expr_rhs->eval_int();
+        cerr << " VALUE is " << int_value << endl;
         void* v_value = (void*) new int(int_value);
         m_var_lhs->set_new_value(v_value);
       }
@@ -73,7 +75,7 @@ void Assignment_stmt::execute()
     {
       cerr << "ERROR::TROUBLE FINDING M_VAR_TYPE in";
       cerr << " Assignment_stmt::execute()!!!" << endl;
-    }     
+    }
   }
   else if (m_oper == ASS_PLUS)
   {

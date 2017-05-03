@@ -263,6 +263,20 @@ void Symbol::set(int value)
   m_value = (void*) new int(value);
 }
 
+void Symbol::set(double value)
+{
+  m_value = (void*) new double(value);
+}
+
+void Symbol::set(string value)
+{
+  m_value = (void*) new string(value);
+}
+
+void Symbol::set(void* value)
+{
+  m_value = value;
+}
 Animation_block* Symbol::get_animation_block()
 {
   assert(m_type == ANIMATION_BLOCK);

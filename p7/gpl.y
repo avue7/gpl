@@ -1,6 +1,5 @@
 %{  // bison syntax to indicate the start of the header
     // the header is copied directly into y.tab.c (the generated parser)
-
 extern int yylex();               // this lexer function returns next token
 extern int yyerror(const char *); // used to print errors
 extern int line_count;            // current line in the input; from record.l
@@ -19,7 +18,6 @@ using namespace std;
 Game_object* cur_obj; // Global variable that stores current obj under const.
 string cur_name; // Current name for object
 int counter=0; //THis is for debugging....
-
 // Globalizing the declaring of stack. Library header is included
 // in the parser.h
 stack <Statement_block*> global_stack; 
@@ -1130,6 +1128,7 @@ expression:
     }
     | expression T_PLUS expression 
     {
+      cerr << "GPL: 1131 this ran in exp + exp " << endl;
       if ($1->m_type == STRING || $3->m_type == STRING)
       {
         $$= new Expression(PLUS, STRING, $1, $3);
@@ -1466,4 +1465,4 @@ empty:
     }
     // empty goes to nothing so that you can use empty in productions
     // when you want a production to go to nothing
-    ;
+;

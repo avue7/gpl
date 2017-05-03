@@ -85,6 +85,7 @@ Expression::Expression(Variable *variable)
 {
   m_var = variable;
   m_type = variable->m_type;
+  cerr << " TYPE IS : Var.cpp (88) : " << m_type << endl;
   m_node = VARIABLE;
 }
 /***************************************
