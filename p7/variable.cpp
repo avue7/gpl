@@ -54,7 +54,7 @@ Variable::Variable(string symbol_name, string param, Expression* p_expr)
 
 int Variable::get_int_value()
 {
-  cerr << " VARIABLE.CPP : m_var_TYPE : " << m_var_type << endl;
+  //cerr << " VARIABLE.CPP : m_var_TYPE : " << m_var_type << endl;
   if (m_var_type == "DUMMY")
   {
     int value = 0;
@@ -62,21 +62,17 @@ int Variable::get_int_value()
   }
   if (m_var_type == "CONSTANT")
   {
-    cerr << "THIS RAN IN CONSANT 65 var.cpp" << endl;
+    //cerr << "THIS RAN IN CONSANT 65 var.cpp" << endl;
     return *(int*) m_symbol->m_value;
   } 
   else if (m_var_type == "EXPRESSION")
   {
-    cerr << "M_type in variable is " << m_type << endl;
+    //cerr << "M_type in variable is " << m_type << endl;
     if (m_type == INT_ARRAY)
     { 
       int value;
       value = ((int*)m_symbol->m_value)[m_expr->eval_int()];
       return value;
-    }
-    else if (m_type == CIRCLE_ARRAY)
-    {
-       cerr << "INDEED IT IS A CIRCLE_ARRAY" << endl;
     }
     else
     {
@@ -93,7 +89,7 @@ int Variable::get_int_value()
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
   {
-    cerr << "this printed in var.cpp get_int_value" << endl;
+    //cerr << "this printed in var.cpp get_int_value" << endl;
     int ret_value;
     Game_object* temp_obj;
     if (m_symbol->m_type == TRIANGLE_ARRAY)
@@ -172,7 +168,7 @@ double Variable::get_double_value()
 string Variable::get_string_value()
 {
 
-  cerr << " THIS RAN IN GET STRING VAL OF VAR>CPP " << endl;
+  //cerr << " THIS RAN IN GET STRING VAL OF VAR>CPP " << endl;
   void *temp;
   stringstream ss;
   string s_value;
@@ -180,7 +176,7 @@ string Variable::get_string_value()
   {
     if (m_expr->m_type == INT && m_type == INT)
     {
-      cerr << "------I AM AN INT ! var.cpp(222) " << endl;
+      //cerr << "------I AM AN INT ! var.cpp(222) " << endl;
       int int_value;
       stringstream ss;
       string s_value;
@@ -230,7 +226,7 @@ string Variable::get_string_value()
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
   {
-    cerr << "  THIS RAN IN GAME_OBJECT _ARRAY" << endl;
+    //cerr << "  THIS RAN IN GAME_OBJECT _ARRAY" << endl;
     string ret_value;
     Game_object* temp_obj;
     if (m_symbol->m_type == TRIANGLE_ARRAY)
@@ -244,10 +240,10 @@ string Variable::get_string_value()
     {
       temp_obj = (Game_object*)((Rectangle**)
                   (m_symbol->m_value))[m_expr->eval_int()];
-      cerr << "---247: m_expr->eval_int is : " << m_expr->eval_int() << endl;
+      //cerr << "---247: m_expr->eval_int is : " << m_expr->eval_int() << endl;
       Status status;
       status = temp_obj->get_member_variable(this->m_param, ret_value);
-      cerr << " ---- status " << status_to_string(status) << endl;
+      //cerr << " ---- status " << status_to_string(status) << endl;
       return ret_value;
     }
     else if (m_symbol->m_type == PIXMAP_ARRAY)
@@ -266,11 +262,11 @@ string Variable::get_string_value()
     }
     else if (m_symbol->m_type == CIRCLE_ARRAY)
     {
-      cerr << "     VAR:296 YES I AM A CIRCLE ARRAY " << endl;
+      //cerr << "     VAR:296 YES I AM A CIRCLE ARRAY " << endl;
       temp_obj = (Game_object*)((Circle**)
                   (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
-      cerr << " THE VALUE FOR CIRCLE ARRAY IS : " << ret_value << endl;
+      //cerr << " THE VALUE FOR CIRCLE ARRAY IS : " << ret_value << endl;
       return ret_value;
     }
     else
@@ -280,7 +276,7 @@ string Variable::get_string_value()
   }
   else if (m_var_type == "CONSTANT")
   {
-    cerr << "THIS PRINT INSIDE OF STRING IN VAR.CPP" << endl;
+    //cerr << "THIS PRINT INSIDE OF STRING IN VAR.CPP" << endl;
     string value;
     temp = m_symbol->m_value;
     value = *(string*)temp;
@@ -309,11 +305,11 @@ void Variable::set_new_value(void* new_value)
 {
   if (m_var_type == "CONSTANT")
   { 
-    if (m_type == INT)
-       cerr << "VAR.CPP:312: set value in set_new Value ks " << *(int*) new_value << endl;    
+   /* if (m_type == INT)
+       //cerr << "VAR.CPP:312: set value in set_new Value ks " << *(int*) new_value << endl;    
     else if (m_type == DOUBLE)
-       cerr << "VAR.CPP::315: set value in set_new value Constant :";
-       cerr << *(double*) new_value << endl;
+       //cerr << "VAR.CPP::315: set value in set_new value Constant :";
+       //cerr << *(double*) new_value << endl; */
     m_symbol->m_value = new_value;
   }
   else if (m_var_type == "EXPRESSION")
@@ -343,27 +339,29 @@ void Variable::set_new_value(void* new_value)
       Status status;
       Game_object* temp_obj;
       temp_obj = (Game_object*)(m_symbol->m_value);
-      cerr << "--Game type is : " << temp_obj->type() << endl;
-      status = temp_obj->set_member_variable(this->m_param, *(int*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
-      cerr << status_to_string(status) << endl;
+      //cerr << "--Game type is : " << temp_obj->type() << endl;
+      status = temp_obj->set_member_variable(this->m_param, *(int*) new_value);       //cerr << "--Game objec ret status(var:340) is : ";
+      //cerr << status_to_string(status) << endl;
     }
     else if (m_type == DOUBLE)
     {
       Status status;
       Game_object* temp_obj;
       temp_obj = (Game_object*)(m_symbol->m_value);
-      cerr << "--Game type is : " << temp_obj->type() << endl;
-      status = temp_obj->set_member_variable(this->m_param, *(double*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
-      cerr << status_to_string(status) << endl;
+      //cerr << "--Game type is : " << temp_obj->type() << endl;
+      status = temp_obj->set_member_variable(this->m_param, *(double*) new_value);       
+      //cerr << "--Game objec ret status(var:340) is : ";
+      //cerr << status_to_string(status) << endl;
     }
     else if (m_type == STRING)
     {
       Status status;
       Game_object* temp_obj;
       temp_obj = (Game_object*)(m_symbol->m_value);
-      cerr << "--Game type is : " << temp_obj->type() << endl;
-      status = temp_obj->set_member_variable(this->m_param, *(string*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
-      cerr << status_to_string(status) << endl;
+      //cerr << "--Game type is : " << temp_obj->type() << endl;
+      status = temp_obj->set_member_variable(this->m_param, *(string*) new_value);       
+      //cerr << "--Game objec ret status(var:340) is : ";
+      //cerr << status_to_string(status) << endl;
     }
     else
     {

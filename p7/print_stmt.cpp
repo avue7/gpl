@@ -13,8 +13,9 @@ void Print_stmt::execute()
      should be printed */
   string s_value;
   s_value = m_expr->eval_string();
+  /*
   cerr << "PRINT_STMT.CPP(16) VALUE IS : " << s_value << endl;
   cerr << " ___m_TYPE is : " << m_expr->m_type << endl;
-  cerr << "    m_node is : " << m_expr->m_node << endl;
+  cerr << "    m_node is : " << m_expr->m_node << endl;*/
   cout << "print[" << m_line_number << "]: " << s_value << endl;
 }
