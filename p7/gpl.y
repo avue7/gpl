@@ -867,11 +867,6 @@ exit_statement:
 assign_statement:
     variable T_ASSIGN expression
     {
-      /* assert(false); */
-
-      /* params goes like this:
-         (Variable* lhs, Expression* rhs, Assignment_type type)
-      */
       if ($1->m_type < $3->m_type)
       {
         stringstream ss;
@@ -921,8 +916,24 @@ assign_statement:
     }
     | variable T_MINUS_ASSIGN expression
     {
-      assert(false);
-
+      if ($1->m_type == GAME_OBJECT)
+      {
+        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+                     $1->m_symbol->m_name, "game_object");
+      }
+      if ($1->m_type < $3->m_type)
+      {
+        stringstream ss;
+        ss << $1->m_type;
+        string s1;
+        ss >> s1;
+        ss << $3->m_type;
+        string s2;
+        ss >> s2;
+        Error::error(Error::MINUS_ASSIGNMENT_TYPE_ERROR, s1, s2);
+      }
+      Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_MINUS);
+      global_stack.top()->m_statements.push_back(plus_stmt); 
     }
     | variable T_PLUS_PLUS
     {

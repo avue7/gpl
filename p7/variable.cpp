@@ -309,7 +309,11 @@ void Variable::set_new_value(void* new_value)
 {
   if (m_var_type == "CONSTANT")
   { 
-    cerr << "VAR.CPP:274: set value in set_new Value ks " << *(int*) new_value << endl;    
+    if (m_type == INT)
+       cerr << "VAR.CPP:312: set value in set_new Value ks " << *(int*) new_value << endl;    
+    else if (m_type == DOUBLE)
+       cerr << "VAR.CPP::315: set value in set_new value Constant :";
+       cerr << *(double*) new_value << endl;
     m_symbol->m_value = new_value;
   }
   else if (m_var_type == "EXPRESSION")
@@ -334,11 +338,37 @@ void Variable::set_new_value(void* new_value)
   }
   else if (m_var_type == "GAME_OBJECT")
   {
-    Status status;
-    Game_object* temp_obj;
-    temp_obj = (Game_object*)(m_symbol->m_value);
-    status = temp_obj->set_member_variable(this->m_param, *(int*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
-    cerr << status_to_string(status) << endl;
+    if (m_type == INT)
+    {
+      Status status;
+      Game_object* temp_obj;
+      temp_obj = (Game_object*)(m_symbol->m_value);
+      cerr << "--Game type is : " << temp_obj->type() << endl;
+      status = temp_obj->set_member_variable(this->m_param, *(int*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
+      cerr << status_to_string(status) << endl;
+    }
+    else if (m_type == DOUBLE)
+    {
+      Status status;
+      Game_object* temp_obj;
+      temp_obj = (Game_object*)(m_symbol->m_value);
+      cerr << "--Game type is : " << temp_obj->type() << endl;
+      status = temp_obj->set_member_variable(this->m_param, *(double*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
+      cerr << status_to_string(status) << endl;
+    }
+    else if (m_type == STRING)
+    {
+      Status status;
+      Game_object* temp_obj;
+      temp_obj = (Game_object*)(m_symbol->m_value);
+      cerr << "--Game type is : " << temp_obj->type() << endl;
+      status = temp_obj->set_member_variable(this->m_param, *(string*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
+      cerr << status_to_string(status) << endl;
+    }
+    else
+    {
+      cerr << "ERROR::VAR.CPP: cannot find object type in set_new_value!" << endl;
+    }
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
   {
