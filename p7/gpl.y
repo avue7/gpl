@@ -871,12 +871,12 @@ assign_statement:
       {
         stringstream ss;
         ss << $1->m_type;
-        string s_f_type;
-        string s_s_type;
-        ss >> s_f_type;
+        string s1;
+        string s3;
+        ss >> s1;
         ss << $3->m_type;
-        ss >> s_s_type;
-        Error::error(Error::ASSIGNMENT_TYPE_ERROR, s_f_type, s_s_type);
+        ss >> s3;
+        Error::error(Error::ASSIGNMENT_TYPE_ERROR, s1, s3);
       }
       else if ($1->m_type == GAME_OBJECT)
       {
@@ -916,34 +916,58 @@ assign_statement:
     }
     | variable T_MINUS_ASSIGN expression
     {
+      cerr << "THIS RAN IN GPL:919 for T_MINUS" << endl;
+      cerr << "--$1->m_type is : " << $1->m_type << endl;
       if ($1->m_type == GAME_OBJECT)
       {
+        cerr << "--THIS SHOULD BE AN ERROR" << endl;
         Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
                      $1->m_symbol->m_name, "game_object");
       }
       if ($1->m_type < $3->m_type)
       {
-        stringstream ss;
-        ss << $1->m_type;
-        string s1;
-        ss >> s1;
-        ss << $3->m_type;
-        string s2;
-        ss >> s2;
-        Error::error(Error::MINUS_ASSIGNMENT_TYPE_ERROR, s1, s2);
+        Error::error(Error::MINUS_ASSIGNMENT_TYPE_ERROR, 
+             gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
+      }
+      if ($1->m_type == STRING)
+      {
+        Error::error(Error::INVALID_LHS_OF_MINUS_ASSIGNMENT, 
+              $1->m_symbol->m_name+"."+$1->m_param, gpl_type_to_string($1->m_type));
       }
       Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_MINUS);
       global_stack.top()->m_statements.push_back(plus_stmt); 
     }
     | variable T_PLUS_PLUS
     {
-      assert(false);
+      if ($1->m_type == DOUBLE)
+      {
+        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+               $1->m_symbol->m_name, gpl_type_to_string($1->m_type));
+      }
+      if ($1->m_type == STRING)
+      {
+         Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+               $1->m_symbol->m_name, gpl_type_to_string($1->m_type));         
+      }
 
+      Assignment_stmt* stmt = new Assignment_stmt($1, NULL, ASS_PLUS_PLUS);
+      global_stack.top()->m_statements.push_back(stmt); 
     }
     | variable T_MINUS_MINUS
     {
-      assert(false);
- 
+      if ($1->m_type == DOUBLE)
+      {
+        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+               $1->m_symbol->m_name, gpl_type_to_string($1->m_type));
+      }
+      if ($1->m_type == STRING)
+      {
+         Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+               $1->m_symbol->m_name, gpl_type_to_string($1->m_type));         
+      }
+
+      Assignment_stmt* stmt = new Assignment_stmt($1, NULL, ASS_MINUS_MINUS); 
+      global_stack.top()->m_statements.push_back(stmt); 
     }
     ;
 

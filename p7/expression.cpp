@@ -104,7 +104,6 @@ int Expression::eval_int()
 {
   if (m_node == CONSTANT)
   {
-    cerr << "this print in expre 107 m_node == CONSTAT" << endl;
     return m_constant->get_int_value();
   }
   else if (m_node == VARIABLE)
@@ -707,7 +706,6 @@ string Expression::eval_string()
     }
     else
     {
-      cerr << "exp.cpp 684 this ran" << endl;
       return m_var->get_string_value();
     }
   }
@@ -715,8 +713,6 @@ string Expression::eval_string()
   {
     if (m_oper == PLUS)
     { 
-      cerr << " expres:692 " << m_lhs->eval_string();
-      cerr << " m_rih " << m_rhs->eval_string();
       return m_lhs->eval_string() + m_rhs->eval_string();   
     }
     else

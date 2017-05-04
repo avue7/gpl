@@ -1,9 +1,16 @@
-
-rectangle rect(user_string = "rect_user_string");
+int index;
 
 on akey
 {
-  rect.user_string += "_akey_pressed";
+  index++;
+  print(index);
+  //for (index = 0; index < 10; index++)
+  //{
+  //  print(index);
+  //}
+
+  //for (index = 9; index >= 0; index--)
+  //{
+  //  print(index);
+  //}
 }
-
-

@@ -78,6 +78,7 @@ void Assignment_stmt::execute()
       cerr << " Assignment_stmt::execute()!!!" << endl;
     }
   }
+/*###########################################################################*/
   else if (m_oper == ASS_PLUS)
   {
     if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
@@ -137,6 +138,7 @@ void Assignment_stmt::execute()
       cerr << "ERROR::ASS.CPP(line:107): cannot find m_var_type!" << endl;
     }
   }
+/*###########################################################################q*/
   else if (m_oper == ASS_MINUS)
   {
     if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
@@ -165,16 +167,42 @@ void Assignment_stmt::execute()
       }
       else if (m_var_lhs->m_type == STRING || m_var_lhs->m_type == STRING_ARRAY)
       {
-        Expression* new_left = new Expression(m_var_lhs);
-        Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
-        void* v_value = (void*) new string(result->eval_string());
-        m_var_lhs->set_new_value(v_value);     
+        cerr << "ERROR::ASS.CPP(MINUS) NO SETTINGS FOR THIS...";
+        cerr << "THIS SHOULD BE AN ERROR!" << endl;
       }
       else
       {
         cerr << "ERROR::ASS.CPP(line:93): cannot find type!" << endl;
       }
     }
+  }
+/*#########################################################################################*/
+  else if (m_oper == ASS_PLUS_PLUS)
+  {
+    if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
+    { 
+      cerr << "THIS PRINTEd IN ASS 182 for ASS++: " << endl;
+      int old_value = m_var_lhs->get_int_value();
+      cerr << "---OLD vALUE IS: " << endl;
+      old_value = old_value + 1;
+      cerr << "---NEW VALUE IS: " << endl;
+      void* v_value = (void*) new int(old_value);
+      m_var_lhs->set_new_value(v_value);
+    }
+    else
+    {
+      cerr << "ERROR::(ASS.CPP++): cannnot find m_var_type!" << endl;
+      exit(1);
+    }
+  }
+/*#########################################################################################*/
+  else if (m_oper == ASS_MINUS_MINUS)
+  {
+    int old_value = m_var_lhs->get_int_value();
+    old_value = old_value - 1;
+    int new_value = old_value;
+    void* v_value = (void*) new int(new_value);
+    m_var_lhs->set_new_value(v_value);
   }
   else
   {
