@@ -1019,7 +1019,7 @@ variable:
           }
           else
           {
-           //cerr << "need to implement new variable" << endl;
+           cerr << "new var created in gpl.y 1022 game  object" << endl;
            $$ = new Variable(symbol->m_name, *$3);
           }
         }

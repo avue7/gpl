@@ -332,6 +332,14 @@ void Variable::set_new_value(void* new_value)
         cerr << "ERROR: VAR(281): CANNOT FIND TYPE!" << endl;
      }
   }
+  else if (m_var_type == "GAME_OBJECT")
+  {
+    Status status;
+    Game_object* temp_obj;
+    temp_obj = (Game_object*)(m_symbol->m_value);
+    status = temp_obj->set_member_variable(this->m_param, *(int*) new_value);       cerr << "--Game objec ret status(var:340) is : ";
+    cerr << status_to_string(status) << endl;
+  }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
   {
     Game_object* temp_obj;
