@@ -20,7 +20,6 @@ class Variable
     Symbol *m_symbol;   // Pointer to class
     string m_var_type;
     string m_param;    
-    int m_array_index;
 
     // Member functions
     string get_type();

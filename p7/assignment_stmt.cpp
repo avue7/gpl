@@ -62,8 +62,9 @@ void Assignment_stmt::execute()
       if (m_expr_rhs->m_type == INT)
       {
         int int_value = m_expr_rhs->eval_int();
-        cerr << " VALUE is " << int_value << endl;
+        cerr << " VALUE: m_expr_rhs  in ass.cpp is " << int_value << endl;
         void* v_value = (void*) new int(int_value);
+        cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
         m_var_lhs->set_new_value(v_value);
       }
       else

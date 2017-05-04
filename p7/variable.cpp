@@ -46,49 +46,10 @@ Variable::Variable(string symbol_name, string param)
 Variable::Variable(string symbol_name, string param, Expression* p_expr)
 {
   m_symbol = Symbol_table::instance()->lookup(symbol_name);
-  m_expr = NULL;
   m_var_type = "GAME_OBJECT_ARRAY";
-  if (m_symbol->m_type == TRIANGLE_ARRAY)
-  {
-    ((Game_object*)((Triangle**)(m_symbol->m_value))
-      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
-     m_param = param;
-     m_array_index = p_expr->eval_int(); 
-  }
-  else if (m_symbol->m_type == RECTANGLE_ARRAY)
-  {
-    ((Game_object*)((Rectangle**)(m_symbol->m_value))
-      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
-     m_param = param;
-     m_array_index = p_expr->eval_int(); 
-  }
-  else if (m_symbol->m_type == CIRCLE_ARRAY)
-  {
-    cerr << "THIS RAN IN var.cpp: 67 in object array constructor" << endl;
-    ((Game_object*)((Circle**)(m_symbol->m_value))
-      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
-     m_param = param;
-     cerr << "-THIS RAN AFTER GETTING MEMBER TYPE" << endl;
-     m_array_index = p_expr->eval_int(); 
-  }
-  else if (m_symbol->m_type == TEXTBOX_ARRAY)
-  {
-    ((Game_object*)((Textbox**)(m_symbol->m_value))
-      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
-     m_param = param;
-     m_array_index = p_expr->eval_int(); 
-  }
-  else if (m_symbol->m_type == PIXMAP_ARRAY)
-  {
-    ((Game_object*)((Pixmap**)(m_symbol->m_value))
-      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
-     m_param = param;
-     m_array_index = p_expr->eval_int(); 
-  }
-  else
-  {
-    cerr << "Trouble in Variable.cpp constr for game_object_array!" << endl;
-  }
+  m_expr = p_expr;
+  m_param = param;
+  m_type = p_expr->m_type;
 }
 
 int Variable::get_int_value()
@@ -101,7 +62,7 @@ int Variable::get_int_value()
   }
   if (m_var_type == "CONSTANT")
   {
-    cerr << "THIS RAN IN CONSANT 106 var.cpp" << endl;
+    cerr << "THIS RAN IN CONSANT 65 var.cpp" << endl;
     return *(int*) m_symbol->m_value;
   } 
   else if (m_var_type == "EXPRESSION")
@@ -138,35 +99,35 @@ int Variable::get_int_value()
     if (m_symbol->m_type == TRIANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Triangle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == RECTANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Rectangle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == PIXMAP_ARRAY)
     {
       temp_obj = (Game_object*)((Pixmap**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == TEXTBOX_ARRAY)
     {
       temp_obj = (Game_object*)((Textbox**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == CIRCLE_ARRAY)
     {
       temp_obj = (Game_object*)((Circle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
@@ -254,7 +215,7 @@ string Variable::get_string_value()
     }
     else 
     {
-      cerr << "ERROR::Var.cpp(line:246): I cant find type!" << endl;
+      cerr << "ERROR::Var.cpp(line:218): I cant find type!" << endl;
       cerr << "----EXPR Type should be: " << m_expr->m_type << endl;
       cerr << "----Var type should be: " << this->m_type << endl;
     }
@@ -275,28 +236,31 @@ string Variable::get_string_value()
     if (m_symbol->m_type == TRIANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Triangle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == RECTANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Rectangle**)
-                  (m_symbol->m_value))[m_array_index];
-      temp_obj->get_member_variable(this->m_param, ret_value);
+                  (m_symbol->m_value))[m_expr->eval_int()];
+      cerr << "---247: m_expr->eval_int is : " << m_expr->eval_int() << endl;
+      Status status;
+      status = temp_obj->get_member_variable(this->m_param, ret_value);
+      cerr << " ---- status " << status_to_string(status) << endl;
       return ret_value;
     }
     else if (m_symbol->m_type == PIXMAP_ARRAY)
     {
       temp_obj = (Game_object*)((Pixmap**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == TEXTBOX_ARRAY)
     {
       temp_obj = (Game_object*)((Textbox**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
@@ -304,7 +268,7 @@ string Variable::get_string_value()
     {
       cerr << "     VAR:296 YES I AM A CIRCLE ARRAY " << endl;
       temp_obj = (Game_object*)((Circle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
       temp_obj->get_member_variable(this->m_param, ret_value);
       cerr << " THE VALUE FOR CIRCLE ARRAY IS : " << ret_value << endl;
       return ret_value;
@@ -374,27 +338,27 @@ void Variable::set_new_value(void* new_value)
     if (m_symbol->m_type == TRIANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Triangle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
     }
     else if (m_symbol->m_type == RECTANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Rectangle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
     }
     else if (m_symbol->m_type == PIXMAP_ARRAY)
     {
       temp_obj = (Game_object*)((Pixmap**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
     }
     else if (m_symbol->m_type == TEXTBOX_ARRAY)
     {
       temp_obj = (Game_object*)((Textbox**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
     }
     else if (m_symbol->m_type == CIRCLE_ARRAY)
     {
       temp_obj = (Game_object*)((Circle**)
-                  (m_symbol->m_value))[m_array_index];
+                  (m_symbol->m_value))[m_expr->eval_int()];
     }
     else
     {

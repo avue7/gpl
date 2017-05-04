@@ -1,14 +1,15 @@
-string strings[3];
+int i = 7000;
+rectangle rect[5];
 
 on akey
 {
-    strings[0] = "zero";
-    strings[1] = "one";
+  i = 2;
+  print(i);
+  // should not be an error
+  rect[i].x = 21;
 }
 
 on skey
 {
-    print(strings[1]);
-    //print("strings[0] = " + strings[0]);
-    //print("strings[1] = " + strings[1]);
+  print(rect[2].x);
 }
