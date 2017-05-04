@@ -104,6 +104,7 @@ int Expression::eval_int()
 {
   if (m_node == CONSTANT)
   {
+    cerr << "this print in expre 107 m_node == CONSTAT" << endl;
     return m_constant->get_int_value();
   }
   else if (m_node == VARIABLE)

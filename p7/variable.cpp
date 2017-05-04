@@ -43,7 +43,7 @@ Variable::Variable(string symbol_name, string param)
   m_param = param;
 }
 
-Variable::Variable(string symbol_name, string param, int array_index)
+Variable::Variable(string symbol_name, string param, Expression* p_expr)
 {
   m_symbol = Symbol_table::instance()->lookup(symbol_name);
   m_expr = NULL;
@@ -51,37 +51,39 @@ Variable::Variable(string symbol_name, string param, int array_index)
   if (m_symbol->m_type == TRIANGLE_ARRAY)
   {
     ((Game_object*)((Triangle**)(m_symbol->m_value))
-      [array_index])->get_member_variable_type(param, m_type);
+      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
      m_param = param;
-     m_array_index = array_index; 
+     m_array_index = p_expr->eval_int(); 
   }
   else if (m_symbol->m_type == RECTANGLE_ARRAY)
   {
     ((Game_object*)((Rectangle**)(m_symbol->m_value))
-      [array_index])->get_member_variable_type(param, m_type);
+      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
      m_param = param;
-     m_array_index = array_index; 
+     m_array_index = p_expr->eval_int(); 
   }
   else if (m_symbol->m_type == CIRCLE_ARRAY)
   {
+    cerr << "THIS RAN IN var.cpp: 67 in object array constructor" << endl;
     ((Game_object*)((Circle**)(m_symbol->m_value))
-      [array_index])->get_member_variable_type(param, m_type);
+      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
      m_param = param;
-     m_array_index = array_index; 
+     cerr << "-THIS RAN AFTER GETTING MEMBER TYPE" << endl;
+     m_array_index = p_expr->eval_int(); 
   }
   else if (m_symbol->m_type == TEXTBOX_ARRAY)
   {
     ((Game_object*)((Textbox**)(m_symbol->m_value))
-      [array_index])->get_member_variable_type(param, m_type);
+      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
      m_param = param;
-     m_array_index = array_index; 
+     m_array_index = p_expr->eval_int(); 
   }
   else if (m_symbol->m_type == PIXMAP_ARRAY)
   {
     ((Game_object*)((Pixmap**)(m_symbol->m_value))
-      [array_index])->get_member_variable_type(param, m_type);
+      [p_expr->eval_int()])->get_member_variable_type(param, m_type);
      m_param = param;
-     m_array_index = array_index; 
+     m_array_index = p_expr->eval_int(); 
   }
   else
   {
@@ -130,6 +132,7 @@ int Variable::get_int_value()
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
   {
+    cerr << "this printed in var.cpp get_int_value" << endl;
     int ret_value;
     Game_object* temp_obj;
     if (m_symbol->m_type == TRIANGLE_ARRAY)
@@ -164,7 +167,7 @@ int Variable::get_int_value()
     {
       temp_obj = (Game_object*)((Circle**)
                   (m_symbol->m_value))[m_array_index];
-      status=temp_obj->get_member_variable(this->m_param, ret_value);
+      temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else
@@ -203,12 +206,6 @@ double Variable::get_double_value()
     cerr << "ERROR::VAR.CPP(line:207): cannot find m_var_type";
     cerr << " for get_double_value!" << endl;
   }
-/*  else
-  {
-    cerr << "I should never print unless something went wrong. ";
-    cerr << "I am printing from get_double_value() in Variable.cpp." << endl;
-    return 1.0;
-  }*/
 }
 
 string Variable::get_string_value()
@@ -220,7 +217,18 @@ string Variable::get_string_value()
   string s_value;
   if (m_var_type == "EXPRESSION")
   {
-    if (m_type == INT_ARRAY)
+    if (m_expr->m_type == INT && m_type == INT)
+    {
+      cerr << "------I AM AN INT ! var.cpp(222) " << endl;
+      int int_value;
+      stringstream ss;
+      string s_value;
+      int_value = m_expr->eval_int();
+      ss << int_value;
+      ss >> s_value;
+      return s_value;
+    }
+    else if (m_type == INT_ARRAY)
     {
       int int_value;
       stringstream ss;
@@ -230,7 +238,7 @@ string Variable::get_string_value()
       ss >> s_value;
       return s_value;
     }
-    if (m_type == DOUBLE_ARRAY)
+    else if (m_type == DOUBLE_ARRAY)
     {
       double d_value;
       stringstream ss;
@@ -240,9 +248,15 @@ string Variable::get_string_value()
       ss >> s_value;
       return s_value;
     }
-    else 
+    else if (m_type == STRING_ARRAY)
     {
       return ((string*)m_symbol->m_value)[m_expr->eval_int()];
+    }
+    else 
+    {
+      cerr << "ERROR::Var.cpp(line:246): I cant find type!" << endl;
+      cerr << "----EXPR Type should be: " << m_expr->m_type << endl;
+      cerr << "----Var type should be: " << this->m_type << endl;
     }
   }
   else if (m_var_type == "GAME_OBJECT")
@@ -326,20 +340,6 @@ Animation_block *Variable::get_animation_block()
   }
 }
 
-void Variable::set_new_value(int new_value)
-{
-  m_symbol->set(new_value);
-}
-
-void Variable::set_new_value(double new_value)
-{
-  m_symbol->set(new_value);
-}
-
-void Variable::set_new_value(string new_value)
-{
-  m_symbol->set(new_value);
-}
 // Added in p7
 void Variable::set_new_value(void* new_value)
 {

@@ -40,7 +40,7 @@ class Variable
     Variable(string symbol_name);
     Variable(string symbol_name, Expression *expr);
     Variable(string symbol_name, string param);
-    Variable(string symbol_name, string param, int array_index);
+    Variable(string symbol_name, string param, Expression *p_expr);
 };
 
 #endif

@@ -986,17 +986,7 @@ variable:
           }
           else
           {
-            int index_size;
-            index_size = $3->eval_int();
-            if (index_size > (ret_sym->m_size)-1)
-            {
-              Error::error(Error::ARRAY_INDEX_OUT_OF_BOUNDS, *$1, std::to_string(index_size));
-              $$ = new Variable("DUMMY");
-            }
-            else
-            {
-              $$ = new Variable(*$1, $3);
-            }
+            $$ = new Variable(*$1, $3);
           }
         }
         else
@@ -1054,7 +1044,8 @@ variable:
         }
         else
         {
-          $$ = new Variable(symbol->m_name, *$6, $3->eval_int());
+          cerr << "this printed gpl.y 1047: m_type for $3 is " << $3->m_type << endl;
+          $$ = new Variable(symbol->m_name, *$6, $3);
         }
       }     
     }
