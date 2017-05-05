@@ -4,12 +4,13 @@
 #include <iostream>
 #include <string>
 #include "gpl_type.h"
+#include "error.h"
 #include "animation_block.h"
-//#include "symbol.h"
+#include "symbol.h"
 
 using namespace std;
 
-class Symbol; // Class forwarding
+//class Symbol; // Class forwarding
 class Expression; // Class forwarding
 
 class Variable

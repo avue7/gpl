@@ -830,10 +830,11 @@ for_statement:
 print_statement:
     T_PRINT T_LPAREN expression T_RPAREN
     {
+      if ($3->m_type > 4)
+      {
+        Error::error(Error::INVALID_TYPE_FOR_PRINT_STMT_EXPRESSION);
+      }
       Print_stmt* print_stmt = new Print_stmt($1, $3);
-      /* As per instructed, need to insert this statement onto the empty 
-         statement block created earlier at the top of the global statement
-         block stack.  */
       global_stack.top()->m_statements.push_back(print_stmt);      
     }
     ;
@@ -866,6 +867,7 @@ exit_statement:
 assign_statement:
     variable T_ASSIGN expression
     {
+      cerr << "M_TYPE IN GPL IS : " << $1->m_type << endl;
       if ($1->m_type < $3->m_type)
       {
         if ($1->m_var_type == "GAME_OBJECT")
@@ -878,6 +880,11 @@ assign_statement:
           Error::error(Error::ASSIGNMENT_TYPE_ERROR, 
           gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
         }
+      }
+      else if ($1->m_type >= 16 && $1->m_type < 529)
+      {
+        Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, $1->m_symbol->m_name,
+               gpl_type_to_string($1->m_type));
       }
      /* Keep for debugging */
      /* cerr << "GPL:894 this ran in ass of gpl " << endl;
@@ -902,6 +909,11 @@ assign_statement:
           Error::error(Error::PLUS_ASSIGNMENT_TYPE_ERROR, 
           gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
         }
+      }
+      else if ($1->m_type >= 16 && $1->m_type < 529)
+      {
+        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT, $1->m_symbol->m_name,
+               gpl_type_to_string($1->m_type));
       }
       else
       {
@@ -1084,6 +1096,30 @@ variable:
           Error::error(Error::LHS_OF_PERIOD_MUST_BE_OBJECT, *$1);
           $$ = new Variable("DUMMY");
         }
+        else if ($3->m_type != INT)
+        { 
+          if ($3->m_type == DOUBLE)
+          {
+            Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1, 
+                  "A double expression");
+          }
+          else if ($3->m_type == STRING)
+          {
+            Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1, 
+                  "A string expression");           
+          }
+          else if ($3->m_type == ANIMATION_BLOCK)
+          {
+            Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1, 
+                  "A animation_block expression");
+          }
+          else
+          {
+            cerr << "ERROR:: I have to error in checking expression type for";
+            cerr << " game_object_params in the action." << endl;
+          }
+          $$ = new Variable("DUMMY");
+        }
         else
         {
           $$ = new Variable(symbol->m_name, *$6, $3);
@@ -1185,6 +1221,15 @@ expression:
       else
       {
         cerr << "ERROR: GPL(1146): cannot find type!" << endl;
+        if ($1->m_type != INT || $1->m_type != DOUBLE || $1->m_type != STRING)
+        {
+          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "+");
+        }
+        if ($3->m_type != INT || $3->m_type != DOUBLE || $3->m_type != STRING)
+        {
+          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "+");
+        }
+        $$ = new Expression(0, INT, NULL, NULL);
       }
     }
     | expression T_MINUS expression

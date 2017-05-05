@@ -1,16 +1,9 @@
- M NAME iS : circles
-PRINTED FROM VAR CONSTR FOR GAME OBJECT 0
- M NAME iS : circles
-PRINTED FROM VAR CONSTR FOR GAME OBJECT 0
- M NAME iS : circles
-PRINTED FROM VAR CONSTR FOR GAME OBJECT 0
- M NAME iS : circles
-PRINTED FROM VAR CONSTR FOR GAME OBJECT 0
- M NAME iS : circles
-PRINTED FROM VAR CONSTR FOR GAME OBJECT 0
-1) m_lhs is an int and m_rhs is an int
---game object type is: 0
-1) m_lhs is an int and m_rhs is an int
---game object type is: 0
-1) m_lhs is an int and m_rhs is an int
---game object type is: 0
+ERROR: GPL(1146): cannot find type!
+Semantic error on line 9: Invalid left operand for operator '+'.
+Semantic error on line 9: Invalid right operand for operator '+'.
+ERROR: GPL(1146): cannot find type!
+Semantic error on line 10: Invalid left operand for operator '+'.
+Semantic error on line 10: Invalid right operand for operator '+'.
+ERROR: GPL(1146): cannot find type!
+Semantic error on line 11: Invalid left operand for operator '+'.
+Semantic error on line 11: Invalid right operand for operator '+'.

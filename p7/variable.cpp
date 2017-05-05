@@ -1,6 +1,6 @@
 #include "variable.h"
 #include "expression.h"
-#include "symbol.h"
+//#include "symbol.h"
 #include "symbol_table.h"
 
 Variable::Variable(string symbol_name)
@@ -114,6 +114,9 @@ Variable::Variable(string symbol_name, string param, Expression* p_expr)
   }
 }
 
+/*################################################################*/
+/*                     GET VALUES BEGINS                          */
+/*################################################################*/
 int Variable::get_int_value()
 {
   //cerr << " VARIABLE.CPP : m_var_TYPE : " << m_var_type << endl;
@@ -393,19 +396,10 @@ string Variable::get_string_value()
     cerr << "ERROR::VAR.CPP(line:260): cannot find m_var_type!" << endl;
   }
 }
- 
-Animation_block *Variable::get_animation_block()
-{
-  if (m_type == ANIMATION_BLOCK)
-  {
-    return m_symbol->get_animation_block();
-  }
-  else 
-  {
-    cerr << "ERROR:VAR(256): M_TYPE == ANIMATION_BLOCK?" << endl;
-  }
-}
 
+/*######################################################################*/
+/*                       SET NEW VALUES BEGINS                          */
+/*######################################################################*/
 // Added in p7
 void Variable::set_new_value(void* new_value)
 {
@@ -415,23 +409,54 @@ void Variable::set_new_value(void* new_value)
   }
   else if (m_var_type == "EXPRESSION")
   {
-     // Arrays
-     if (m_symbol->m_type == INT_ARRAY)
-     {
-       ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
-     }
-     else if (m_symbol->m_type == DOUBLE_ARRAY)
-     {
-       ((double*)m_symbol->m_value)[m_expr->eval_int()] = *(double*) new_value;
-     }
-     else if (m_symbol->m_type == STRING_ARRAY)
-     {
-       ((string*)m_symbol->m_value)[m_expr->eval_int()] = *(string*) new_value;
-     }
-     else
-     {
-        cerr << "ERROR: VAR(281): CANNOT FIND TYPE!" << endl;
-     }
+    cerr << " current index is : " << m_symbol->m_size << endl;
+    cerr << " new index is : " <<  m_expr->eval_int() << endl; 
+    if (m_symbol->m_size < m_expr->eval_int() || m_expr->eval_int() < 0)
+    {
+      stringstream ss;
+      ss << m_expr->eval_int();
+      string s2;
+      ss >> s2;
+      Error::starting_execution();
+      Error::error(Error::ARRAY_INDEX_OUT_OF_BOUNDS, m_symbol->m_name, s2);  
+      if (m_symbol->m_type == INT_ARRAY)
+      {
+        ((int*)m_symbol->m_value)[0] = *(int*) new_value;
+      }
+      else if (m_symbol->m_type == DOUBLE_ARRAY)
+      {
+        ((double*)m_symbol->m_value)[0] = *(double*) new_value;
+      }
+      else if (m_symbol->m_type == STRING_ARRAY)
+      {
+        ((string*)m_symbol->m_value)[0] = *(string*) new_value;
+      }
+      else
+      {
+         cerr << "ERROR: VAR(428): CANNOT FIND TYPE IN SETTING TO [0]!" << endl;
+      }
+    }
+    else
+    {
+      // Arrays
+      if (m_symbol->m_type == INT_ARRAY)
+      {
+        ((int*)m_symbol->m_value)[m_expr->eval_int()] = *(int*) new_value;
+      }
+      else if (m_symbol->m_type == DOUBLE_ARRAY)
+      {
+        ((double*)m_symbol->m_value)[m_expr->eval_int()] = *(double*) new_value;
+      }
+      else if (m_symbol->m_type == STRING_ARRAY)
+      {
+        ((string*)m_symbol->m_value)[m_expr->eval_int()] = *(string*) new_value;
+      }
+      else
+      {
+         cerr << "ERROR: VAR.CPP(4488): CANNOT FIND TYPE";
+         cerr << " WHILE SETTING VALUE FOR ARRAY!" << endl;
+      }
+    }
   }
   else 
   {
@@ -524,3 +549,16 @@ void Variable::set_game_object_value(void* value)
   }
 }
 
+/*############################################################################*/
+
+Animation_block *Variable::get_animation_block()
+{
+  if (m_type == ANIMATION_BLOCK)
+  {
+    return m_symbol->get_animation_block();
+  }
+  else 
+  {
+    cerr << "ERROR:VAR(256): M_TYPE == ANIMATION_BLOCK?" << endl;
+  }
+}

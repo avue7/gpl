@@ -11,6 +11,7 @@ void Assignment_stmt::execute()
 {
   if (m_oper == ASS_ASSIGN)
   {
+    cerr << " ASSS: m-var m type is : " << m_var_lhs->m_type << endl;
     if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
     {
       if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
@@ -34,9 +35,15 @@ void Assignment_stmt::execute()
         void* v_value = (void*) new string(s_value);
         m_var_lhs->set_new_value(v_value);
       }
+      else if (m_var_lhs->m_symbol->is_game_object())
+      {
+        Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, m_var_lhs->m_symbol->m_name,
+               gpl_type_to_string(m_var_lhs->m_type));
+
+      }
       else
       {
-        cerr << "ERROR::(ASS.CPP:41) cannot find m_expr->m_type for CONSTANT!" << endl;
+        cerr << "ERROR::(ASS.CPP:41) cannot find m_var->m_type for CONSTANT!" << endl;
       }
     }
     else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
