@@ -106,7 +106,6 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
       {
         for (int i = 0; i < symbol->m_size; i++)
         {
-          cerr << "this ran in symTable: 109" << endl;
           ((string*) symbol->m_value)[i] = "";
         }
         

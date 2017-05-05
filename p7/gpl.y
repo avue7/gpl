@@ -821,7 +821,6 @@ for_statement:
       {
         Error::error(Error::INVALID_TYPE_FOR_FOR_STMT_EXPRESSION);
       }
-      /*cerr << "gpl:(826) THIS SHOULD RUN ONCE ONLY!!!!!" << endl;*/
       For_stmt* for_stmt = new For_stmt($3,$9,$13,$7);
       global_stack.top()->m_statements.push_back(for_stmt); 
     }
@@ -869,84 +868,97 @@ assign_statement:
     {
       if ($1->m_type < $3->m_type)
       {
-        stringstream ss;
-        ss << $1->m_type;
-        string s1;
-        string s3;
-        ss >> s1;
-        ss << $3->m_type;
-        ss >> s3;
-        Error::error(Error::ASSIGNMENT_TYPE_ERROR, s1, s3);
+        if ($1->m_var_type == "GAME_OBJECT")
+        {
+          Error::error(Error::INVALID_LHS_OF_ASSIGNMENT,
+          $1->m_symbol->m_name+"."+$1->m_param, gpl_type_to_string($3->m_type));
+        }
+        else
+        {
+          Error::error(Error::ASSIGNMENT_TYPE_ERROR, 
+          gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
+        }
       }
-      else if ($1->m_type == GAME_OBJECT)
+      else
       {
-        string s1, s2;
-        s1 = $1->m_symbol->m_name;
-        Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, s1, "game_object");
-      }
+   
      /* Keep for debugging */
      /* cerr << "GPL:894 this ran in ass of gpl " << endl;
       cerr << "$1 type is : " << $1->m_type << endl;
       cerr << "$1 value is : " << $1->get_int_value() << endl;
       cerr << "$1 name is : " << $1->m_symbol->m_name << endl;
      */
-      Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
-      global_stack.top()->m_statements.push_back(ass_stmt);       
+        Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
+        global_stack.top()->m_statements.push_back(ass_stmt);
+      }
     }
     | variable T_PLUS_ASSIGN expression
     {
-      if ($1->m_type == GAME_OBJECT)
-      {
-        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
-                     $1->m_symbol->m_name, "game_object");
-      }
       if ($1->m_type < $3->m_type)
       {
-        stringstream ss;
-        ss << $1->m_type;
-        string s1;
-        ss >> s1;
-        ss << $3->m_type;
-        string s2;
-        ss >> s2;
-        Error::error(Error::PLUS_ASSIGNMENT_TYPE_ERROR, s1, s2);
+        if ($1->m_var_type == "GAME_OBJECT")
+        {
+          Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+          $1->m_symbol->m_name+"."+$1->m_param, gpl_type_to_string($3->m_type));
+        }
+        else
+        {
+          Error::error(Error::PLUS_ASSIGNMENT_TYPE_ERROR, 
+          gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
+        }
       }
-      Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_PLUS);
-      global_stack.top()->m_statements.push_back(plus_stmt); 
+      else
+      {
+        Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_PLUS);
+        global_stack.top()->m_statements.push_back(plus_stmt); 
+      }
     }
     | variable T_MINUS_ASSIGN expression
     {
-      cerr << "THIS RAN IN GPL:919 for T_MINUS" << endl;
-      cerr << "--$1->m_type is : " << $1->m_type << endl;
-      if ($1->m_type == GAME_OBJECT)
-      {
-        cerr << "--THIS SHOULD BE AN ERROR" << endl;
-        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
-                     $1->m_symbol->m_name, "game_object");
-      }
+      /*cerr << "THIS RAN IN GPL:919 for T_MINUS" << endl;
+      cerr << "--$1->m_type is : " << $1->m_type << endl;*/
       if ($1->m_type < $3->m_type)
       {
-        Error::error(Error::MINUS_ASSIGNMENT_TYPE_ERROR, 
-             gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
+        if ($1->m_var_type == "GAME_OBJECT")
+        {
+          Error::error(Error::INVALID_LHS_OF_MINUS_ASSIGNMENT,
+          $1->m_symbol->m_name+"."+$1->m_param, gpl_type_to_string($3->m_type));
+        }
+        else
+        {
+          Error::error(Error::MINUS_ASSIGNMENT_TYPE_ERROR, 
+          gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
+        }
       }
-      if ($1->m_type == STRING)
+      else if ($1->m_type == STRING)
       {
-        Error::error(Error::INVALID_LHS_OF_MINUS_ASSIGNMENT, 
-              $1->m_symbol->m_name+"."+$1->m_param, gpl_type_to_string($1->m_type));
+        if ($1->m_var_type == "GAME_OBJECT")
+        {
+          Error::error(Error::INVALID_LHS_OF_MINUS_ASSIGNMENT,
+          $1->m_symbol->m_name+"."+$1->m_param, gpl_type_to_string($3->m_type));
+        }
+        else
+        {
+          Error::error(Error::INVALID_LHS_OF_MINUS_ASSIGNMENT, 
+          $1->m_symbol->m_name, gpl_type_to_string($1->m_type));
+        }
       }
-      Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_MINUS);
-      global_stack.top()->m_statements.push_back(plus_stmt); 
+      else
+      {
+        Assignment_stmt* plus_stmt = new Assignment_stmt($1, $3, ASS_MINUS);
+        global_stack.top()->m_statements.push_back(plus_stmt); 
+      }
     }
     | variable T_PLUS_PLUS
     {
       if ($1->m_type == DOUBLE)
       {
-        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+        Error::error(Error::INVALID_LHS_OF_PLUS_PLUS,
                $1->m_symbol->m_name, gpl_type_to_string($1->m_type));
       }
       if ($1->m_type == STRING)
       {
-         Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+         Error::error(Error::INVALID_LHS_OF_PLUS_PLUS,
                $1->m_symbol->m_name, gpl_type_to_string($1->m_type));         
       }
 
@@ -957,12 +969,12 @@ assign_statement:
     {
       if ($1->m_type == DOUBLE)
       {
-        Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+        Error::error(Error::INVALID_LHS_OF_MINUS_MINUS,
                $1->m_symbol->m_name, gpl_type_to_string($1->m_type));
       }
       if ($1->m_type == STRING)
       {
-         Error::error(Error::INVALID_LHS_OF_PLUS_ASSIGNMENT,
+         Error::error(Error::INVALID_LHS_OF_MINUS_MINUS,
                $1->m_symbol->m_name, gpl_type_to_string($1->m_type));         
       }
 
@@ -1054,7 +1066,6 @@ variable:
           }
           else
           {
-           cerr << "new var created in gpl.y 1022 game  object" << endl;
            $$ = new Variable(symbol->m_name, *$3);
           }
         }
@@ -1079,7 +1090,6 @@ variable:
         }
         else
         {
-          cerr << "this printed gpl.y 1047: m_type for $3 is " << $3->m_type << endl;
           $$ = new Variable(symbol->m_name, *$6, $3);
         }
       }     
@@ -1154,7 +1164,7 @@ expression:
     }
     | expression T_PLUS expression 
     {
-      cerr << "GPL: 1131 this ran in exp + exp " << endl;
+      /*cerr << "GPL: 1131 this ran in exp + exp " << endl;*/
       if ($1->m_type == STRING || $3->m_type == STRING)
       {
         $$= new Expression(PLUS, STRING, $1, $3);

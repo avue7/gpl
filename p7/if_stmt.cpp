@@ -16,7 +16,6 @@ If_stmt::If_stmt(Expression* expr, Statement_block* then, Statement_block* b_els
 
 void If_stmt::execute()
 {
-  cerr << "type for m_expr in if_stamet.cpp " << m_expr->m_type << endl;
   if(m_expr->eval_int()) //If true
   {
     m_then->execute();
@@ -25,8 +24,8 @@ void If_stmt::execute()
   {
     m_else->execute();
   }
-  else
+/*  else
   {
     cerr << "ERROR: trouble in execute() of if_stmt.cpp" << endl;
-  }
+  } */
 }

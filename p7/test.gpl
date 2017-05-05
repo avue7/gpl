@@ -1,16 +1,13 @@
-int index;
+int i = 7000;
+int ints[5];
+rectangle rect[5];
 
 on akey
 {
-  index++;
-  print(index);
-  //for (index = 0; index < 10; index++)
-  //{
-  //  print(index);
-  //}
-
-  //for (index = 9; index >= 0; index--)
-  //{
-  //  print(index);
-  //}
+  i = 2;
+  ints[i] = 10;
+  print("ints = " + ints[i]);
+  // should not be an error
+  rect[2].x = 21;
+  print("rect = " + rect[i].x);
 }

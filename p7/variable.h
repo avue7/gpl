@@ -5,6 +5,7 @@
 #include <string>
 #include "gpl_type.h"
 #include "animation_block.h"
+//#include "symbol.h"
 
 using namespace std;
 

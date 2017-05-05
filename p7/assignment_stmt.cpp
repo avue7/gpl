@@ -16,6 +16,8 @@ void Assignment_stmt::execute()
 
   if (m_oper == ASS_ASSIGN)
   {
+//    cerr << " ASSS : m name is " << m_var_lhs->m_symbol->m_name << endl;
+    cerr << "ASSS: mvar type is " << m_var_lhs->m_type << endl;
     //cerr << "THIS RAN IN ASS" << endl;
     if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
     {
@@ -57,17 +59,45 @@ void Assignment_stmt::execute()
     else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
     {
       //cerr << " M_VAR IS AN GAME_OBJECT" << endl;
-      if (m_expr_rhs->m_type == INT)
+      if (m_var_lhs->m_type == INT && m_expr_rhs->m_type == INT)
       {
+        cerr << "1) m_lhs is an int and m_rhs is an int" << endl;
         int int_value = m_expr_rhs->eval_int();
         //cerr << " VALUE: m_expr_rhs  in ass.cpp is " << int_value << endl;
         void* v_value = (void*) new int(int_value);
         //cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
         m_var_lhs->set_new_value(v_value);
       }
+      else if (m_var_lhs->m_type == DOUBLE)
+      {
+        cerr << "1)from ass .cpp m_lhs is a double" << endl;
+        if (m_expr_rhs->m_type == INT)
+        {
+          int int_value = m_expr_rhs->eval_int();
+          void* v_value = (void*) new int(int_value);
+          cerr << "2)--from ass.cpp m_rhs is an int " << endl;
+          m_var_lhs->set_new_value(v_value);      
+        }
+        else
+        {
+          cerr << "2)--from ass.cpp m_rhs is a double" << endl;
+          double d_value = m_expr_rhs->eval_double();
+          cerr << "3)-- VALUE: m_expr_rhs  in ass.cpp is " << d_value << endl;
+          void* v_value = (void*) new double(d_value);
+          //cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
+          m_var_lhs->set_new_value(v_value);
+        }
+      }
+      else if (m_var_lhs->m_type == STRING)
+      {
+          string s_value = m_expr_rhs->eval_string();
+          void* v_value = (void*) new string(s_value);
+          m_var_lhs->set_new_value(v_value);
+      }
       else
       {
         cerr << "ERROR::(ASS.CPP:71) cannot find m_expr_rhs type!" << endl;
+        cerr << "m_type = " << m_var_lhs->m_type << endl;
       }
     }
     else
@@ -87,7 +117,7 @@ void Assignment_stmt::execute()
       cerr << "----m_var_lhs->m_type is :" << m_var_lhs->m_type << endl;
       cerr << "----m_expr_rhs->m_type is :" << m_expr_rhs->m_type << endl;
       */
-      if (m_var_lhs->m_type == INT)
+      if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
@@ -95,7 +125,7 @@ void Assignment_stmt::execute()
         void* v_value = (void*) new int(result->eval_int());
         m_var_lhs->set_new_value(v_value);
       }
-      else if (m_var_lhs->m_type == DOUBLE)
+      else if (m_var_lhs->m_type == DOUBLE || m_var_lhs->m_type == DOUBLE_ARRAY)
       {
         Expression* new_left = new Expression(m_var_lhs);
         //cerr << "---m_var_lhs eval_double () value : " << new_left->eval_double() << endl;
@@ -114,12 +144,26 @@ void Assignment_stmt::execute()
       }
       else
       {
-        cerr << "ERROR::ASS.CPP(line:93): cannot find type!" << endl;
+        cerr << "ERROR::ASS.CPP(line:117): cannot find type!" << endl;
       }
     }
     else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
     {
-      if (m_expr_rhs->m_type == STRING)
+      if (m_expr_rhs->m_type == INT)
+      {
+        Expression* new_left = new Expression(m_var_lhs);
+        Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
+        void* v_value = (void*) new int(result->eval_int());
+        m_var_lhs->set_new_value(v_value);     
+      }
+      else if (m_expr_rhs->m_type == DOUBLE)
+      {
+        Expression* new_left = new Expression(m_var_lhs);
+        Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
+        void* v_value = (void*) new double(result->eval_double());
+        m_var_lhs->set_new_value(v_value);     
+      }
+      else if (m_expr_rhs->m_type == STRING)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
@@ -146,14 +190,14 @@ void Assignment_stmt::execute()
       cerr << "----m_var_lhs->m_type is :" << m_var_lhs->m_type << endl;
       cerr << "----m_expr_rhs->m_type is :" << m_expr_rhs->m_type << endl;
       */
-      if (m_var_lhs->m_type == INT)
+      if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
         void* v_value = (void*) new int(result->eval_int());
         m_var_lhs->set_new_value(v_value);
       }
-      else if (m_var_lhs->m_type == DOUBLE)
+      else if (m_var_lhs->m_type == DOUBLE || m_var_lhs->m_type == DOUBLE_ARRAY)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
@@ -164,6 +208,31 @@ void Assignment_stmt::execute()
       {
         cerr << "ERROR::ASS.CPP(line:93): cannot find type!" << endl;
       }
+    }
+    else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
+    {
+      if (m_expr_rhs->m_type == INT)
+      {
+        Expression* new_left = new Expression(m_var_lhs);
+        Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
+        void* v_value = (void*) new int(result->eval_int());
+        m_var_lhs->set_new_value(v_value);     
+      }
+      else if (m_expr_rhs->m_type == DOUBLE)
+      {
+        Expression* new_left = new Expression(m_var_lhs);
+        Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
+        void* v_value = (void*) new double(result->eval_double());
+        m_var_lhs->set_new_value(v_value);     
+      }
+      else
+      {
+        cerr << "ERROR::(ASS.CPP: \"minus\") cannot find m_expr_rhs type!" << endl;
+      }
+    }
+    else
+    {
+      cerr << "ERROR::ASS.CPP(-=): cannot find m_var_type!" << endl;
     }
   }
 /*#########################################################################################*/
