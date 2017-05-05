@@ -879,9 +879,6 @@ assign_statement:
           gpl_type_to_string($1->m_type), gpl_type_to_string($3->m_type));
         }
       }
-      else
-      {
-   
      /* Keep for debugging */
      /* cerr << "GPL:894 this ran in ass of gpl " << endl;
       cerr << "$1 type is : " << $1->m_type << endl;
@@ -890,7 +887,6 @@ assign_statement:
      */
         Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
         global_stack.top()->m_statements.push_back(ass_stmt);
-      }
     }
     | variable T_PLUS_ASSIGN expression
     {
@@ -1092,6 +1088,11 @@ variable:
         {
           $$ = new Variable(symbol->m_name, *$6, $3);
         }
+      }
+      else
+      {
+        Error::error(Error::UNDECLARED_VARIABLE, *$1);
+        $$ = new Variable("DUMMY");
       }     
     }
     ;
@@ -1500,5 +1501,4 @@ empty:
     {
     }
     // empty goes to nothing so that you can use empty in productions
-    // when you want a production to go to nothing
-;
+

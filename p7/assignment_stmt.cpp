@@ -9,16 +9,8 @@ Assignment_stmt::Assignment_stmt(Variable* lhs, Expression* rhs, Assignment_type
 
 void Assignment_stmt::execute()
 {
-  /* We dont really care what the lhs is since we are not setting the values
-     here....however, I just wanted to be sure....HOWEVER, we must check the
-     quality or type of the right hand side to correctly allocate the correct
-     amount of space. */
-
   if (m_oper == ASS_ASSIGN)
   {
-//    cerr << " ASSS : m name is " << m_var_lhs->m_symbol->m_name << endl;
-    cerr << "ASSS: mvar type is " << m_var_lhs->m_type << endl;
-    //cerr << "THIS RAN IN ASS" << endl;
     if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
     {
       if (m_var_lhs->m_type == INT || m_var_lhs->m_type == INT_ARRAY)
@@ -27,28 +19,19 @@ void Assignment_stmt::execute()
         value = m_expr_rhs->eval_int();
         void* v_value = (void*) new int(value);
         m_var_lhs->set_new_value(v_value);
-        //cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_int_value(); 
-        //cerr << " at address :" << m_var_lhs->m_symbol<< endl;
       }    
       else if (m_var_lhs->m_type == DOUBLE || m_var_lhs->m_type == DOUBLE_ARRAY)
       {
-        //cerr << " THIS SHIT IS a double" << endl;
         double value; 
         value = m_expr_rhs->eval_double();
-        //m_var_lhs->m_symbol->set(value);
-        //cerr << "ASS(22):: new value is " << value << endl;
         void* v_value = (void*) new double(value);
         m_var_lhs->set_new_value(v_value);
-        //cerr << " NEW VALUE SHOULD BE: " << m_var_lhs->get_double_value(); 
-        //cerr << " at address :" << m_var_lhs->m_symbol<< endl;
       }    
       else if (m_var_lhs->m_type == STRING || m_var_lhs->m_type == STRING_ARRAY)
       {
-        //cerr << "THIS SHI IS A STRING" << endl;
         string s_value;
         s_value = m_expr_rhs->eval_string();
         void* v_value = (void*) new string(s_value);
-        //cerr << "s_value is " << s_value << endl;
         m_var_lhs->set_new_value(v_value);
       }
       else
@@ -58,17 +41,15 @@ void Assignment_stmt::execute()
     }
     else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
     {
-      //cerr << " M_VAR IS AN GAME_OBJECT" << endl;
-      if (m_var_lhs->m_type == INT && m_expr_rhs->m_type == INT)
+      if (m_expr_rhs->m_type == INT)
       {
         cerr << "1) m_lhs is an int and m_rhs is an int" << endl;
         int int_value = m_expr_rhs->eval_int();
-        //cerr << " VALUE: m_expr_rhs  in ass.cpp is " << int_value << endl;
         void* v_value = (void*) new int(int_value);
         //cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
-        m_var_lhs->set_new_value(v_value);
+        m_var_lhs->set_game_object_value(v_value);
       }
-      else if (m_var_lhs->m_type == DOUBLE)
+      else if (m_expr_rhs->m_type == DOUBLE)
       {
         cerr << "1)from ass .cpp m_lhs is a double" << endl;
         if (m_expr_rhs->m_type == INT)
@@ -76,7 +57,7 @@ void Assignment_stmt::execute()
           int int_value = m_expr_rhs->eval_int();
           void* v_value = (void*) new int(int_value);
           cerr << "2)--from ass.cpp m_rhs is an int " << endl;
-          m_var_lhs->set_new_value(v_value);      
+          m_var_lhs->set_game_object_value(v_value);      
         }
         else
         {
@@ -85,14 +66,14 @@ void Assignment_stmt::execute()
           cerr << "3)-- VALUE: m_expr_rhs  in ass.cpp is " << d_value << endl;
           void* v_value = (void*) new double(d_value);
           //cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
-          m_var_lhs->set_new_value(v_value);
+          m_var_lhs->set_game_object_value(v_value);
         }
       }
-      else if (m_var_lhs->m_type == STRING)
+      else if (m_expr_rhs->m_type == STRING)
       {
           string s_value = m_expr_rhs->eval_string();
           void* v_value = (void*) new string(s_value);
-          m_var_lhs->set_new_value(v_value);
+          m_var_lhs->set_game_object_value(v_value);
       }
       else
       {
@@ -154,21 +135,21 @@ void Assignment_stmt::execute()
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
         void* v_value = (void*) new int(result->eval_int());
-        m_var_lhs->set_new_value(v_value);     
+        m_var_lhs->set_game_object_value(v_value);     
       }
       else if (m_expr_rhs->m_type == DOUBLE)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
         void* v_value = (void*) new double(result->eval_double());
-        m_var_lhs->set_new_value(v_value);     
+        m_var_lhs->set_game_object_value(v_value);     
       }
       else if (m_expr_rhs->m_type == STRING)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(PLUS, m_var_lhs->m_type, new_left, m_expr_rhs);
         void* v_value = (void*) new string(result->eval_string());
-        m_var_lhs->set_new_value(v_value);     
+        m_var_lhs->set_game_object_value(v_value);     
       }
       else
       {
@@ -216,14 +197,14 @@ void Assignment_stmt::execute()
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
         void* v_value = (void*) new int(result->eval_int());
-        m_var_lhs->set_new_value(v_value);     
+        m_var_lhs->set_game_object_value(v_value);     
       }
       else if (m_expr_rhs->m_type == DOUBLE)
       {
         Expression* new_left = new Expression(m_var_lhs);
         Expression* result = new Expression(MINUS, m_var_lhs->m_type, new_left, m_expr_rhs);
         void* v_value = (void*) new double(result->eval_double());
-        m_var_lhs->set_new_value(v_value);     
+        m_var_lhs->set_game_object_value(v_value);     
       }
       else
       {
@@ -235,7 +216,7 @@ void Assignment_stmt::execute()
       cerr << "ERROR::ASS.CPP(-=): cannot find m_var_type!" << endl;
     }
   }
-/*#########################################################################################*/
+/*#################################################################################*/
   else if (m_oper == ASS_PLUS_PLUS)
   {
     if (m_var_lhs->m_var_type == "CONSTANT" || m_var_lhs->m_var_type == "EXPRESSION")
@@ -251,7 +232,7 @@ void Assignment_stmt::execute()
       exit(1);
     }
   }
-/*#########################################################################################*/
+/*##################################################################################*/
   else if (m_oper == ASS_MINUS_MINUS)
   {
     int old_value = m_var_lhs->get_int_value();

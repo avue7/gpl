@@ -297,4 +297,3 @@ void Symbol_table::print(ostream &os)
     }
   }
 }
-

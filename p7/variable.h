@@ -32,9 +32,7 @@ class Variable
     //Added in p7.. Must create for assignment->execute() in 
     // assignment class to work. 
     void set_new_value(void* new_value);
-    void set_new_value(int new_value);
-    void set_new_value(double new_value);
-    void set_new_value(string new_value);
+    void set_game_object_value(void* value);
     
     // Constructors 
     Variable(string symbol_name);
