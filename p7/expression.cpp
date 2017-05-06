@@ -127,7 +127,7 @@ int Expression::eval_int()
         return m_lhs->eval_int() % m_rhs->eval_int();
       default: 
         cerr << "Error: cannot find m_oper in binary of eval_int()!" << endl;
-        return 1;
+        return -1;
     }
   }
   else if (m_node == LOGICAL_OPERATOR) 
@@ -216,7 +216,7 @@ int Expression::eval_int()
         else
         {
           cerr << "ERROR: Trouble in equal of logical of eval_int()!" << endl;
-          return 1;
+          return -1;
         }
       case NOT_EQUAL:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
@@ -262,7 +262,7 @@ int Expression::eval_int()
         else
         {
           cerr << "ERROR: Trouble in != of logical of eval_int()!" << endl;
-          return 1;
+          return -1;
         }
         return m_lhs->eval_int() != m_rhs->eval_int();
       case LESS_THAN:
@@ -311,7 +311,7 @@ int Expression::eval_int()
         else
         {
           cerr << "ERROR: Trouble in < of logical of eval_int()!" << endl;
-          return 1;
+          return -1;
         }
       case LESS_EQUAL:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
@@ -357,7 +357,7 @@ int Expression::eval_int()
         else
         {
           cerr << "ERROR: Trouble in <= of logical of eval_int()!" << endl;
-          return 1;
+          return -1;
         }
       case GREATER_THAN:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
@@ -403,7 +403,7 @@ int Expression::eval_int()
         else
         {
           cerr << "ERROR: Trouble in > of logical of eval_int()!" << endl;
-          return 1;
+          return -1;
         }
       case GREATER_EQUAL:
         if (m_lhs->m_type == INT && m_rhs->m_type == DOUBLE)
@@ -449,7 +449,7 @@ int Expression::eval_int()
         else
         {
           cerr << "ERROR: Trouble in >= of logical of eval_int()!" << endl;
-          return 1;
+          return -1;
         }
       case NOT:
         if (m_lhs->m_type == DOUBLE)
@@ -462,7 +462,7 @@ int Expression::eval_int()
         }
       default:
         cerr << "Error: cannot find m_oper in logical_ops of eval_double()!" << endl;
-        return 1;
+        return -1;
     }
   }
   else if (m_node == UNARY_OPERATOR)
@@ -525,13 +525,13 @@ int Expression::eval_int()
     else
     {
       cerr << "Error: Cannot find m_oper in eval_int();" << endl;
-      return 1;
+      return -1;
     }
   }
   else
   {
     cerr << "ERROR: TROUBLE IN EVAL_INT()" << endl;
-    return 1;
+    return -1;
   }
 }
 
@@ -587,7 +587,7 @@ double Expression::eval_double()
         return m_lhs->eval_double() / m_rhs->eval_double();
       default:
         cerr << "Error: cannot find m_oper in eval_double()!" << endl;
-        return 1;
+        return -1;
     }
   }
   else if (m_node == UNARY_OPERATOR)
@@ -632,11 +632,16 @@ double Expression::eval_double()
     {
       return (-m_lhs->eval_double());
     }
+    else
+    {
+      cerr << "ERROR::EXPR.CPP(637): cannot find m_oper in UNARY_OPERATION!" << endl;
+      return -1;
+    }
   }
   else
   { 
     cerr << "ERROR: TROUBLE IN EVAL_DOUBLE()" << endl;
-    return 1;
+    return -1;
   }
 }
 
@@ -717,6 +722,7 @@ string Expression::eval_string()
     else
     {
       cerr << "ERROR: cannot find m_oper in eval_string()!" << endl;
+      return "ERROR!";
     }
   }
   else
@@ -731,5 +737,10 @@ Animation_block* Expression::eval_animation_block()
   {
    assert(m_var->m_type == ANIMATION_BLOCK);
    return m_var->get_animation_block();
+  }
+  else
+  {
+    cerr << "ERROR::EXPR.CPP(743): cannot find m_node in eval_animation!" << endl;
+    return NULL;
   }
 }

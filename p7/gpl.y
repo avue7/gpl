@@ -473,7 +473,6 @@ parameter:
       Status status;
       if ((status = cur_obj->get_member_variable_type(*$1, member_type)) != OK)
       {
-        //cerr << "this ran in error on line 467" << endl;
         switch(status)
         {
           case MEMBER_NOT_DECLARED:
@@ -488,7 +487,6 @@ parameter:
       }
       else
       { 
-       // cerr << "STATUS IS LINE 467 : " << status_to_string(status) << endl;
         switch(member_type)
         {
           case INT:
@@ -867,7 +865,6 @@ exit_statement:
 assign_statement:
     variable T_ASSIGN expression
     {
-      cerr << "M_TYPE IN GPL IS : " << $1->m_type << endl;
       if ($1->m_type < $3->m_type)
       {
         if ($1->m_var_type == "GAME_OBJECT")
@@ -886,14 +883,8 @@ assign_statement:
         Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, $1->m_symbol->m_name,
                gpl_type_to_string($1->m_type));
       }
-     /* Keep for debugging */
-     /* cerr << "GPL:894 this ran in ass of gpl " << endl;
-      cerr << "$1 type is : " << $1->m_type << endl;
-      cerr << "$1 value is : " << $1->get_int_value() << endl;
-      cerr << "$1 name is : " << $1->m_symbol->m_name << endl;
-     */
-        Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
-        global_stack.top()->m_statements.push_back(ass_stmt);
+      Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
+      global_stack.top()->m_statements.push_back(ass_stmt);
     }
     | variable T_PLUS_ASSIGN expression
     {
@@ -923,8 +914,6 @@ assign_statement:
     }
     | variable T_MINUS_ASSIGN expression
     {
-      /*cerr << "THIS RAN IN GPL:919 for T_MINUS" << endl;
-      cerr << "--$1->m_type is : " << $1->m_type << endl;*/
       if ($1->m_type < $3->m_type)
       {
         if ($1->m_var_type == "GAME_OBJECT")
@@ -1201,7 +1190,21 @@ expression:
     }
     | expression T_PLUS expression 
     {
-      /*cerr << "GPL: 1131 this ran in exp + exp " << endl;*/
+      //cerr << "LEFT EXPR TYPE IS: " << $1->m_type << endl;
+      //cerr << "RIGHT EXPR TYPE IS: " << $3->m_type << endl;
+      
+      if (($1->m_type > 4 && $1->m_type < 1025)||
+          ($1->m_type > 1028))
+      {
+        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "+");
+      }
+      if (($3->m_type > 4 && $3->m_type < 1025)||
+          ($3->m_type > 1028))
+      { 
+        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "+");
+      }
+      $$ = new Expression(0, INT, NULL, NULL);
+
       if ($1->m_type == STRING || $3->m_type == STRING)
       {
         $$= new Expression(PLUS, STRING, $1, $3);
@@ -1218,19 +1221,10 @@ expression:
       {
         $$= new Expression(PLUS, INT, $1, $3);
       }
-      else
+    /*  else
       {
-        cerr << "ERROR: GPL(1146): cannot find type!" << endl;
-        if ($1->m_type != INT || $1->m_type != DOUBLE || $1->m_type != STRING)
-        {
-          Error::error(Error::INVALID_LEFT_OPERAND_TYPE, "+");
-        }
-        if ($3->m_type != INT || $3->m_type != DOUBLE || $3->m_type != STRING)
-        {
-          Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, "+");
-        }
-        $$ = new Expression(0, INT, NULL, NULL);
-      }
+        cerr << "ERROR::GPL.CPP: I CANNOT FIND EXPR TYPE!" << endl;
+      }*/
     }
     | expression T_MINUS expression
     {
@@ -1423,32 +1417,6 @@ expression:
       }
       else if ($1 == RANDOM)
       {
-        /* Check the Random for any values < 1 since any value 
-           < 1 is not legal. In p6 need to change this to default to 2 */
-        /*if ($3->m_type == DOUBLE)
-        {
-           if ($3->eval_double() < 1)
-           {
-             stringstream ss;
-             double value;
-             value = $3->eval_double();
-             ss << value;
-             Error::starting_execution()
-             cerr << Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
-           }
-        }
-        if ($3->m_type == INT)
-        {
-          if ($3->eval_int() < 1)
-          {
-            stringstream ss;
-            int value;
-            value = $3->eval_double();
-            ss << value;
-            Error::starting_execution();
-            cerr << Error::error(Error::INVALID_ARGUMENT_FOR_RANDOM, ss.str());
-          }
-        }*/
        $$ = new Expression($1, INT, expr, NULL);         
       } 
       else if ($1 == FLOOR)
