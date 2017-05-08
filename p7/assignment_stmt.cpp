@@ -1,5 +1,5 @@
 #include "assignment_stmt.h"
-
+#include "symbol.h"
 Assignment_stmt::Assignment_stmt(Variable* lhs, Expression* rhs, Assignment_type type)
 {
   m_var_lhs = lhs;

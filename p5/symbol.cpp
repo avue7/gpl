@@ -106,7 +106,7 @@ bool Symbol::is_array()
 // Get the string type instead of a digit
 string Symbol::get_type()
 {
-  return  gpl_type_to_string(m_type);
+  return  m_type;
 }
 
 // Get the base type of an array

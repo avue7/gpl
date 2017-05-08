@@ -74,14 +74,14 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
        // cerr << "this printed from circle_array in sym_table" << endl;
         for (int i = 0; i < symbol->m_size; i++)
         {
-          ((Circle**) symbol->m_value)[i] = new Circle();
+          ((Game_object*)symbol->m_value)[i] = new Circle();
         }
       }
       else if (symbol->m_type == RECTANGLE_ARRAY)
       {
         for (int i = 0; i < symbol->m_size; i++)
         {
-          ((Rectangle**) symbol->m_value)[i] = new Rectangle();
+          ((Rectangle) symbol->m_value)[i] = new Rectangle();
         }
       }
       else if (symbol->m_type == TRIANGLE_ARRAY)
@@ -89,21 +89,21 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
         for (int i = 0; i < symbol->m_size; i++)
         {
           //cerr << "this printed in trangle array of sym_table " << endl;
-          ((Triangle**) symbol->m_value)[i] = new Triangle();
+          ((Triangle) symbol->m_value)[i] = new Triangle();
         }
       }
       else if (symbol->m_type == TEXTBOX_ARRAY)
       {
         for (int i = 0; i < symbol->m_size; i++)
         {
-          ((Textbox**) symbol->m_value)[i] = new Textbox();
+          ((Textbox) symbol->m_value)[i] = new Textbox();
         }
       }
       else if (symbol->m_type == PIXMAP_ARRAY)
       {
         for (int i = 0; i < symbol->m_size; i++)
         {
-          ((Pixmap**) symbol->m_value)[i] = new Pixmap();
+          ((Pixmap) symbol->m_value)[i] = new Pixmap();
         }
       }
       else  // It's a string
@@ -117,7 +117,7 @@ bool Symbol_table::insert_symbol(Symbol *symbol)
         //cerr << "this printed from string in sym_table " << endl;
         for (int i = 0; i < symbol->m_size; i++)
         {
-          ((string**) symbol->m_value)[i] = new string("");
+          ((string*) symbol->m_value)[i] = new string("");
         }
         
       }

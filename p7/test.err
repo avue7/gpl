@@ -1,9 +1,2 @@
-ERROR: GPL(1146): cannot find type!
-Semantic error on line 9: Invalid left operand for operator '+'.
-Semantic error on line 9: Invalid right operand for operator '+'.
-ERROR: GPL(1146): cannot find type!
-Semantic error on line 10: Invalid left operand for operator '+'.
-Semantic error on line 10: Invalid right operand for operator '+'.
-ERROR: GPL(1146): cannot find type!
-Semantic error on line 11: Invalid left operand for operator '+'.
-Semantic error on line 11: Invalid right operand for operator '+'.
+THIS HAPPENED IN GPL 411 
+VAR:11: STATUS IS :OK

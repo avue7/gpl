@@ -1,6 +1,6 @@
 #include "variable.h"
 #include "expression.h"
-//#include "symbol.h"
+#include "symbol.h"
 #include "symbol_table.h"
 
 Variable::Variable(string symbol_name)
@@ -108,6 +108,7 @@ Variable::Variable(string symbol_name, string param, Expression* p_expr)
       cerr << "Trouble in Var:: cannot find member type for constructor!" << endl;
     }
     status = temp_obj->get_member_variable_type(m_param, this->m_type);
+    cerr << "VAR:11: STATUS IS :" << status_to_string(status) << endl;
   }
   if (status != OK)
   {
@@ -122,6 +123,7 @@ Variable::Variable(string symbol_name, string param, Expression* p_expr)
 int Variable::get_int_value()
 {
   //cerr << " VARIABLE.CPP : m_var_TYPE : " << m_var_type << endl;
+  Status status;
   if (m_var_type == "DUMMY")
   {
     int value = 0;
@@ -150,7 +152,14 @@ int Variable::get_int_value()
     int ret_value;
     Game_object* temp_obj;
     temp_obj = (Game_object*)(m_symbol->m_value);
-    temp_obj->get_member_variable(this->m_param, ret_value);
+    status = temp_obj->get_member_variable(this->m_param, ret_value);
+    if (status != OK)
+    {
+      cerr << "ERROR::VAR.CPP(158): while getting member";
+      cerr << " variable in get_int_value()!" << endl;
+      cerr << "---STATUS RETURNED: " << status_to_string(status) << endl;
+      return -1;
+    }
     return ret_value;
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
@@ -162,40 +171,48 @@ int Variable::get_int_value()
     {
       (Game_object*)((Triangle**)
                   (m_symbol->m_value))[m_expr->eval_int()];
-      temp_obj->get_member_variable(this->m_param, ret_value);
+      status = temp_obj->get_member_variable(m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == RECTANGLE_ARRAY)
     {
       temp_obj = (Game_object*)((Rectangle**)
                   (m_symbol->m_value))[m_expr->eval_int()];
-      temp_obj->get_member_variable(this->m_param, ret_value);
+      status = temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == PIXMAP_ARRAY)
     {
       temp_obj = (Game_object*)((Pixmap**)
                   (m_symbol->m_value))[m_expr->eval_int()];
-      temp_obj->get_member_variable(this->m_param, ret_value);
+      status = temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == TEXTBOX_ARRAY)
     {
       temp_obj = (Game_object*)((Textbox**)
                   (m_symbol->m_value))[m_expr->eval_int()];
-      temp_obj->get_member_variable(this->m_param, ret_value);
+      status = temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else if (m_symbol->m_type == CIRCLE_ARRAY)
     {
       temp_obj = (Game_object*)((Circle**)
                   (m_symbol->m_value))[m_expr->eval_int()];
-      temp_obj->get_member_variable(this->m_param, ret_value);
+      status = temp_obj->get_member_variable(this->m_param, ret_value);
       return ret_value;
     }
     else
     {
       cerr << "Trouble in Var::get_int_value for object_array!" << endl;
+      return -1;
+    }
+
+    if (status != OK)
+    {
+      cerr << "ERROR::VAR.CPP(158): while getting member";
+      cerr << " variable in get_int_value()!" << endl;
+      cerr << "---STATUS RETURNED: " << status_to_string(status) << endl;
       return -1;
     }
   }

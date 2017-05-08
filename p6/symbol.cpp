@@ -35,7 +35,7 @@ Symbol::Symbol(string name, Gpl_type type, int value)
     m_size = value;
     m_name = name;
     m_type = type;
-    m_value = (void*) new Circle*[value];
+    m_value = (void*) new Circle[value];
   }
   else if (type == RECTANGLE_ARRAY)
   {
@@ -43,7 +43,7 @@ Symbol::Symbol(string name, Gpl_type type, int value)
     m_size = value;
     m_name = name;
     m_type = type;
-    m_value = (void*) new Rectangle*[value];
+    m_value = (void*) new Rectangle[value];
   }
   else if (type == TRIANGLE_ARRAY)
   {
@@ -51,21 +51,21 @@ Symbol::Symbol(string name, Gpl_type type, int value)
     m_size = value;
     m_name = name;
     m_type = type;
-    m_value = (void*) new Triangle*[value];
+    m_value = (void*) new Triangle[value];
   }
   else if (type == TEXTBOX_ARRAY)
   {
     m_size = value;
     m_name = name;
     m_type = type;
-    m_value = (void*) new Textbox*[value];
+    m_value = (void*) new Textbox[value];
   }
   else if (type == PIXMAP_ARRAY)
   {
     m_size = value;
     m_name = name;
     m_type = type;
-    m_value = (void*) new Pixmap*[value];
+    m_value = (void*) new Pixmap[value];
   }
   else
   {

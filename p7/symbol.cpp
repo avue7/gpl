@@ -254,6 +254,7 @@ string Symbol::get_string_value()
 
 Game_object *Symbol::get_game_object_value()
 {
+  
   return (Game_object*) m_value;
 }
 

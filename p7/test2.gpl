@@ -1,29 +1,5 @@
-int i;
-int ints[3];
 
-on akey
-{
-  for (i = 0; i < 3; i += 1)
-  {
-    ints[i] = 2;
-    print("ints[" + i + "] = " + ints[i]);
-  }
-}
 
-on dkey
-{
-  for (i = 0; i < 3; i += 1)
-  {
-    ints[i] += 1;
-    print("ints[" + i + "] = " + ints[i]);
-  }
-}
+triangle t[3];
 
-on skey
-{
-  for (i = 0; i < 3; i += 1)
-  {
-    ints[i] -= 1;
-    print("ints[" + i + "] = " + ints[i]);
-  }
-}
+int sum = t[0].x;
