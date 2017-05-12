@@ -1,0 +1,5 @@
+
+
+triangle t[3];
+
+int sum = t[0].x;
