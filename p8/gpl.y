@@ -590,14 +590,27 @@ termination_block:
 
 //---------------------------------------------------------------------
 animation_block:
-    T_ANIMATION T_ID T_LPAREN check_animation_parameter 
+    T_ANIMATION T_ID  T_LPAREN check_animation_parameter 
     {
       Symbol* symbol;
       Animation_block* anim_block;
       symbol = Symbol_table::instance()->lookup(*$2);
       anim_block = symbol->get_animation_block();
-      anim_block->mark_complete();
-      global_stack.push(anim_block);
+      if (!symbol && symbol->m_type != ANIMATION_BLOCK)
+      {
+        Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
+      }
+      else
+      {
+        Animation_block* anim_block;
+        anim_block = symbol->get_animation_block();
+        if (anim_block->is_complete())
+        {
+          Error::error(Error::PREVIOUSLY_DEFINED_ANIMATION_BLOCK, anim_block->name());
+        }
+        anim_block->mark_complete();
+        global_stack.push(anim_block);
+      }
     }
     T_RPAREN T_LBRACE statement_list T_RBRACE end_of_statement_block
     ;
@@ -888,8 +901,21 @@ assign_statement:
         Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, $1->m_symbol->m_name,
                gpl_type_to_string($1->m_type));
       }
-      Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
-      global_stack.top()->m_statements.push_back(ass_stmt);
+      else if ($1->m_type == ANIMATION_BLOCK && $1->m_var_type == "CONSTANT")
+      {
+        
+        Error::error(Error::CANNOT_ASSIGN_TO_NON_MEMBER_ANIMATION_BLOCK,
+               $1->m_symbol->m_name);
+       cerr << "gpl.y895:: animation name is " << $1->m_symbol->m_name << endl;
+      }
+      else
+      {
+        cerr << "gpl.y 896 : 1 m_type = " << $1->m_type << endl;
+
+       cerr << "gpl.y895:: var type is " << $1->m_var_type<< endl;
+        Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
+        global_stack.top()->m_statements.push_back(ass_stmt);
+      }
     }
     | variable T_PLUS_ASSIGN expression
     {

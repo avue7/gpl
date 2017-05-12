@@ -41,6 +41,11 @@ void Assignment_stmt::execute()
                gpl_type_to_string(m_var_lhs->m_type));
 
       }
+      else if (m_var_lhs->m_symbol->m_type == ANIMATION_BLOCK)
+      {
+        Error::error(Error::CANNOT_ASSIGN_TO_NON_MEMBER_ANIMATION_BLOCK,
+              m_var_lhs->m_symbol->get_name());
+      }
       else
       {
         cerr << "ERROR::(ASS.CPP:41) cannot find m_var->m_type for CONSTANT!" << endl;

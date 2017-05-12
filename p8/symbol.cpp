@@ -314,6 +314,5 @@ void Symbol::set(void* value)
 }
 Animation_block* Symbol::get_animation_block()
 {
-  assert(m_type == ANIMATION_BLOCK);
   return (Animation_block*) m_value;
 }
