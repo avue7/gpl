@@ -20,7 +20,8 @@ string cur_name; // Current name for object
 int counter=0; //THis is for debugging....
 // Globalizing the declaring of stack. Library header is included
 // in the parser.h
-stack <Statement_block*> global_stack; 
+stack <Statement_block*> global_stack;
+vector <Animation_block*> animation_stack; //Added in p8
 // bison syntax to indicate the end of the header
 %} 
 
@@ -188,6 +189,17 @@ stack <Statement_block*> global_stack;
 //---------------------------------------------------------------------
 program:
     declaration_list block_list
+    {
+      vector<Animation_block*>::iterator it; 
+      for (it = animation_stack.begin(); it != animation_stack.end(); it++)
+      {
+        Animation_block* anim_block = *it;
+        if (!anim_block->is_complete())
+        {
+          Error::error(Error::NO_BODY_PROVIDED_FOR_FORWARD, anim_block->name());
+        }
+      } 
+    }
     ;
 
 //---------------------------------------------------------------------
@@ -553,6 +565,7 @@ forward_declaration:
         found_sym = Symbol_table::instance()->lookup(*$5);       
         anim_block = (Animation_block*) symbol->m_value; 
         anim_block->initialize(found_sym, *$3);
+        animation_stack.push_back(anim_block);
       }
 
     }
@@ -596,20 +609,25 @@ animation_block:
       Animation_block* anim_block;
       symbol = Symbol_table::instance()->lookup(*$2);
       anim_block = symbol->get_animation_block();
-      if (!symbol && symbol->m_type != ANIMATION_BLOCK)
+      if (!symbol)
       {
         Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
       }
       else
       {
-        Animation_block* anim_block;
-        anim_block = symbol->get_animation_block();
-        if (anim_block->is_complete())
+        if (!anim_block)
+        {
+          Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
+        }
+        else if (anim_block->is_complete())
         {
           Error::error(Error::PREVIOUSLY_DEFINED_ANIMATION_BLOCK, anim_block->name());
         }
-        anim_block->mark_complete();
-        global_stack.push(anim_block);
+        else
+        {
+          anim_block->mark_complete();
+          global_stack.push(anim_block);
+        }
       }
     }
     T_RPAREN T_LBRACE statement_list T_RBRACE end_of_statement_block
