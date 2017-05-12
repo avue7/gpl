@@ -170,7 +170,7 @@ stack <Statement_block*> global_stack;
 %type <union_statement_block> statement_block_creator
 %type <union_statement_block> if_block
 %type <union_int> check_animation_parameter /* Added in p8: need for id */
-%type <union_oper_type> geometric_operator /* Added in p8 */ 
+%type <union_expression> geometric_operator /* Added in p8 */ 
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -1473,8 +1473,11 @@ expression:
         $$ = new Expression(0, INT, NULL, NULL);
       }
       else
-      {
-        $$ = new Expression($2, INT, new Expression($1), new Expression($3));
+      { 
+        /*cerr << "COUNT: " << counter << endl;
+        cerr << "GPL 1478: lhs m_type = " << $1->m_type << endl;
+        cerr << "--rhs_m_type = " << $3->m_type << endl;*/
+        $$ = new Expression($2->m_oper, INT, new Expression($1), new Expression($3));
       }
     /*  cerr << "GPL.y:1478: var_lhs m_type is : " << $1->m_symbol->is_game_object() << endl;*/
     } 
@@ -1502,11 +1505,11 @@ primary_expression:
 geometric_operator:
     T_TOUCHES
     {
-      $$ = TOUCHES;
+      $$ = new Expression(TOUCHES, INT, NULL, NULL);
     }
     | T_NEAR
     {
-      $$ = NEAR;
+      $$ = new Expression(NEAR, INT, NULL, NULL);
     }
     ;
 

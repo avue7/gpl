@@ -251,10 +251,44 @@ string Symbol::get_string_value()
   assert(m_type == STRING);
   return *(string*) m_value;
 }
-
-Game_object *Symbol::get_game_object_value()
+Game_object* Symbol::get_game_object_value(int index)
 {
-  
+  if (this->is_array() == true)
+  { 
+    Game_object* ret_obj;
+    if (m_type == RECTANGLE_ARRAY)
+    {
+      ret_obj = (Game_object*)((Rectangle**)(m_value))[index];
+      cerr << "THIS PRINTED FROM RECT ARRAY IN SYMBOL GET GAME OBJECT" << endl;
+      cerr << "--index is : " << index << endl;
+      return ret_obj;
+    }
+    else if (m_type == TRIANGLE_ARRAY)
+    {
+    }
+    else if (m_type == CIRCLE_ARRAY)
+    {
+    }
+    else if (m_type == TEXTBOX_ARRAY)
+    {
+    }
+    else if (m_type == PIXMAP_ARRAY)
+    {
+    }
+    else 
+    {
+      cerr << "ERROR::SYMBOL.CPP: cannot find m_type in";
+      cerr << " get game object value!" << endl;
+    }
+  }
+  else
+  {
+    cerr << "ERROR::SYMBOL.CPP: game_object not array...";
+    cerr << "maybe you need to call const without index!" << endl;
+  }
+}
+Game_object *Symbol::get_game_object_value()
+{ 
   return (Game_object*) m_value;
 }
 

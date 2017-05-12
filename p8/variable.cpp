@@ -424,9 +424,15 @@ string Variable::get_string_value()
 
 Game_object* Variable::get_game_object()
 {
-  return m_symbol->get_game_object_value();
+  if(m_symbol->is_array())
+  {
+    return m_symbol->get_game_object_value(m_expr->eval_int());
+  }
+  else
+  {
+    return m_symbol->get_game_object_value();
+  }
 }
-
 /*######################################################################*/
 /*                       SET NEW VALUES BEGINS                          */
 /*######################################################################*/

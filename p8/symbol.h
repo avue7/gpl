@@ -42,6 +42,7 @@ class Symbol
     double get_double_value();
     string get_string_value();
     Game_object *get_game_object_value();
+    Game_object *get_game_object_value(int index);
     Animation_block* get_animation_block();
     void set(void* value);
     void set(int value);
