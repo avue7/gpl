@@ -608,18 +608,15 @@ animation_block:
       Symbol* symbol;
       Animation_block* anim_block;
       symbol = Symbol_table::instance()->lookup(*$2);
-      anim_block = symbol->get_animation_block();
-      if (!symbol)
+      if (symbol == NULL)
       {
+        cerr << "this ran in gpl 613" << endl;
         Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
       }
       else
       {
-        if (!anim_block)
-        {
-          Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
-        }
-        else if (anim_block->is_complete())
+        anim_block = symbol->get_animation_block();
+        if (anim_block->is_complete())
         {
           Error::error(Error::PREVIOUSLY_DEFINED_ANIMATION_BLOCK, anim_block->name());
         }
@@ -919,12 +916,23 @@ assign_statement:
         Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, $1->m_symbol->m_name,
                gpl_type_to_string($1->m_type));
       }
-      else if ($1->m_type == ANIMATION_BLOCK && $1->m_var_type == "CONSTANT")
+      else if ($1->m_type == ANIMATION_BLOCK) 
       {
-        
-        Error::error(Error::CANNOT_ASSIGN_TO_NON_MEMBER_ANIMATION_BLOCK,
+        if ($1->m_var_type == "CONSTANT")
+        {
+          Error::error(Error::CANNOT_ASSIGN_TO_NON_MEMBER_ANIMATION_BLOCK,
                $1->m_symbol->m_name);
-       cerr << "gpl.y895:: animation name is " << $1->m_symbol->m_name << endl;
+          cerr << "gpl.y895:: animation name is ";
+          cerr << $1->m_symbol->m_name << endl;
+        }
+        Game_object* temp;
+        Animation_block* anim_block;
+        temp = (Game_object*)($1->m_symbol->m_value);
+        temp->get_member_variable($1->m_param, anim_block);
+        cerr << "gpl:932 anim_block value : " << anim_block << endl;
+        cerr << "---rhs anim_block value : " << $3->m_var->m_symbol->m_name << endl; 
+        Symbol* new_symbol = anim_block->get_parameter_symbol();
+        cerr << " String value " << new_symbol->get_name() << endl;
       }
       else
       {
