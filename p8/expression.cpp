@@ -1,7 +1,7 @@
 #include "expression.h"
 #include "variable.h"
 #include "constant.h"
-
+#include "game_object.h"
 
 // unary and binary operator
 Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expression *lhs, Expression *rhs)
@@ -19,6 +19,8 @@ Expression::Expression(Operator_type operator_type, Gpl_type gpl_type, Expressio
     case MULTIPLY:
     case DIVIDE:
     case MOD:
+    case TOUCHES:
+    case NEAR:
       m_node = BINARY_OPERATOR;
       break;
     case OR:
@@ -113,6 +115,7 @@ int Expression::eval_int()
   }
   else if (m_node == BINARY_OPERATOR)
   {   
+    Game_object *lhs, *rhs;
     switch(m_oper)
     {
       case MULTIPLY:
@@ -125,6 +128,14 @@ int Expression::eval_int()
         return m_lhs->eval_int() / m_rhs->eval_int();
       case MOD:
         return m_lhs->eval_int() % m_rhs->eval_int();
+      case TOUCHES:
+        lhs = m_lhs->m_var->get_game_object();
+        rhs = m_rhs->m_var->get_game_object();
+        return lhs->touches(rhs);
+      case NEAR:
+        lhs = m_lhs->m_var->get_game_object();
+        rhs = m_rhs->m_var->get_game_object();
+        return lhs->near(rhs);
       default: 
         cerr << "Error: cannot find m_oper in binary of eval_int()!" << endl;
         return -1;

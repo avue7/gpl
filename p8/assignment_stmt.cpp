@@ -48,7 +48,7 @@ void Assignment_stmt::execute()
     }
     else if (m_var_lhs->m_var_type == "GAME_OBJECT" || m_var_lhs->m_var_type == "GAME_OBJECT_ARRAY")
     {
-      if (m_expr_rhs->m_type == INT)
+      if (m_var_lhs->m_type == INT && m_expr_rhs->m_type == INT)
       {
         //cerr << "1) m_lhs is an int and m_rhs is an int" << endl;
         int int_value = m_expr_rhs->eval_int();
@@ -56,13 +56,14 @@ void Assignment_stmt::execute()
         //cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
         m_var_lhs->set_game_object_value(v_value);
       }
-      else if (m_expr_rhs->m_type == DOUBLE)
+      else if (m_var_lhs->m_type == DOUBLE)
       {
         //cerr << "1)from ass .cpp m_lhs is a double" << endl;
         if (m_expr_rhs->m_type == INT)
         {
           int int_value = m_expr_rhs->eval_int();
-          void* v_value = (void*) new int(int_value);
+          double d_value = (double) int_value;
+          void* v_value = (void*) new double(d_value);
           //cerr << "2)--from ass.cpp m_rhs is an int " << endl;
           m_var_lhs->set_game_object_value(v_value);      
         }
@@ -76,11 +77,40 @@ void Assignment_stmt::execute()
           m_var_lhs->set_game_object_value(v_value);
         }
       }
-      else if (m_expr_rhs->m_type == STRING)
+      else if (m_var_lhs->m_type == STRING)
       {
+        stringstream ss;
+        string s_value;
+        if (m_expr_rhs->m_type == INT)
+        {
+          int int_value = m_expr_rhs->eval_int();
+          ss << int_value;
+          ss >> s_value;
+          void* v_value = (void*) new string(s_value);
+          //cerr << "2)--from ass.cpp m_rhs is an int " << endl;
+          m_var_lhs->set_game_object_value(v_value);      
+        }
+        else if (m_expr_rhs->m_type == DOUBLE)
+        {
+          //cerr << "2)--from ass.cpp m_rhs is a double" << endl;
+          double d_value = m_expr_rhs->eval_double();
+          //cerr << "3)-- VALUE: m_expr_rhs  in ass.cpp is " << d_value << endl;
+          ss << d_value;
+          ss >> s_value;
+          void* v_value = (void*) new string(s_value);
+          //cerr << "  Ass.cpp: m_var_lhs type is : " << m_var_lhs->m_type << endl;
+          m_var_lhs->set_game_object_value(v_value);
+        }
+        else if (m_expr_rhs->m_type == STRING)
+        {
           string s_value = m_expr_rhs->eval_string();
           void* v_value = (void*) new string(s_value);
           m_var_lhs->set_game_object_value(v_value);
+        }
+        else
+        {
+          cerr << "ERROR::ASS.CPP(line:112): cannot find m_expr_rhs m_type!" << endl;
+        }
       }
       else if (m_expr_rhs->m_type == ANIMATION_BLOCK)
       {
@@ -94,7 +124,7 @@ void Assignment_stmt::execute()
       }
       else
       {
-        cerr << "ERROR::(ASS.CPP:87) cannot find m_expr_rhs type!" << endl;
+        cerr << "ERROR::(ASS.CPP:87) cannot find m_var_lhs type!" << endl;
         cerr << "--m_expr_rhs m_type is: " << m_expr_rhs->m_type << endl;
         cerr << "--m_var_lhs m_type = " << m_var_lhs->m_type << endl;
       }

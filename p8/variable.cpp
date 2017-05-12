@@ -118,7 +118,7 @@ Variable::Variable(string symbol_name, string param, Expression* p_expr)
 }
 
 /*################################################################*/
-/*                     GET VALUES BEGINS                          */
+/*                     GETTER FUNCTIONS BEGINS                    */
 /*################################################################*/
 int Variable::get_int_value()
 {
@@ -420,6 +420,11 @@ string Variable::get_string_value()
     cerr << "ERROR::VAR.CPP(line:260): cannot find m_var_type!" << endl;
     return "-1";
   }
+}
+
+Game_object* Variable::get_game_object()
+{
+  return m_symbol->get_game_object_value();
 }
 
 /*######################################################################*/

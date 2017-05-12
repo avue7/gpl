@@ -23,15 +23,15 @@ class Variable
     string m_var_type;
     string m_param;    
 
-    // Member functions
+    // Getters
     string get_type();
     int get_int_value();
     double get_double_value();
     string get_string_value();
     Animation_block * get_animation_block();
+    Game_object* get_game_object();
 
-    //Added in p7.. Must create for assignment->execute() in 
-    // assignment class to work. 
+    // Setters
     void set_new_value(void* new_value);
     void set_game_object_value(void* value);
     

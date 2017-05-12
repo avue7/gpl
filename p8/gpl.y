@@ -162,7 +162,7 @@ stack <Statement_block*> global_stack;
 %type <union_variable> variable
 %type <union_expression> primary_expression
 %type <union_expression> optional_initializer
-%type <union_oper_type> math_operator
+%type <union_oper_type> math_operator 
 %type <union_int> object_type
 %type <union_string> animation_parameter
 %type <union_keystroke> keystroke
@@ -170,6 +170,7 @@ stack <Statement_block*> global_stack;
 %type <union_statement_block> statement_block_creator
 %type <union_statement_block> if_block
 %type <union_int> check_animation_parameter /* Added in p8: need for id */
+%type <union_oper_type> geometric_operator /* Added in p8 */ 
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -787,7 +788,7 @@ statement:
 if_statement:
     T_IF T_LPAREN expression T_RPAREN if_block %prec IF_NO_ELSE
     {
-      if ($3->m_type != INT)
+      /*if ($3->m_type != INT)
       {
         Error::error(Error::INVALID_TYPE_FOR_IF_STMT_EXPRESSION);
       }
@@ -795,11 +796,13 @@ if_statement:
       {
         If_stmt* if_stmt = new If_stmt($3, $5);
         global_stack.top()->m_statements.push_back(if_stmt);
-      }
+      }*/
+      If_stmt* if_stmt = new If_stmt($3, $5);
+      global_stack.top()->m_statements.push_back(if_stmt);
     }
     | T_IF T_LPAREN expression T_RPAREN if_block T_ELSE if_block 
     {
-      if ($3->m_type != INT)
+      /*if ($3->m_type != INT)
       {
         Error::error(Error::INVALID_TYPE_FOR_IF_STMT_EXPRESSION);
       }
@@ -807,7 +810,9 @@ if_statement:
       {
         If_stmt* if_stmt = new If_stmt($3, $5, $7);
         global_stack.top()->m_statements.push_back(if_stmt);
-      }
+      }*/
+      If_stmt* if_stmt = new If_stmt($3, $5, $7);
+      global_stack.top()->m_statements.push_back(if_stmt);
     }
     ;
 
@@ -1458,6 +1463,20 @@ expression:
     }
     | variable geometric_operator variable
     {
+      if ($1->m_symbol->is_game_object() == false ||
+          $3->m_symbol->is_game_object() == false)
+      {
+        if($1->m_symbol->is_game_object() == false)
+          Error::error(Error::OPERAND_MUST_BE_A_GAME_OBJECT, $1->m_symbol->get_name());
+        if($3->m_symbol->is_game_object() == false)
+          Error::error(Error::OPERAND_MUST_BE_A_GAME_OBJECT, $3->m_symbol->get_name());
+        $$ = new Expression(0, INT, NULL, NULL);
+      }
+      else
+      {
+        $$ = new Expression($2, INT, new Expression($1), new Expression($3));
+      }
+    /*  cerr << "GPL.y:1478: var_lhs m_type is : " << $1->m_symbol->is_game_object() << endl;*/
     } 
     ;
 
@@ -1482,7 +1501,13 @@ primary_expression:
 //---------------------------------------------------------------------
 geometric_operator:
     T_TOUCHES
+    {
+      $$ = TOUCHES;
+    }
     | T_NEAR
+    {
+      $$ = NEAR;
+    }
     ;
 
 //---------------------------------------------------------------------
