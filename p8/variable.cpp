@@ -569,6 +569,10 @@ void Variable::set_game_object_value(void* value)
     {
       temp_obj->set_member_variable(m_param, *(string*) value); 
     }
+    else if (m_type == ANIMATION_BLOCK)
+    {
+      temp_obj->set_member_variable(m_param, (Animation_block*) value);
+    }
     else
     {
       cerr << "ERROR::Var.cpp: CANNOT FIND TYPE WHILE SETTING GAME-OBJECT VALUE!" << endl;
