@@ -511,9 +511,15 @@ void Variable::set_game_object_value(void* value)
       temp_obj = (Game_object*)(m_symbol->m_value);
       temp_obj->set_member_variable(this->m_param, *(string*) value);       
     }
+    else if (m_type == ANIMATION_BLOCK)
+    {
+      Game_object* temp_obj;
+      temp_obj = (Game_object*)(m_symbol->m_value);
+      temp_obj->set_member_variable(this->m_param, (Animation_block*) value);       }
     else
     {
-      cerr << "ERROR::VAR.CPP: cannot find object type in set_new_value!" << endl;
+      cerr << "ERROR::VAR.CPP: cannot find object type in";
+      cerr << "set_game_object_value!" << endl;
     }
   }
   else if (m_var_type == "GAME_OBJECT_ARRAY")
