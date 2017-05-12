@@ -39,7 +39,14 @@ class Animation_block : public Statement_block
     Symbol *get_parameter_symbol() {return m_parameter_symbol;}
     std::string name() {return m_name;}
 
+    //Added in p8: Need two new functions to mark complete and check
+    //if block is complete.
+    void mark_complete();
+    bool is_complete();
+
   private:
+    // Added p8: need member variable to set to complete
+    bool m_complete;
 
     Symbol *m_parameter_symbol = NULL;
     std::string m_name = "you forgot to call initialize() on this Animation_block";

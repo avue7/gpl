@@ -169,6 +169,7 @@ stack <Statement_block*> global_stack;
 %type <union_statement_block> statement_block
 %type <union_statement_block> statement_block_creator
 %type <union_statement_block> if_block
+%type <union_int> check_animation_parameter /* Added in p8: need for id */
 ///////////// Precedence = low to high ////////////////////////////////
 %nonassoc IF_NO_ELSE
 %nonassoc T_ELSE
@@ -574,7 +575,7 @@ block:
 initialization_block:
     T_INITIALIZATION statement_block
     {
-      assert(false);
+      Event_manager::instance()->register_event(Window::INITIALIZE, $2);
     }
     ;
 
@@ -582,16 +583,22 @@ initialization_block:
 termination_block:
     T_TERMINATION statement_block
     {
-      assert(false);
+      Event_manager::instance()->register_event(Window::TERMINATE, $2);
     }
     ;
 
 //---------------------------------------------------------------------
 animation_block:
-    T_ANIMATION T_ID T_LPAREN check_animation_parameter T_RPAREN T_LBRACE statement_list T_RBRACE end_of_statement_block
+    T_ANIMATION T_ID T_LPAREN check_animation_parameter 
     {
-      assert(false);
+      Symbol* symbol;
+      Animation_block* anim_block;
+      symbol = Symbol_table::instance()->lookup(*$2);
+      anim_block = symbol->get_animation_block();
+      anim_block->mark_complete();
+      global_stack.push(anim_block);
     }
+    T_RPAREN T_LBRACE statement_list T_RBRACE end_of_statement_block
     ;
 
 //---------------------------------------------------------------------
@@ -641,23 +648,23 @@ animation_parameter:
 check_animation_parameter:
     T_TRIANGLE T_ID
     {
-      assert(false);
+      $$ = TRIANGLE;
     }
     | T_PIXMAP T_ID
     {
-      assert(false);
+      $$ = PIXMAP;
     }
     | T_CIRCLE T_ID
     {
-      assert(false);
+      $$ = CIRCLE;
     }
     | T_RECTANGLE T_ID
     {
-      assert(false);
+      $$ = RECTANGLE;
     }
     | T_TEXTBOX T_ID
     {
-      assert(false);
+      $$ = TEXTBOX;
     }
     ;
 
