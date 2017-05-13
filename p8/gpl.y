@@ -560,14 +560,16 @@ forward_declaration:
       {
         Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$3);
       }
-      if ($5)
+      else
       {
-        found_sym = Symbol_table::instance()->lookup(*$5);       
-        anim_block = (Animation_block*) symbol->m_value; 
-        anim_block->initialize(found_sym, *$3);
-        animation_stack.push_back(anim_block);
+        if ($5)
+        {
+          found_sym = Symbol_table::instance()->lookup(*$5);       
+          anim_block = (Animation_block*) symbol->m_value; 
+          anim_block->initialize(found_sym, *$3);
+          animation_stack.push_back(anim_block);
+        }
       }
-
     }
     ;
 
@@ -916,31 +918,37 @@ assign_statement:
         Error::error(Error::INVALID_LHS_OF_ASSIGNMENT, $1->m_symbol->m_name,
                gpl_type_to_string($1->m_type));
       }
-      else if ($1->m_type == ANIMATION_BLOCK) 
+      else if ($1->m_type == ANIMATION_BLOCK && $1->m_var_type == "CONSTANT")
       {
-        if ($1->m_var_type == "CONSTANT")
-        {
-          Error::error(Error::CANNOT_ASSIGN_TO_NON_MEMBER_ANIMATION_BLOCK,
+        Error::error(Error::CANNOT_ASSIGN_TO_NON_MEMBER_ANIMATION_BLOCK,
                $1->m_symbol->m_name);
-          cerr << "gpl.y895:: animation name is ";
-          cerr << $1->m_symbol->m_name << endl;
-        }
-        Game_object* temp;
-        Animation_block* anim_block;
-        temp = (Game_object*)($1->m_symbol->m_value);
-        temp->get_member_variable($1->m_param, anim_block);
-        cerr << "gpl:932 anim_block value : " << anim_block << endl;
-        cerr << "---rhs anim_block value : " << $3->m_var->m_symbol->m_name << endl; 
-        Symbol* new_symbol = anim_block->get_parameter_symbol();
-        cerr << " String value " << new_symbol->get_name() << endl;
       }
       else
       {
-        cerr << "gpl.y 896 : 1 m_type = " << $1->m_type << endl;
+        if ($1->m_type == ANIMATION_BLOCK && $3->m_var->m_var_type == "CONSTANT")
+        {
+          Gpl_type lhs_type, rhs_type;
+          lhs_type = $1->m_symbol->m_type;
+          rhs_type = $3->eval_animation_block()->get_parameter_symbol()->m_type;
 
-       cerr << "gpl.y895:: var type is " << $1->m_var_type<< endl;
-        Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
-        global_stack.top()->m_statements.push_back(ass_stmt);
+          cerr << "---LHS(VAR) " << lhs_type << endl;
+          cerr << " ### RHS(EXPR) " << rhs_type << endl;
+          cerr << " gpl to base " << gpl_type_to_base_string(lhs_type) << endl;
+          if (gpl_type_to_base_string(lhs_type) != gpl_type_to_base_string(rhs_type))
+          {
+            cerr << "YOU FUCKING DEBUGGED THIS SHIT!!!!" << endl;
+          }
+          else
+          {
+            Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
+            global_stack.top()->m_statements.push_back(ass_stmt);
+          }
+        }
+        else
+        {
+          Assignment_stmt* ass_stmt = new Assignment_stmt($1, $3, ASS_ASSIGN);
+          global_stack.top()->m_statements.push_back(ass_stmt);
+        }
       }
     }
     | variable T_PLUS_ASSIGN expression
