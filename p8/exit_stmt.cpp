@@ -6,6 +6,8 @@ Exit_stmt::Exit_stmt(Expression* expr, int line_number)
   m_line_number = line_number;
 }
 
+Exit_stmt::~Exit_stmt() {}
+
 void Exit_stmt::execute()
 {
   int int_val;

@@ -119,11 +119,11 @@ void Assignment_stmt::execute()
       }
       else if (m_expr_rhs->m_type == ANIMATION_BLOCK)
       {
-        cerr << "YOURE ON THE RIGHT TRACK PRINTED FROM ASS.CPP 87";
+        /*cerr << "YOURE ON THE RIGHT TRACK PRINTED FROM ASS.CPP 87";
         cerr << " FOR ANIMATION BLOCK" << endl;
         cerr << "--eval_animation_block() returned : " << m_expr_rhs->eval_animation_block() << endl;
         cerr << "--m_expr_rhs m_type is: " << m_expr_rhs->m_type << endl;
-        cerr << "--m_var_lhs m_type = " << m_var_lhs->m_type << endl;
+        cerr << "--m_var_lhs m_type = " << m_var_lhs->m_type << endl; */
         void* v_value = (void*) m_expr_rhs->eval_animation_block();
         m_var_lhs->set_game_object_value(v_value);
       }

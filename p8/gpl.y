@@ -222,12 +222,12 @@ variable_declaration:
     {
       Symbol *symbol;
       Expression *expr = $3;
-      if ($3 && ($3->m_type > $1))
+      /*if ($3 && ($3->m_type > $1))
       {
         Error::error(Error::INVALID_TYPE_FOR_INITIAL_VALUE, 
                gpl_type_to_string($3->m_type), *$2, gpl_type_to_string($1));
-      }
-      else if ($3)
+      }*/
+      if ($3)
       {
         if ($1 == INT)
         {
@@ -423,7 +423,6 @@ object_declaration:
         switch($1)
         {
           case TRIANGLE:
-             cerr << "THIS HAPPENED IN GPL 411 " << endl;
              symbol = new Symbol(*$2, TRIANGLE_ARRAY, $4->eval_int());
              break;
           case CIRCLE:
@@ -611,37 +610,34 @@ animation_block:
       Symbol* symbol;
       Animation_block* anim_block;
       symbol = Symbol_table::instance()->lookup(*$2);
+      
       if (symbol == NULL)
       {
-        cerr << "this ran in gpl 613" << endl;
         Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
       }
       else
       {
         anim_block = symbol->get_animation_block();
-        if (anim_block->is_complete())
+        if (symbol->m_type != ANIMATION_BLOCK)
+        {
+           Error::error(Error::NO_FORWARD_FOR_ANIMATION_BLOCK, *$2);
+        } 
+        else if (anim_block->is_complete())
         {
           Error::error(Error::PREVIOUSLY_DEFINED_ANIMATION_BLOCK, anim_block->name());
         }
         else
         {
-          cerr << "$2 sym type is " << symbol->m_type << endl;
-          cerr << "###$2 animation param ";
-          cerr << anim_block->get_parameter_symbol()->m_name << endl;
-          cerr << "after checing params cur_id is : " << cur_id << endl;
-          
-          anim_block->mark_complete();
-         
+          Game_object* temp;
+          temp = (Game_object*)(anim_block->get_parameter_symbol()->m_value);
           string assigned_param_name;
-          assigned_param_name = anim_block->get_parameter_symbol()->m_name;
-          if (assigned_param_name != cur_id)
+          assigned_param_name = anim_block->get_parameter_symbol()->m_name;          
+          if (temp->type() != $4 || assigned_param_name != cur_id)
           {
             Error::error(Error::ANIMATION_PARAM_DOES_NOT_MATCH_FORWARD);
           }
-          else
-          {
-            global_stack.push(anim_block);
-          }
+          anim_block->mark_complete();
+          global_stack.push(anim_block);
         }
       }
     }
@@ -952,9 +948,9 @@ assign_statement:
           lhs_type = $1->m_symbol->m_type;
           rhs_type = $3->eval_animation_block()->get_parameter_symbol()->m_type;
 
-          cerr << "---LHS(VAR) " << lhs_type << endl;
+         /* cerr << "---LHS(VAR) " << lhs_type << endl;
           cerr << " ### RHS(EXPR) " << rhs_type << endl;
-          cerr << " gpl to base " << gpl_type_to_base_string(lhs_type) << endl;
+          cerr << " gpl to base " << gpl_type_to_base_string(lhs_type) << endl;*/
           if (gpl_type_to_base_string(lhs_type) != gpl_type_to_base_string(rhs_type))
           {
             Error::error(Error::ANIMATION_BLOCK_ASSIGNMENT_PARAMETER_TYPE_ERROR,
@@ -1114,6 +1110,15 @@ variable:
           {
             Error::error(Error::VARIABLE_NOT_AN_ARRAY, *$1);
             $$ = new Variable("DUMMY");
+          }
+          else if (expr->eval_int() >= ret_sym->m_size)
+          {
+            stringstream ss;
+            ss << expr->eval_int();
+            string value;
+            ss >> value;
+            Error::error(Error::ARRAY_INDEX_OUT_OF_BOUNDS, ret_sym->m_name, value);
+            $$ = new Variable("DUMMY"); 
           }
           else
           {

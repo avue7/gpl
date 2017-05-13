@@ -524,12 +524,10 @@ void Variable::set_game_object_value(void* value)
     }
     else if (m_type == ANIMATION_BLOCK)
     {
-      cerr << " THIS RAN IN ANI" << endl;
-      Status status;
+      //Status status;
       Game_object* temp_obj;
       temp_obj = (Game_object*)(m_symbol->m_value);
-      status = temp_obj->set_member_variable(this->m_param, (Animation_block*) value);
-      cerr << "Status 531 var: " << status_to_string(status) << endl;
+      temp_obj->set_member_variable(this->m_param, (Animation_block*) value);
     }
     else
     {
