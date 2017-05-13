@@ -13,5 +13,6 @@ void Exit_stmt::execute()
   int int_val;
   int_val = m_expr->eval_int();
   cout << "gpl[" << m_line_number << "]: exit(" << int_val << ")" << endl;
+  Event_manager::instance()->execute_handlers(Window::TERMINATE);
   exit(int_val);
 }
