@@ -22,6 +22,7 @@ int counter=0; //THis is for debugging....
 // in the parser.h
 stack <Statement_block*> global_stack;
 vector <Animation_block*> animation_stack; //Added in p8
+string cur_id; //Added in p8 for check_parameter for id of animation
 // bison syntax to indicate the end of the header
 %} 
 
@@ -624,8 +625,23 @@ animation_block:
         }
         else
         {
+          cerr << "$2 sym type is " << symbol->m_type << endl;
+          cerr << "###$2 animation param ";
+          cerr << anim_block->get_parameter_symbol()->m_name << endl;
+          cerr << "after checing params cur_id is : " << cur_id << endl;
+          
           anim_block->mark_complete();
-          global_stack.push(anim_block);
+         
+          string assigned_param_name;
+          assigned_param_name = anim_block->get_parameter_symbol()->m_name;
+          if (assigned_param_name != cur_id)
+          {
+            Error::error(Error::ANIMATION_PARAM_DOES_NOT_MATCH_FORWARD);
+          }
+          else
+          {
+            global_stack.push(anim_block);
+          }
         }
       }
     }
@@ -679,23 +695,28 @@ animation_parameter:
 check_animation_parameter:
     T_TRIANGLE T_ID
     {
+      cur_id = *$2;
       $$ = TRIANGLE;
     }
     | T_PIXMAP T_ID
     {
+      cur_id = *$2;
       $$ = PIXMAP;
     }
     | T_CIRCLE T_ID
     {
+      cur_id = *$2;
       $$ = CIRCLE;
     }
     | T_RECTANGLE T_ID
     {
+      cur_id = *$2;
       $$ = RECTANGLE;
     }
     | T_TEXTBOX T_ID
     {
-      $$ = TEXTBOX;
+      cur_id = *$2;
+      $$ = TEXTBOX;      
     }
     ;
 
@@ -936,7 +957,8 @@ assign_statement:
           cerr << " gpl to base " << gpl_type_to_base_string(lhs_type) << endl;
           if (gpl_type_to_base_string(lhs_type) != gpl_type_to_base_string(rhs_type))
           {
-            cerr << "YOU FUCKING DEBUGGED THIS SHIT!!!!" << endl;
+            Error::error(Error::ANIMATION_BLOCK_ASSIGNMENT_PARAMETER_TYPE_ERROR,
+            gpl_type_to_base_string(lhs_type), gpl_type_to_base_string(rhs_type));
           }
           else
           {
